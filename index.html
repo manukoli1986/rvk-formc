@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guest Registration — Raj Vidya Kender</title>
+<style>
+  :root{
+    --ink:#12233f; --line:#d7deea; --bg:#f5f7fb; --accent:#1a3a6b;
+    --accent2:#c9a24b; --ok:#1f7a4d; --warn:#b23a2e; --muted:#6b7688;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px 72px}
+  header{background:var(--accent);color:#fff;padding:26px 24px;text-align:center}
+  header .inner{max-width:860px;margin:0 auto}
+  header .crest{font-size:13px;letter-spacing:.12em;color:var(--accent2);text-transform:uppercase;font-weight:600}
+  header h1{margin:6px 0 2px;font-size:22px;font-weight:600}
+  header p{margin:0;font-size:13px;opacity:.85}
+  .langbar{margin-top:14px;display:inline-flex;gap:3px;background:rgba(255,255,255,.12);padding:3px;border-radius:7px}
+  .langbtn{background:transparent;border:none;color:#fff;font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:5px;cursor:pointer;font-family:inherit}
+  .langbtn.active{background:#fff;color:var(--accent)}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px 26px;margin-top:18px;box-shadow:0 1px 3px rgba(18,35,63,.04),0 6px 20px rgba(18,35,63,.05)}
+  h2{font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);margin:0 0 16px;padding-bottom:10px;border-bottom:2px solid var(--accent2);display:flex;align-items:center;gap:8px}
+  h2::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent2);flex-shrink:0}
+  label{display:block;font-size:13px;font-weight:600;margin:12px 0 5px}
+  label .req{color:var(--warn)}
+  .hint{font-size:11.5px;color:var(--muted);font-weight:400;margin-top:3px}
+  input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:9px;font-size:15px;font-family:inherit;background:#fcfdff;transition:border-color .15s,box-shadow .15s}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(26,58,107,.12);background:#fff}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  /* Phones: stack the two-column rows */
+  @media (max-width:640px){
+    .wrap{padding:0 14px 60px}
+    header{padding:22px 16px}
+    .card{padding:18px 16px}
+    .row{grid-template-columns:1fr;gap:0}
+  }
+  .scan{background:linear-gradient(135deg,#fbf6e8,#fff);border:1.5px dashed var(--accent2);border-radius:10px;padding:16px;text-align:center;margin-bottom:6px}
+  .scan b{color:var(--accent)}
+  .scan input{display:none}
+  .scan .btn{display:inline-block;margin-top:10px;background:var(--accent);color:#fff;padding:10px 20px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px}
+  .status{font-size:13px;margin-top:10px;font-weight:600}
+  .status.busy{color:var(--accent)}
+  .status.done{color:var(--ok)}
+  .status.err{color:var(--warn)}
+  .photo-prev{width:96px;height:120px;object-fit:cover;border:1px solid var(--line);border-radius:6px;margin-top:8px;display:none}
+  .confirm{display:flex;align-items:flex-start;gap:8px;margin-top:8px;font-size:12.5px;color:var(--ink);font-weight:500}
+  .confirm input{width:auto;margin-top:2px;flex-shrink:0}
+  .submit{width:100%;background:var(--accent);color:#fff;border:none;padding:16px;font-size:16px;font-weight:700;border-radius:11px;margin-top:22px;cursor:pointer;box-shadow:0 6px 18px rgba(26,58,107,.25);transition:transform .1s,box-shadow .15s,background .15s}
+  .submit:hover{background:#16335f;box-shadow:0 8px 24px rgba(26,58,107,.32)}
+  .submit:active{transform:translateY(1px)}
+  .submit:disabled{opacity:.5}
+  .done-msg{display:none;text-align:center;padding:30px 16px}
+  .done-msg .tick{width:64px;height:64px;border-radius:50%;background:var(--ok);color:#fff;font-size:34px;line-height:64px;margin:0 auto 14px}
+  .note{background:#fbf6e8;border-left:3px solid var(--accent2);padding:10px 12px;font-size:12.5px;border-radius:0 6px 6px 0;margin-top:10px}
+  #gate .card{margin-top:26px}
+  #gate .big{font-size:20px;text-align:center;letter-spacing:.18em;text-transform:uppercase;font-weight:700}
+  .verified-banner{background:#e9f5ee;border:1px solid #bfe3cd;color:var(--ok);border-radius:10px;padding:12px 14px;font-size:14px;font-weight:600;margin-top:18px;display:flex;align-items:center;gap:8px}
+  input:disabled{background:#eef1f6;color:var(--muted);cursor:not-allowed}
+  #formSection{display:none}
+  .overlay{position:fixed;inset:0;background:rgba(18,35,63,.55);display:none;align-items:center;justify-content:center;z-index:999;padding:20px}
+  .overlay.show{display:flex}
+  .overlay .box{background:#fff;border-radius:14px;padding:28px 26px;max-width:340px;width:100%;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.25)}
+  .spinner{width:44px;height:44px;border:4px solid var(--line);border-top-color:var(--accent);border-radius:50%;margin:0 auto 16px;animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .overlay h3{margin:0 0 4px;font-size:17px;color:var(--accent)}
+  .overlay .step{font-size:13.5px;color:var(--muted);min-height:20px;margin-top:6px}
+  .bar{height:6px;background:var(--line);border-radius:6px;margin-top:16px;overflow:hidden}
+  .bar > span{display:block;height:100%;width:0;background:var(--accent);border-radius:6px;transition:width .4s ease}
+</style>
+</head>
+<body>
+<header>
+  <div class="inner">
+  <div class="crest">Government of India · Form C</div>
+  <h1>Raj Vidya Kender</h1>
+  <p>Shahurpur Chhatarpur, New Delhi 110074 · Foreign Guest Arrival Registration</p>
+  <div class="langbar">
+    <button type="button" class="langbtn active" data-lang="en">English</button>
+    <button type="button" class="langbtn" data-lang="es">Español</button>
+  </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <!-- STEP 1: Smartcard verification gate -->
+  <div id="gate">
+    <div class="card">
+      <h2>Verify Your Smartcard</h2>
+      <p style="font-size:13.5px;color:var(--muted);margin-top:0">
+        Enter the smartcard code from your invitation to begin registration.</p>
+      <label>Smartcard Code <span class="req">*</span></label>
+      <input id="cardInput" class="big" placeholder="Enter your smart card number" autocomplete="off"
+             style="text-transform:uppercase">
+      <div class="status" id="gateStatus" style="text-align:center"></div>
+      <button type="button" class="submit" id="verifyBtn">Verify &amp; Continue</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: The form (revealed only after verification) -->
+  <div id="formSection">
+  <div class="verified-banner">✓ Verified — welcome, <span id="guestName"></span></div>
+  <form id="f">
+    <div class="card">
+      <h2>Passport Photos</h2>
+      <div class="hint" style="margin-bottom:10px">Please provide the three images below. They are kept with your record for verification and the portal upload.</div>
+
+      <label>Passport-Size Photo (Headshot) <span class="req">*</span></label>
+      <div class="hint">A passport-style portrait — face centered, plain background. Auto-compressed to under 50 KB for the portal.</div>
+      <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap">
+        <label class="btn" for="portraitCam" style="display:inline-block;background:var(--accent);color:#fff;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px">📷 Take Photo</label>
+        <label class="btn" for="portrait" style="display:inline-block;background:var(--accent2);color:#fff;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px">🖼️ Upload</label>
+      </div>
+      <input type="file" id="portraitCam" accept="image/*" capture="user" style="display:none">
+      <input type="file" id="portrait" accept="image/jpeg,image/png" style="display:none">
+      <img id="portraitPrev" class="photo-prev">
+      <div class="status" id="portraitStatus"></div>
+      <label class="confirm"><input type="checkbox" id="confirmPortrait"> <span>I confirm I have uploaded a clear photo of this document</span></label>
+
+      <label style="margin-top:16px">Passport — Front Page <span class="req">*</span></label>
+      <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap">
+        <label class="btn" for="ppFrontCam" style="display:inline-block;background:var(--accent);color:#fff;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px">📷 Take Photo</label>
+        <label class="btn" for="ppFront" style="display:inline-block;background:var(--accent2);color:#fff;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px">🖼️ Upload</label>
+      </div>
+      <input type="file" id="ppFrontCam" accept="image/*" capture="environment" style="display:none">
+      <input type="file" id="ppFront" accept="image/*" style="display:none">
+      <img id="ppFrontPrev" class="photo-prev" style="width:auto;max-width:100%;height:auto;max-height:170px">
+      <div class="status" id="ppFrontStatus"></div>
+      <label class="confirm"><input type="checkbox" id="confirmFront"> <span>I confirm I have uploaded a clear photo of this document</span></label>
+
+      <label style="margin-top:16px">Passport — Last Page <span class="req">*</span></label>
+      <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap">
+        <label class="btn" for="ppLastCam" style="display:inline-block;background:var(--accent);color:#fff;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px">📷 Take Photo</label>
+        <label class="btn" for="ppLast" style="display:inline-block;background:var(--accent2);color:#fff;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px">🖼️ Upload</label>
+      </div>
+      <input type="file" id="ppLastCam" accept="image/*" capture="environment" style="display:none">
+      <input type="file" id="ppLast" accept="image/*" style="display:none">
+      <img id="ppLastPrev" class="photo-prev" style="width:auto;max-width:100%;height:auto;max-height:170px">
+      <div class="status" id="ppLastStatus"></div>
+      <label class="confirm"><input type="checkbox" id="confirmLast"> <span>I confirm I have uploaded a clear photo of this document</span></label>
+
+      <label style="margin-top:16px">Visa / eVisa <span class="req">*</span></label>
+      <div class="hint">Photo of the visa sticker in your passport, or a clear image/screenshot of your eVisa.</div>
+      <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap">
+        <label class="btn" for="visaCam" style="display:inline-block;background:var(--accent);color:#fff;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px">📷 Take Photo</label>
+        <label class="btn" for="visaImg" style="display:inline-block;background:var(--accent2);color:#fff;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px">🖼️ Upload</label>
+      </div>
+      <input type="file" id="visaCam" accept="image/*" capture="environment" style="display:none">
+      <input type="file" id="visaImg" accept="image/*" style="display:none">
+      <img id="visaPrev" class="photo-prev" style="width:auto;max-width:100%;height:auto;max-height:170px">
+      <div class="status" id="visaStatus"></div>
+      <label class="confirm"><input type="checkbox" id="confirmVisa"> <span>I confirm I have uploaded a clear photo of this document</span></label>
+    </div>
+
+    <div class="card">
+      <h2>Personal Details</h2>
+      <label>Registered Name (Smartcard)</label>
+      <input name="registeredName" id="registeredName" disabled>
+      <div class="hint">Linked to your smartcard. Fill your passport name below exactly as printed.</div>
+      <div class="row">
+        <div><label>Surname <span class="req">*</span></label><input name="surname" required></div>
+        <div><label>Given Name <span class="req">*</span></label><input name="givenName" required></div>
+      </div>
+      <div class="row">
+        <div><label>Sex <span class="req">*</span></label>
+          <select name="sex" required><option value="">Select</option><option>Male</option><option>Female</option><option>Transgender</option></select></div>
+        <div><label>Date of Birth <span class="req">*</span></label><input type="date" name="dob" required></div>
+      </div>
+      <label>Nationality <span class="req">*</span></label><input name="nationality" required>
+      <label>Special Category</label>
+      <select name="specialCategory"><option value="Others" selected>Others (general)</option><option>Tibetan Refugee</option><option>PIO</option><option>OCI</option></select>
+    </div>
+
+    <div class="card">
+      <h2>Permanent Address (Abroad)</h2>
+      <label>Address <span class="req">*</span></label><textarea name="permAddress" rows="2" required></textarea>
+      <div class="row">
+        <div><label>City <span class="req">*</span></label><input name="permCity" required></div>
+        <div><label>Country <span class="req">*</span></label><input name="permCountry" required></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Address / Reference in India</h2>
+      <div class="hint">You may use the hotel address if you have no other reference.</div>
+      <label>Address <span class="req">*</span></label>
+      <textarea name="indiaAddress" rows="2" required>Raj Vidya Kender, Shahurpur Chhatarpur, New Delhi</textarea>
+      <div class="row">
+        <div><label>State <span class="req">*</span></label><input name="indiaState" value="Delhi" required></div>
+        <div><label>City/District <span class="req">*</span></label><input name="indiaCity" value="Delhi" required></div>
+      </div>
+      <label>Pin Code <span class="req">*</span></label><input name="indiaPin" value="110074" inputmode="numeric" required>
+    </div>
+
+    <div class="card">
+      <h2>Passport Details</h2>
+      <label>Passport No <span class="req">*</span></label><input name="passportNo" required style="text-transform:uppercase">
+      <div class="row">
+        <div><label>Place of Issue — City <span class="req">*</span></label><input name="passportCity" required></div>
+        <div><label>Place of Issue — Country <span class="req">*</span></label><input name="passportCountry" required></div>
+      </div>
+      <div class="row">
+        <div><label>Date of Issue <span class="req">*</span></label><input type="date" name="passportIssue" required></div>
+        <div><label>Valid Till <span class="req">*</span></label><input type="date" name="passportValid" required></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Visa Details</h2>
+      <label>Visa No <span class="req">*</span></label><input name="visaNo" required>
+      <div class="row">
+        <div><label>Place of Issue — City <span class="req">*</span></label><input name="visaCity" required></div>
+        <div><label>Place of Issue — Country <span class="req">*</span></label><input name="visaCountry" required></div>
+      </div>
+      <div class="row">
+        <div><label>Date of Issue <span class="req">*</span></label><input type="date" name="visaIssue" required></div>
+        <div><label>Valid Till <span class="req">*</span></label><input type="date" name="visaValid" required></div>
+      </div>
+      <div class="row">
+        <div><label>Type of Visa <span class="req">*</span></label>
+          <select name="visaType" required><option value="">Select</option>
+            <option>Tourist</option><option>Business</option><option>Employment</option><option>Student</option>
+            <option>Medical</option><option>Conference</option><option>e-Visa</option><option>OCI</option><option>Other</option></select></div>
+        <div><label>Visa Sub Type</label><input name="visaSubType"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Arrival Information</h2>
+      <div class="row">
+        <div><label>Arrived From — Country <span class="req">*</span></label><input name="arrivedCountry" required></div>
+        <div><label>Arrived From — City <span class="req">*</span></label><input name="arrivedCity" required></div>
+      </div>
+      <label>Arrived From — Place</label><input name="arrivedPlace">
+      <label>Date of Arrival in India <span class="req">*</span></label>
+      <div class="hint">The day you landed at the airport in India.</div>
+      <input type="date" name="arrivalIndia" required>
+      <label>Date of Arrival at Hotel <span class="req">*</span></label>
+      <div class="hint">The day you arrive at Raj Vidya Kender.</div>
+      <input type="date" name="arrivalHotel" required>
+      <div class="row">
+        <div><label>Time of Arrival <span class="req">*</span></label>
+          <div class="hint">24-hour (e.g. 22:30)</div><input type="time" name="arrivalTime" required></div>
+        <div><label>Duration of Stay (days) <span class="req">*</span></label><input type="number" name="duration" min="1" inputmode="numeric" required></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Departure from RVK</h2>
+      <div class="hint" style="margin-bottom:6px">The date and time you will leave Raj Vidya Kender. This is required for the departure report.</div>
+      <div class="row">
+        <div><label>Date of Departure <span class="req">*</span></label><input type="date" name="departureDate" required></div>
+        <div><label>Time of Departure <span class="req">*</span></label>
+          <div class="hint">24-hour (e.g. 09:30)</div><input type="time" name="departureTime" required></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Other Details</h2>
+      <label>Employed in India? <span class="req">*</span></label>
+      <select name="employed" required><option value="No" selected>No</option><option>Yes</option></select>
+      <label>Purpose of Visit <span class="req">*</span></label>
+      <select name="purpose" required><option value="">Select</option>
+        <option>Tourism</option><option>Business</option><option>Spiritual / Religious</option>
+        <option>Conference / Event</option><option>Medical</option><option>Education</option><option>Other</option></select>
+      <label>Next Destination <span class="req">*</span></label>
+      <select name="nextDestination" id="nextDest" required><option value="Inside India">Inside India</option><option>Outside India</option></select>
+      <div id="destInside">
+        <div class="row">
+          <div><label>State <span class="req">*</span></label><input name="nextInsideState" placeholder="e.g. Rajasthan"></div>
+          <div><label>City <span class="req">*</span></label><input name="nextInsideCity" placeholder="e.g. Jaipur"></div>
+        </div>
+      </div>
+      <div id="destOutside" style="display:none">
+        <div class="row">
+          <div><label>Country <span class="req">*</span></label><input name="nextOutsideCountry" placeholder="e.g. Singapore"></div>
+          <div><label>State <span class="req">*</span></label><input name="nextOutsideState" placeholder="State / Region"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Contact Details</h2>
+      <div class="hint" style="margin-bottom:6px">A filled copy of this form will be emailed to you for your records.</div>
+      <label>Email <span class="req">*</span></label>
+      <input type="email" name="email" required placeholder="you@example.com">
+      <label>Residential Mobile/Phone Number <span class="req">*</span></label>
+      <input name="mobile" inputmode="tel" required placeholder="+country code number">
+      <label>New / Temporary Number (in India)</label>
+      <div class="hint">An Indian SIM or temporary number where we can reach you during your stay, if any.</div>
+      <input name="tempMobile" inputmode="tel" placeholder="+91 number (optional)">
+      <label>Booking Reference (Optional)</label><input name="bookingRef">
+    </div>
+
+    <div class="note" style="margin-top:18px"><b>Note for Nepal / Bhutan passport holders:</b> Form C is not required for you under bilateral treaty — please inform the front desk directly instead of submitting this form.</div>
+
+    <button type="submit" class="submit" id="submitBtn">Submit Registration</button>
+  </form>
+  </div><!-- /formSection -->
+
+  <div class="overlay" id="overlay">
+    <div class="box">
+      <div class="spinner"></div>
+      <h3>Submitting…</h3>
+      <div class="step" id="progStep">Preparing your details</div>
+      <div class="bar"><span id="progBar"></span></div>
+    </div>
+  </div>
+
+  <div class="done-msg" id="done">
+    <div class="tick">✓</div>
+    <h2 style="border:none;justify-content:center">Registration Received</h2>
+    <p>Thank you. A filled copy has been <b>emailed to you</b> for your records — you can print it.<br><br>
+    Please show your passport at check-in — it will take only seconds.</p>
+  </div>
+</div>
+
+<script>
+const SCRIPT_URL = 'PASTE_YOUR_APPS_SCRIPT_EXEC_URL_HERE';
+let verifiedCard = '';
+let verifiedName = '';
+
+/* ============ i18n: English → Spanish ============ */
+const I18N = {
+  es: {
+    // Headings
+    'Verify Your Smartcard':'Verifique su tarjeta inteligente',
+    'Passport Photos':'Fotos del pasaporte',
+    'Personal Details':'Datos personales',
+    'Permanent Address (Abroad)':'Domicilio permanente (en el extranjero)',
+    'Address / Reference in India':'Dirección / referencia en la India',
+    'Passport Details':'Datos del pasaporte',
+    'Visa Details':'Datos del visado',
+    'Arrival Information':'Información de llegada',
+    'Departure from RVK':'Salida de RVK',
+    'Other Details':'Otros datos',
+    'Contact Details':'Datos de contacto',
+    'Registration Received':'Registro recibido',
+    // Gate
+    'Enter the smartcard code from your invitation to begin registration.':'Introduzca el código de la tarjeta inteligente de su invitación para comenzar el registro.',
+    'Smartcard Code':'Código de tarjeta inteligente',
+    'Verify & Continue':'Verificar y continuar',
+    'Enter your smart card number':'Introduzca el número de su tarjeta inteligente',
+    // Buttons / photo
+    '📷 Take Photo':'📷 Tomar foto',
+    '🖼️ Upload':'🖼️ Subir',
+    'Passport-Size Photo (Headshot)':'Foto tamaño pasaporte (rostro)',
+    'A passport-style portrait — face centered, plain background. Auto-compressed to under 50 KB for the portal.':'Retrato tipo pasaporte — rostro centrado, fondo liso. Se comprime automáticamente a menos de 50 KB para el portal.',
+    'Passport — Front Page':'Pasaporte — página frontal',
+    'Passport — Last Page':'Pasaporte — última página',
+    'Visa / eVisa':'Visado / eVisa',
+    'Please provide the three images below. They are kept with your record for verification and the portal upload.':'Proporcione las imágenes a continuación. Se guardan con su registro para verificación y para subirlas al portal.',
+    'Photo of the visa sticker in your passport, or a clear image/screenshot of your eVisa.':'Foto del visado en su pasaporte, o una imagen/captura clara de su eVisa.',
+    'I confirm I have uploaded a clear photo of this document':'Confirmo que he subido una foto clara de este documento',
+    // Personal
+    'Registered Name (Smartcard)':'Nombre registrado (tarjeta inteligente)',
+    'Linked to your smartcard. Fill your passport name below exactly as printed.':'Vinculado a su tarjeta inteligente. Escriba su nombre del pasaporte tal como aparece impreso.',
+    'Surname':'Apellido(s)',
+    'Given Name':'Nombre(s)',
+    'Sex':'Sexo',
+    'Date of Birth':'Fecha de nacimiento',
+    'Nationality':'Nacionalidad',
+    'Special Category':'Categoría especial',
+    'Select':'Seleccione',
+    'Male':'Hombre','Female':'Mujer','Transgender':'Transgénero',
+    'Others (general)':'Otros (general)','Tibetan Refugee':'Refugiado tibetano',
+    // Addresses
+    'Address':'Dirección','City':'Ciudad','Country':'País','State':'Estado/Provincia',
+    'City/District':'Ciudad/Distrito','Pin Code':'Código postal',
+    'You may use the hotel address if you have no other reference.':'Puede usar la dirección del hotel si no tiene otra referencia.',
+    // Passport / visa
+    'Passport No':'Número de pasaporte',
+    'Place of Issue — City':'Lugar de emisión — Ciudad',
+    'Place of Issue — Country':'Lugar de emisión — País',
+    'Date of Issue':'Fecha de emisión',
+    'Valid Till':'Válido hasta',
+    'Visa No':'Número de visado',
+    'Type of Visa':'Tipo de visado',
+    'Visa Sub Type':'Subtipo de visado',
+    'Tourist':'Turista','Business':'Negocios','Employment':'Empleo','Student':'Estudiante',
+    'Medical':'Médico','Conference':'Conferencia','Other':'Otro',
+    // Arrival / departure
+    'Arrived From — Country':'Procedente de — País',
+    'Arrived From — City':'Procedente de — Ciudad',
+    'Arrived From — Place':'Procedente de — Lugar',
+    'Date of Arrival in India':'Fecha de llegada a la India',
+    'The day you landed at the airport in India.':'El día que aterrizó en el aeropuerto de la India.',
+    'Date of Arrival at Hotel':'Fecha de llegada al hotel',
+    'The day you arrive at Raj Vidya Kender.':'El día que llega a Raj Vidya Kender.',
+    'Time of Arrival':'Hora de llegada',
+    '24-hour (e.g. 22:30)':'Formato 24 h (p. ej., 22:30)',
+    'Duration of Stay (days)':'Duración de la estancia (días)',
+    'The date and time you will leave Raj Vidya Kender. This is required for the departure report.':'La fecha y hora en que saldrá de Raj Vidya Kender. Es obligatorio para el informe de salida.',
+    'Date of Departure':'Fecha de salida',
+    'Time of Departure':'Hora de salida',
+    '24-hour (e.g. 09:30)':'Formato 24 h (p. ej., 09:30)',
+    // Other
+    'Employed in India?':'¿Empleado en la India?',
+    'No':'No','Yes':'Sí',
+    'Purpose of Visit':'Motivo de la visita',
+    'Tourism':'Turismo','Spiritual / Religious':'Espiritual / religioso',
+    'Conference / Event':'Conferencia / evento','Education':'Educación',
+    'Next Destination':'Próximo destino',
+    'Inside India':'Dentro de la India','Outside India':'Fuera de la India',
+    'Which State & City / Hotel in India?':'¿Qué estado y ciudad / hotel en la India?',
+    'Residential Mobile/Phone Number':'Número de móvil / teléfono residencial',
+    'Booking Reference (Optional)':'Referencia de reserva (opcional)',
+    // Contact
+    'A filled copy of this form will be emailed to you for your records.':'Se le enviará por correo una copia completa de este formulario para sus registros.',
+    'Email':'Correo electrónico',
+    'Residential Mobile Number':'Número de móvil residencial',
+    'New / Temporary Number (in India)':'Número nuevo / temporal (en la India)',
+    'An Indian SIM or temporary number where we can reach you during your stay, if any.':'Una SIM india o número temporal donde podamos contactarlo durante su estancia, si lo tiene.',
+    'Booking Reference':'Referencia de reserva',
+    // Note / submit / done
+    'Note for Nepal / Bhutan passport holders:':'Aviso para titulares de pasaporte de Nepal / Bután:',
+    'Form C is not required for you under bilateral treaty — please inform the front desk directly instead of submitting this form.':'El Formulario C no es necesario para usted según el tratado bilateral — informe directamente en recepción en lugar de enviar este formulario.',
+    'Submit Registration':'Enviar registro',
+    'Submitting…':'Enviando…',
+    'Preparing your details':'Preparando sus datos',
+    'Uploading your photos':'Subiendo sus fotos',
+    'Done! Sending your copy…':'¡Listo! Enviando su copia…',
+    'Thank you. A filled copy has been':'Gracias. Se ha enviado una copia completa',
+    'emailed to you':'por correo electrónico',
+    'for your records — you can print it.':'para sus registros — puede imprimirla.',
+    'Please show your passport at check-in — it will take only seconds.':'Muestre su pasaporte al registrarse — solo tomará unos segundos.',
+    '✓ Verified — welcome,':'✓ Verificado — bienvenido,'
+  }
+};
+let LANG='en';
+// Capture original English text for each translatable element (leading text node).
+function i18nInit(){
+  const sel = 'h2, label, .hint, .note, option, h3, button.submit, .verified-banner, #done p';
+  document.querySelectorAll(sel).forEach(el=>{
+    if(el.hasAttribute('data-en')) return;
+    // Use the concatenated text of direct text nodes only (ignore child element text like the * span)
+    let t='';
+    el.childNodes.forEach(n=>{ if(n.nodeType===3) t+=n.textContent; });
+    t=t.trim();
+    if(t) el.setAttribute('data-en', t);
+  });
+  document.querySelectorAll('input[placeholder]').forEach(el=>{
+    if(!el.hasAttribute('data-en-ph')) el.setAttribute('data-en-ph', el.getAttribute('placeholder'));
+  });
+}
+function applyLang(lang){
+  LANG=lang;
+  const dict = lang==='es' ? I18N.es : null;
+  const tr = s => (dict && dict[s]) ? dict[s] : s;
+  document.querySelectorAll('[data-en]').forEach(el=>{
+    const en = el.getAttribute('data-en');
+    const translated = tr(en);
+    // Replace the FIRST text node, keep child elements (e.g. the required * span) intact
+    let done=false;
+    for(const n of el.childNodes){
+      if(n.nodeType===3 && n.textContent.trim()){ n.textContent = (el.tagName==='OPTION'? '':' ') + translated + ' '; done=true; break; }
+    }
+    if(!done && el.childNodes.length===0) el.textContent = translated;
+  });
+  document.querySelectorAll('[data-en-ph]').forEach(el=>{
+    el.setAttribute('placeholder', tr(el.getAttribute('data-en-ph')));
+  });
+  document.querySelectorAll('.langbtn').forEach(b=>b.classList.toggle('active', b.dataset.lang===lang));
+  document.documentElement.lang = lang;
+}
+document.querySelectorAll('.langbtn').forEach(b=>{
+  b.addEventListener('click', ()=>applyLang(b.dataset.lang));
+});
+function msg(en, es){ return LANG==='es' ? es : en; }
+
+// ---------- STEP 1: Smartcard verification ----------
+const cardInput = document.getElementById('cardInput');
+document.getElementById('verifyBtn').addEventListener('click', verify);
+cardInput.addEventListener('keydown', e=>{ if(e.key==='Enter') verify(); });
+
+async function verify(){
+  const code = cardInput.value.trim().toUpperCase();
+  const st = document.getElementById('gateStatus');
+  if(!code){ st.className='status err'; st.textContent='Please enter your smartcard code.'; return; }
+  const btn = document.getElementById('verifyBtn');
+  btn.disabled=true; btn.textContent='Verifying…';
+  st.className='status busy'; st.textContent='Checking…';
+  try{
+    const res = await fetch(SCRIPT_URL,{method:'POST',
+      body:JSON.stringify({action:'verify', smartcard:code}),
+      headers:{'Content-Type':'text/plain;charset=utf-8'}});
+    const data = await res.json();
+    if(data.ok){
+      verifiedCard = data.smartcard; verifiedName = data.name || '';
+      document.getElementById('guestName').textContent = verifiedName;
+      document.getElementById('registeredName').value = verifiedName;
+      document.getElementById('gate').style.display='none';
+      document.getElementById('formSection').style.display='block';
+      window.scrollTo(0,0);
+    } else {
+      st.className='status err'; st.textContent = data.error || 'Verification failed.';
+      btn.disabled=false; btn.textContent='Verify & Continue';
+    }
+  }catch(err){
+    st.className='status err'; st.textContent='Network error. Please try again.';
+    btn.disabled=false; btn.textContent='Verify & Continue';
+  }
+}
+
+// ---------- Passport photos: compress each, store separately ----------
+let portraitB64='', ppFrontB64='', ppLastB64='', visaB64='';
+function compress(file, cb, statusEl, maxKB, maxDim){
+  if(!file) return;
+  statusEl.className='status busy'; statusEl.textContent='Processing photo…';
+  const img=new Image();
+  img.onload=()=>{
+    const canvas=document.createElement('canvas');
+    let w=img.width,h=img.height;
+    if(w>h && w>maxDim){h=h*maxDim/w;w=maxDim;} else if(h>maxDim){w=w*maxDim/h;h=maxDim;}
+    canvas.width=w;canvas.height=h;
+    canvas.getContext('2d').drawImage(img,0,0,w,h);
+    let q=0.8,data;
+    do{ data=canvas.toDataURL('image/jpeg',q); q-=0.05; }
+    while(data.length>maxKB*1024*1.37 && q>0.2);
+    const kb=Math.round(data.length/1.37/1024);
+    statusEl.className='status done'; statusEl.textContent='Photo ready ('+kb+' KB).';
+    cb(data);
+  };
+  img.onerror=()=>{ statusEl.className='status err'; statusEl.textContent='Could not read that image — try another.'; };
+  img.src=URL.createObjectURL(file);
+}
+function bindPhoto(camId, upId, prevId, statusId, setter, maxKB, maxDim){
+  const st=document.getElementById(statusId), prev=document.getElementById(prevId);
+  const handle=file=>compress(file, data=>{ setter(data); prev.src=data; prev.style.display='block'; }, st, maxKB, maxDim);
+  document.getElementById(camId).addEventListener('change', e=>handle(e.target.files[0]));
+  document.getElementById(upId).addEventListener('change', e=>handle(e.target.files[0]));
+}
+// Portrait: passport-size headshot, ≤50 KB. Passport pages: keep readable, ~200 KB.
+bindPhoto('portraitCam','portrait','portraitPrev','portraitStatus', d=>portraitB64=d, 50, 600);
+bindPhoto('ppFrontCam','ppFront','ppFrontPrev','ppFrontStatus', d=>ppFrontB64=d, 200, 1000);
+bindPhoto('ppLastCam','ppLast','ppLastPrev','ppLastStatus', d=>ppLastB64=d, 200, 1000);
+bindPhoto('visaCam','visaImg','visaPrev','visaStatus', d=>visaB64=d, 200, 1000);
+
+// ---------- Next destination: show relevant detail field ----------
+const nextDest=document.getElementById('nextDest');
+function toggleDest(){
+  const inside = nextDest.value==='Inside India';
+  document.getElementById('destInside').style.display = inside?'block':'none';
+  document.getElementById('destOutside').style.display = inside?'none':'block';
+  document.querySelector('[name="nextInsideState"]').required = inside;
+  document.querySelector('[name="nextInsideCity"]').required = inside;
+  document.querySelector('[name="nextOutsideCountry"]').required = !inside;
+  document.querySelector('[name="nextOutsideState"]').required = !inside;
+}
+nextDest.addEventListener('change', toggleDest);
+toggleDest();
+i18nInit(); // capture English strings for translation toggle
+
+// ---------- Submit ----------
+document.getElementById('f').addEventListener('submit', async e=>{
+  e.preventDefault();
+  if(!portraitB64){ alert(msg('Please add your passport-size photo (headshot).','Añada su foto tamaño pasaporte (rostro).')); return; }
+  if(!document.getElementById('confirmPortrait').checked){ alert(msg('Please tick the confirmation box under your passport-size photo.','Marque la casilla de confirmación debajo de su foto tamaño pasaporte.')); return; }
+  if(!ppFrontB64){ alert(msg('Please add a photo of your passport front page.','Añada una foto de la página frontal del pasaporte.')); return; }
+  if(!document.getElementById('confirmFront').checked){ alert(msg('Please tick the confirmation box under your passport front page.','Marque la casilla de confirmación debajo de la página frontal del pasaporte.')); return; }
+  if(!ppLastB64){ alert(msg('Please add a photo of your passport last page.','Añada una foto de la última página del pasaporte.')); return; }
+  if(!document.getElementById('confirmLast').checked){ alert(msg('Please tick the confirmation box under your passport last page.','Marque la casilla de confirmación debajo de la última página del pasaporte.')); return; }
+  if(!visaB64){ alert(msg('Please add a photo of your Visa / eVisa.','Añada una foto de su visado / eVisa.')); return; }
+  if(!document.getElementById('confirmVisa').checked){ alert(msg('Please tick the confirmation box under your Visa / eVisa.','Marque la casilla de confirmación debajo de su visado / eVisa.')); return; }
+
+  const overlay=document.getElementById('overlay');
+  const progStep=document.getElementById('progStep');
+  const progBar=document.getElementById('progBar');
+  const setProg=(pct,msg)=>{ progBar.style.width=pct+'%'; if(msg) progStep.textContent=msg; };
+  overlay.classList.add('show');
+  setProg(15,'Preparing your details');
+
+  const btn=document.getElementById('submitBtn');
+  btn.disabled=true; btn.textContent='Submitting…';
+  const fd=new FormData(e.target);
+  const payload=Object.fromEntries(fd.entries());
+  payload.portrait=portraitB64;
+  payload.ppFront=ppFrontB64;
+  payload.ppLast=ppLastB64;
+  payload.visaImg=visaB64;
+  payload.confirmations='portrait,front,last,visa'; // all confirmed to reach here
+  payload.formLang=LANG;
+  payload.smartcard=verifiedCard;   // re-checked server-side
+
+  setProg(40,'Uploading your photos');
+  // gentle animation while the request is in flight
+  let p=40;
+  const tick=setInterval(()=>{ p=Math.min(p+3,88); setProg(p); }, 500);
+
+  try{
+    await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify(payload),
+      headers:{'Content-Type':'text/plain;charset=utf-8'}}); // text/plain avoids CORS preflight
+    clearInterval(tick);
+    setProg(100,'Done! Sending your copy…');
+    setTimeout(()=>{
+      overlay.classList.remove('show');
+      document.getElementById('f').style.display='none';
+      document.getElementById('done').style.display='block';
+      window.scrollTo(0,0);
+    }, 600);
+  }catch(err){
+    clearInterval(tick);
+    overlay.classList.remove('show');
+    alert('Submission failed. Please try again or see the front desk.');
+    btn.disabled=false; btn.textContent='Submit Registration';
+  }
+});
+</script>
+</body>
+</html>
