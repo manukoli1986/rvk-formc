@@ -2,610 +2,824 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Guest Registration — Raj Vidya Kender</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow">
+<title>Guest Registration Form — Raj Vidya Kender</title>
+<script src="config.js"></script>
 <style>
   :root{
-    --ink:#12233f; --line:#d7deea; --bg:#f5f7fb; --accent:#1a3a6b;
-    --accent2:#c9a24b; --ok:#1f7a4d; --warn:#b23a2e; --muted:#6b7688;
+    --ink:#172033; --muted:#4a5568; --line:#e3e8f0; --bg:#eef2f8;
+    --navy:#12315f; --saffron:#e07a1f; --gold:#c9a24b; --green:#0f6b3c; --warn:#7a1f1f;
   }
   *{box-sizing:border-box}
-  body{margin:0;font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
-  .wrap{max-width:860px;margin:0 auto;padding:0 24px 72px}
-  header{background:var(--accent);color:#fff;padding:26px 24px;text-align:center}
-  header .inner{max-width:860px;margin:0 auto}
-  header .crest{font-size:13px;letter-spacing:.12em;color:var(--accent2);text-transform:uppercase;font-weight:600}
-  header h1{margin:6px 0 2px;font-size:22px;font-weight:600}
-  header p{margin:0;font-size:13px;opacity:.85}
-  .langbar{margin-top:14px;display:inline-flex;gap:3px;background:rgba(255,255,255,.12);padding:3px;border-radius:7px}
-  .langbtn{background:transparent;border:none;color:#fff;font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:5px;cursor:pointer;font-family:inherit}
-  .langbtn.active{background:#fff;color:var(--accent)}
-  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px 26px;margin-top:18px;box-shadow:0 1px 3px rgba(18,35,63,.04),0 6px 20px rgba(18,35,63,.05)}
-  h2{font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);margin:0 0 16px;padding-bottom:10px;border-bottom:2px solid var(--accent2);display:flex;align-items:center;gap:8px}
-  h2::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent2);flex-shrink:0}
-  label{display:block;font-size:13px;font-weight:600;margin:12px 0 5px}
-  label .req{color:var(--warn)}
-  .hint{font-size:11.5px;color:var(--muted);font-weight:400;margin-top:3px}
-  input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:9px;font-size:15px;font-family:inherit;background:#fcfdff;transition:border-color .15s,box-shadow .15s}
-  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(26,58,107,.12);background:#fff}
-  .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  /* Phones: stack the two-column rows */
-  @media (max-width:640px){
-    .wrap{padding:0 14px 60px}
-    header{padding:22px 16px}
-    .card{padding:18px 16px}
-    .row{grid-template-columns:1fr;gap:0}
-  }
-  .scan{background:linear-gradient(135deg,#fbf6e8,#fff);border:1.5px dashed var(--accent2);border-radius:10px;padding:16px;text-align:center;margin-bottom:6px}
-  .scan b{color:var(--accent)}
-  .scan input{display:none}
-  .scan .btn{display:inline-block;margin-top:10px;background:var(--accent);color:#fff;padding:10px 20px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px}
-  .status{font-size:13px;margin-top:10px;font-weight:600}
-  .status.busy{color:var(--accent)}
-  .status.done{color:var(--ok)}
-  .status.err{color:var(--warn)}
-  .photo-prev{width:96px;height:120px;object-fit:cover;border:1px solid var(--line);border-radius:6px;margin-top:8px;display:none}
-  .confirm{display:flex;align-items:flex-start;gap:8px;margin-top:8px;font-size:12.5px;color:var(--ink);font-weight:500}
-  .confirm input{width:auto;margin-top:2px;flex-shrink:0}
-  .submit{width:100%;background:var(--accent);color:#fff;border:none;padding:16px;font-size:16px;font-weight:700;border-radius:11px;margin-top:22px;cursor:pointer;box-shadow:0 6px 18px rgba(26,58,107,.25);transition:transform .1s,box-shadow .15s,background .15s}
-  .submit:hover{background:#16335f;box-shadow:0 8px 24px rgba(26,58,107,.32)}
-  .submit:active{transform:translateY(1px)}
-  .submit:disabled{opacity:.5}
-  .done-msg{display:none;text-align:center;padding:30px 16px}
-  .done-msg .tick{width:64px;height:64px;border-radius:50%;background:var(--ok);color:#fff;font-size:34px;line-height:64px;margin:0 auto 14px}
-  .note{background:#fbf6e8;border-left:3px solid var(--accent2);padding:10px 12px;font-size:12.5px;border-radius:0 6px 6px 0;margin-top:10px}
-  #gate .card{margin-top:26px}
-  #gate .big{font-size:20px;text-align:center;letter-spacing:.18em;text-transform:uppercase;font-weight:700}
-  .verified-banner{background:#e9f5ee;border:1px solid #bfe3cd;color:var(--ok);border-radius:10px;padding:12px 14px;font-size:14px;font-weight:600;margin-top:18px;display:flex;align-items:center;gap:8px}
-  input:disabled{background:#eef1f6;color:var(--muted);cursor:not-allowed}
-  #formSection{display:none}
-  .overlay{position:fixed;inset:0;background:rgba(18,35,63,.55);display:none;align-items:center;justify-content:center;z-index:999;padding:20px}
-  .overlay.show{display:flex}
-  .overlay .box{background:#fff;border-radius:14px;padding:28px 26px;max-width:340px;width:100%;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.25)}
-  .spinner{width:44px;height:44px;border:4px solid var(--line);border-top-color:var(--accent);border-radius:50%;margin:0 auto 16px;animation:spin 1s linear infinite}
+  html,body{margin:0}
+  body{font-family:"Segoe UI",system-ui,sans-serif;background:linear-gradient(180deg,#e7eef8 0,#f7f4ee 320px);color:var(--ink);font-size:17px;line-height:1.45}
+  .warnbar{position:sticky;top:0;z-index:20;background:var(--warn);color:#fff;text-align:center;font-weight:750;padding:11px 16px;font-size:15.5px}
+  header{background:var(--navy);color:#fff;text-align:center;padding:22px 16px 16px}
+  header .kicker{margin:0;color:var(--gold);letter-spacing:.16em;text-transform:uppercase;font-size:12px;font-weight:750}
+  header h1{margin:8px 0 0;font-size:28px;font-weight:750}
+  header .sub{margin:6px 0 0;font-size:16px;opacity:.92}
+  .tricolor{display:flex;height:6px}
+  .tricolor i{flex:1;display:block}
+  .tricolor i:nth-child(1){background:#ff9933}
+  .tricolor i:nth-child(2){background:#fff}
+  .tricolor i:nth-child(3){background:#138808}
+  .langbar{display:inline-flex;gap:6px;margin-top:14px;background:rgba(255,255,255,.12);padding:4px;border-radius:12px}
+  .langbtn{min-height:44px;padding:8px 14px;border:0;border-radius:9px;background:transparent;color:#fff;font:700 16px/1 inherit;cursor:pointer}
+  .langbtn[aria-pressed="true"]{background:#fff;color:var(--navy)}
+  main{max-width:680px;margin:0 auto;padding:8px 16px 64px}
+  .card{background:#fff;border-radius:16px;box-shadow:0 1px 2px rgba(18,49,95,.06),0 12px 32px rgba(18,49,95,.08);padding:22px 22px 18px;margin-top:16px}
+  .progress{display:flex;gap:6px;margin:0 0 8px}
+  .progress i{flex:1;height:7px;border-radius:7px;background:#e3e8f0;display:block}
+  .progress i.on{background:var(--saffron)}
+  .progress i.done{background:var(--green)}
+  .stepno{margin:0;color:var(--saffron);font-weight:750;font-size:14px;letter-spacing:.04em;text-transform:uppercase}
+  h2{margin:4px 0 14px;font-size:26px;line-height:1.2}
+  label{display:block;font-weight:700;margin:14px 0 6px}
+  .req{color:#b42318}
+  input,textarea{width:100%;font:inherit;padding:12px 14px;border:1.5px solid #d5dce8;border-radius:10px;background:#fbfcff}
+  input:focus,textarea:focus,button:focus-visible{outline:3px solid #e2c57a;outline-offset:2px}
+  input[readonly]{background:#f3f5f8;color:var(--muted)}
+  .hint{color:var(--muted);font-size:14.5px;margin:4px 0 0}
+  .note{background:#fff8ea;border-left:4px solid var(--gold);padding:10px 12px;border-radius:0 10px 10px 0;margin:12px 0}
+  .err{color:var(--warn);font-weight:750;min-height:1.2em;margin:8px 0}
+  button.action{font:750 18px/1.2 inherit;min-height:54px;padding:14px 18px;border-radius:12px;border:0;cursor:pointer;background:var(--navy);color:#fff}
+  button.action.next{background:var(--green)}
+  button.action.ghost{background:#fff;color:var(--navy);border:2px solid var(--navy)}
+  button.action:disabled{opacity:.55}
+  .nav{display:flex;gap:10px;margin-top:18px}
+  .nav .action{flex:1}
+  .picks{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+  @media(max-width:560px){.picks{grid-template-columns:1fr}}
+  .pick{font:700 16px/1.3 inherit;min-height:64px;padding:12px;border-radius:12px;border:2px solid #d5dce8;background:#fff;cursor:pointer;color:var(--ink)}
+  .pick[aria-pressed="true"]{border-color:var(--saffron);background:#fff6ec;box-shadow:inset 0 0 0 1px var(--saffron)}
+  .slot{border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:14px;background:#fbfcff}
+  .slot h3{margin:0 0 4px;font-size:18px}
+  .rowbtns{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .rowbtns button{font:700 15px/1 inherit;min-height:46px;padding:10px 14px;border-radius:10px;border:0;cursor:pointer}
+  .rowbtns .cam{background:var(--navy);color:#fff}
+  .rowbtns .up{background:#fff;color:var(--navy);border:2px solid var(--navy)}
+  .shot{width:100%;max-height:240px;object-fit:contain;background:#fff;border-radius:10px;margin-top:10px;border:1px solid var(--line)}
+  .tick{width:68px;height:68px;border-radius:50%;background:var(--green);color:#fff;font-size:36px;line-height:68px;text-align:center;margin:6px auto 12px}
+  .big{font-size:30px;font-weight:750;margin:0 0 8px;word-wrap:break-word}
+  .overlay{position:fixed;inset:0;background:rgba(18,49,95,.55);display:flex;align-items:center;justify-content:center;padding:20px;z-index:30}
+  .overlay[hidden]{display:none}
+  .box{background:#fff;border-radius:16px;padding:26px 20px;max-width:340px;width:100%;text-align:center}
+  .spinner{width:44px;height:44px;border:4px solid var(--line);border-top-color:var(--navy);border-radius:50%;margin:0 auto 12px;animation:spin .9s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
-  .overlay h3{margin:0 0 4px;font-size:17px;color:var(--accent)}
-  .overlay .step{font-size:13.5px;color:var(--muted);min-height:20px;margin-top:6px}
-  .bar{height:6px;background:var(--line);border-radius:6px;margin-top:16px;overflow:hidden}
-  .bar > span{display:block;height:100%;width:0;background:var(--accent);border-radius:6px;transition:width .4s ease}
+  [hidden]{display:none !important}
 </style>
 </head>
 <body>
+<div class="warnbar" data-i18n="blacklist">Do not pass this form to anyone else. You will be blacklisted for future events.</div>
 <header>
-  <div class="inner">
-  <div class="crest">Government of India · Form C</div>
-  <h1>Raj Vidya Kender</h1>
-  <p>Shahurpur Chhatarpur, New Delhi 110074 · Foreign Guest Arrival Registration</p>
-  <div class="langbar">
-    <button type="button" class="langbtn active" data-lang="en">English</button>
+  <p class="kicker" data-i18n="gov">Government of India — Form C</p>
+  <h1 data-i18n="title">Guest Registration Form</h1>
+  <p class="sub">Raj Vidya Kender · Shahurpur Chhatarpur, New Delhi</p>
+  <div class="langbar" role="group" aria-label="Language">
+    <button type="button" class="langbtn" data-lang="en">English</button>
     <button type="button" class="langbtn" data-lang="es">Español</button>
   </div>
-  </div>
 </header>
+<div class="tricolor" aria-hidden="true"><i></i><i></i><i></i></div>
 
-<div class="wrap">
-  <!-- STEP 1: Smartcard verification gate -->
-  <div id="gate">
+<main>
+  <section class="card screen" id="gate">
+    <p class="stepno" data-i18n="private">Private registration</p>
+    <h2 data-i18n="gateTitle">Enter your registered email</h2>
+    <p data-i18n="gateBody">This form opens only for the email address Raj Vidya Kender registered. A shared link is not enough.</p>
+    <label for="gateEmail" data-i18n="email">Email</label>
+    <input id="gateEmail" type="email" autocomplete="email" inputmode="email">
+    <p class="err" id="gateError" role="alert"></p>
+    <button type="button" class="action" id="unlockBtn" data-i18n="openForm">Open my form</button>
+  </section>
+
+  <section class="card screen" id="choose" hidden>
+    <h2 data-i18n="chooseTitle">Which guest are you?</h2>
+    <p data-i18n="chooseBody">This email is registered for more than one person. Choose the right name.</p>
+    <div id="chooseList"></div>
+  </section>
+
+  <section class="card screen" id="used" hidden>
+    <div class="tick" aria-hidden="true">✓</div>
+    <h2 data-i18n="usedTitle">Already received</h2>
+    <p id="usedText"></p>
+  </section>
+
+  <section class="screen" id="wizard" hidden>
     <div class="card">
-      <h2>Verify Your Smartcard</h2>
-      <p style="font-size:13.5px;color:var(--muted);margin-top:0">
-        Enter the smartcard code from your invitation to begin registration.</p>
-      <label>Smartcard Code <span class="req">*</span></label>
-      <input id="cardInput" class="big" placeholder="Enter your smart card number" autocomplete="off"
-             style="text-transform:uppercase">
-      <div class="status" id="gateStatus" style="text-align:center"></div>
-      <button type="button" class="submit" id="verifyBtn">Verify &amp; Continue</button>
-    </div>
-  </div>
+      <div class="progress" id="progress" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+      <p class="stepno" id="stepNo"></p>
+      <p class="hint" id="who"></p>
 
-  <!-- STEP 2: The form (revealed only after verification) -->
-  <div id="formSection">
-  <div class="verified-banner">✓ Verified — welcome, <span id="guestName"></span></div>
-  <form id="f">
-    <div class="card">
-      <h2>Passport Photos</h2>
-      <div class="hint" style="margin-bottom:10px">Please provide the three images below. They are kept with your record for verification and the portal upload.</div>
+      <div class="step" data-step="0">
+        <h2 data-i18n="s1">Your details</h2>
+        <label for="fullName"><span data-i18n="name">Full name</span> <span class="req">*</span></label>
+        <input id="fullName" autocomplete="name" maxlength="120">
+        <label for="emailLocked" data-i18n="email">Email</label>
+        <input id="emailLocked" type="email" readonly>
+        <label for="contact"><span data-i18n="contact">Contact number</span> <span class="req">*</span></label>
+        <input id="contact" inputmode="tel" autocomplete="tel" maxlength="40" placeholder="+country code and number">
+        <label for="emergencyName"><span data-i18n="emergencyName">Emergency contact name</span> <span class="req">*</span></label>
+        <input id="emergencyName" maxlength="120">
+        <label for="emergencyPhone"><span data-i18n="emergencyPhone">Emergency contact number</span> <span class="req">*</span></label>
+        <input id="emergencyPhone" inputmode="tel" maxlength="40">
+        <label for="address"><span data-i18n="address">Home address</span> <span class="req">*</span></label>
+        <textarea id="address" rows="2" maxlength="300"></textarea>
+        <label for="addrCity"><span data-i18n="city">City</span> <span class="req">*</span></label>
+        <input id="addrCity" maxlength="80">
+        <label for="addrCountry"><span data-i18n="country">Country</span> <span class="req">*</span></label>
+        <input id="addrCountry" maxlength="80">
+        <div class="note" data-i18n="indiaAddr">Address in India for this stay: Raj Vidya Kender, Shahurpur Chhatarpur, New Delhi 110074.</div>
+      </div>
 
-      <label>Passport-Size Photo (Headshot) <span class="req">*</span></label>
-      <div class="hint">A passport-style portrait — face centered, plain background. Auto-compressed to under 50 KB for the portal.</div>
-      <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap">
-        <label class="btn" for="portraitCam" style="display:inline-block;background:var(--accent);color:#fff;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px">📷 Take Photo</label>
-        <label class="btn" for="portrait" style="display:inline-block;background:var(--accent2);color:#fff;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px">🖼️ Upload</label>
-      </div>
-      <input type="file" id="portraitCam" accept="image/*" capture="user" style="display:none">
-      <input type="file" id="portrait" accept="image/jpeg,image/png" style="display:none">
-      <img id="portraitPrev" class="photo-prev">
-      <div class="status" id="portraitStatus"></div>
-      <label class="confirm"><input type="checkbox" id="confirmPortrait"> <span>I confirm I have uploaded a clear photo of this document</span></label>
-
-      <label style="margin-top:16px">Passport — Front Page <span class="req">*</span></label>
-      <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap">
-        <label class="btn" for="ppFrontCam" style="display:inline-block;background:var(--accent);color:#fff;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px">📷 Take Photo</label>
-        <label class="btn" for="ppFront" style="display:inline-block;background:var(--accent2);color:#fff;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px">🖼️ Upload</label>
-      </div>
-      <input type="file" id="ppFrontCam" accept="image/*" capture="environment" style="display:none">
-      <input type="file" id="ppFront" accept="image/*" style="display:none">
-      <img id="ppFrontPrev" class="photo-prev" style="width:auto;max-width:100%;height:auto;max-height:170px">
-      <div class="status" id="ppFrontStatus"></div>
-      <label class="confirm"><input type="checkbox" id="confirmFront"> <span>I confirm I have uploaded a clear photo of this document</span></label>
-
-      <label style="margin-top:16px">Passport — Last Page <span class="req">*</span></label>
-      <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap">
-        <label class="btn" for="ppLastCam" style="display:inline-block;background:var(--accent);color:#fff;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px">📷 Take Photo</label>
-        <label class="btn" for="ppLast" style="display:inline-block;background:var(--accent2);color:#fff;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px">🖼️ Upload</label>
-      </div>
-      <input type="file" id="ppLastCam" accept="image/*" capture="environment" style="display:none">
-      <input type="file" id="ppLast" accept="image/*" style="display:none">
-      <img id="ppLastPrev" class="photo-prev" style="width:auto;max-width:100%;height:auto;max-height:170px">
-      <div class="status" id="ppLastStatus"></div>
-      <label class="confirm"><input type="checkbox" id="confirmLast"> <span>I confirm I have uploaded a clear photo of this document</span></label>
-
-      <label style="margin-top:16px">Visa / eVisa <span class="req">*</span></label>
-      <div class="hint">Photo of the visa sticker in your passport, or a clear image/screenshot of your eVisa.</div>
-      <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap">
-        <label class="btn" for="visaCam" style="display:inline-block;background:var(--accent);color:#fff;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px">📷 Take Photo</label>
-        <label class="btn" for="visaImg" style="display:inline-block;background:var(--accent2);color:#fff;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px">🖼️ Upload</label>
-      </div>
-      <input type="file" id="visaCam" accept="image/*" capture="environment" style="display:none">
-      <input type="file" id="visaImg" accept="image/*" style="display:none">
-      <img id="visaPrev" class="photo-prev" style="width:auto;max-width:100%;height:auto;max-height:170px">
-      <div class="status" id="visaStatus"></div>
-      <label class="confirm"><input type="checkbox" id="confirmVisa"> <span>I confirm I have uploaded a clear photo of this document</span></label>
-    </div>
-
-    <div class="card">
-      <h2>Personal Details</h2>
-      <label>Registered Name (Smartcard)</label>
-      <input name="registeredName" id="registeredName" disabled>
-      <div class="hint">Linked to your smartcard. Fill your passport name below exactly as printed.</div>
-      <div class="row">
-        <div><label>Surname <span class="req">*</span></label><input name="surname" required></div>
-        <div><label>Given Name <span class="req">*</span></label><input name="givenName" required></div>
-      </div>
-      <div class="row">
-        <div><label>Sex <span class="req">*</span></label>
-          <select name="sex" required><option value="">Select</option><option>Male</option><option>Female</option><option>Transgender</option></select></div>
-        <div><label>Date of Birth <span class="req">*</span></label><input type="date" name="dob" required></div>
-      </div>
-      <label>Nationality <span class="req">*</span></label><input name="nationality" required>
-      <label>Special Category</label>
-      <select name="specialCategory"><option value="Others" selected>Others (general)</option><option>Tibetan Refugee</option><option>PIO</option><option>OCI</option></select>
-    </div>
-
-    <div class="card">
-      <h2>Permanent Address (Abroad)</h2>
-      <label>Address <span class="req">*</span></label><textarea name="permAddress" rows="2" required></textarea>
-      <div class="row">
-        <div><label>City <span class="req">*</span></label><input name="permCity" required></div>
-        <div><label>Country <span class="req">*</span></label><input name="permCountry" required></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Address / Reference in India</h2>
-      <div class="hint">You may use the hotel address if you have no other reference.</div>
-      <label>Address <span class="req">*</span></label>
-      <textarea name="indiaAddress" rows="2" required>Raj Vidya Kender, Shahurpur Chhatarpur, New Delhi</textarea>
-      <div class="row">
-        <div><label>State <span class="req">*</span></label><input name="indiaState" value="Delhi" required></div>
-        <div><label>City/District <span class="req">*</span></label><input name="indiaCity" value="Delhi" required></div>
-      </div>
-      <label>Pin Code <span class="req">*</span></label><input name="indiaPin" value="110074" inputmode="numeric" required>
-    </div>
-
-    <div class="card">
-      <h2>Passport Details</h2>
-      <label>Passport No <span class="req">*</span></label><input name="passportNo" required style="text-transform:uppercase">
-      <div class="row">
-        <div><label>Place of Issue — City <span class="req">*</span></label><input name="passportCity" required></div>
-        <div><label>Place of Issue — Country <span class="req">*</span></label><input name="passportCountry" required></div>
-      </div>
-      <div class="row">
-        <div><label>Date of Issue <span class="req">*</span></label><input type="date" name="passportIssue" required></div>
-        <div><label>Valid Till <span class="req">*</span></label><input type="date" name="passportValid" required></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Visa Details</h2>
-      <label>Visa No <span class="req">*</span></label><input name="visaNo" required>
-      <div class="row">
-        <div><label>Place of Issue — City <span class="req">*</span></label><input name="visaCity" required></div>
-        <div><label>Place of Issue — Country <span class="req">*</span></label><input name="visaCountry" required></div>
-      </div>
-      <div class="row">
-        <div><label>Date of Issue <span class="req">*</span></label><input type="date" name="visaIssue" required></div>
-        <div><label>Valid Till <span class="req">*</span></label><input type="date" name="visaValid" required></div>
-      </div>
-      <div class="row">
-        <div><label>Type of Visa <span class="req">*</span></label>
-          <select name="visaType" required><option value="">Select</option>
-            <option>Tourist</option><option>Business</option><option>Employment</option><option>Student</option>
-            <option>Medical</option><option>Conference</option><option>e-Visa</option><option>OCI</option><option>Other</option></select></div>
-        <div><label>Visa Sub Type</label><input name="visaSubType"></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Arrival Information</h2>
-      <div class="row">
-        <div><label>Arrived From — Country <span class="req">*</span></label><input name="arrivedCountry" required></div>
-        <div><label>Arrived From — City <span class="req">*</span></label><input name="arrivedCity" required></div>
-      </div>
-      <label>Arrived From — Place</label><input name="arrivedPlace">
-      <label>Date of Arrival in India <span class="req">*</span></label>
-      <div class="hint">The day you landed at the airport in India.</div>
-      <input type="date" name="arrivalIndia" required>
-      <label>Date of Arrival at Hotel <span class="req">*</span></label>
-      <div class="hint">The day you arrive at Raj Vidya Kender.</div>
-      <input type="date" name="arrivalHotel" required>
-      <div class="row">
-        <div><label>Time of Arrival <span class="req">*</span></label>
-          <div class="hint">24-hour (e.g. 22:30)</div><input type="time" name="arrivalTime" required></div>
-        <div><label>Duration of Stay (days) <span class="req">*</span></label><input type="number" name="duration" min="1" inputmode="numeric" required></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Departure from RVK</h2>
-      <div class="hint" style="margin-bottom:6px">The date and time you will leave Raj Vidya Kender. This is required for the departure report.</div>
-      <div class="row">
-        <div><label>Date of Departure <span class="req">*</span></label><input type="date" name="departureDate" required></div>
-        <div><label>Time of Departure <span class="req">*</span></label>
-          <div class="hint">24-hour (e.g. 09:30)</div><input type="time" name="departureTime" required></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Other Details</h2>
-      <label>Employed in India? <span class="req">*</span></label>
-      <select name="employed" required><option value="No" selected>No</option><option>Yes</option></select>
-      <label>Purpose of Visit <span class="req">*</span></label>
-      <select name="purpose" required><option value="">Select</option>
-        <option>Tourism</option><option>Business</option><option>Spiritual / Religious</option>
-        <option>Conference / Event</option><option>Medical</option><option>Education</option><option>Other</option></select>
-      <label>Next Destination <span class="req">*</span></label>
-      <select name="nextDestination" id="nextDest" required><option value="Inside India">Inside India</option><option>Outside India</option></select>
-      <div id="destInside">
-        <div class="row">
-          <div><label>State <span class="req">*</span></label><input name="nextInsideState" placeholder="e.g. Rajasthan"></div>
-          <div><label>City <span class="req">*</span></label><input name="nextInsideCity" placeholder="e.g. Jaipur"></div>
+      <div class="step" data-step="1" hidden>
+        <h2 data-i18n="s2">Transport</h2>
+        <p data-i18n="pickupQ">Do you need a pickup from the airport?</p>
+        <div class="picks">
+          <button type="button" class="pick" data-group="pickup" data-value="Yes" data-i18n="pickupYes">Yes — pick me up</button>
+          <button type="button" class="pick" data-group="pickup" data-value="No" data-i18n="pickupNo">No — I will reach RVK myself</button>
+        </div>
+        <div id="flightBlock" hidden>
+          <label for="pickupPlace"><span data-i18n="pickupPlace">Pickup airport</span> <span class="req">*</span></label>
+          <input id="pickupPlace" maxlength="120" placeholder="Delhi airport, terminal">
+          <label for="airline"><span data-i18n="airline">Airline</span> <span class="req">*</span></label>
+          <input id="airline" maxlength="80">
+          <label for="flightNo"><span data-i18n="flightNo">Flight number</span> <span class="req">*</span></label>
+          <input id="flightNo" maxlength="20">
+          <label for="flightFrom"><span data-i18n="flightFrom">Flying from (city)</span> <span class="req">*</span></label>
+          <input id="flightFrom" maxlength="80">
+          <label for="flightDate"><span data-i18n="flightDate">Flight arrival date</span> <span class="req">*</span></label>
+          <input id="flightDate" type="date">
+          <label for="flightTime"><span data-i18n="flightTime">Flight arrival time</span> <span class="req">*</span></label>
+          <input id="flightTime" type="time">
+        </div>
+        <div id="rvkBlock" hidden>
+          <label for="rvkDate"><span data-i18n="rvkDate">Date you arrive at Raj Vidya Kender, Delhi</span> <span class="req">*</span></label>
+          <input id="rvkDate" type="date">
+          <label for="rvkTime"><span data-i18n="rvkTime">Time you arrive at Raj Vidya Kender</span> <span class="req">*</span></label>
+          <input id="rvkTime" type="time">
         </div>
       </div>
-      <div id="destOutside" style="display:none">
-        <div class="row">
-          <div><label>Country <span class="req">*</span></label><input name="nextOutsideCountry" placeholder="e.g. Singapore"></div>
-          <div><label>State <span class="req">*</span></label><input name="nextOutsideState" placeholder="State / Region"></div>
+
+      <div class="step" data-step="2" hidden>
+        <h2 data-i18n="s3">Passport, visa, and photo</h2>
+        <p class="hint" data-i18n="photoHelp">Take a photo now, or upload a scan. The numbers must be readable.</p>
+        <div class="note" data-i18n="photocopy">Please also bring a photocopy of your passport and your visa when you arrive.</div>
+        <div class="slot" data-photo="front">
+          <h3 data-i18n="ppFront">Passport — photo page</h3>
+          <div class="rowbtns">
+            <button type="button" class="cam" data-cam="front" data-i18n="take">Take photo</button>
+            <button type="button" class="up" data-up="front" data-i18n="upload">Upload</button>
+          </div>
+          <img class="shot" id="prev-front" alt="" hidden>
+        </div>
+        <div class="slot" data-photo="last">
+          <h3 data-i18n="ppLast">Passport — last page</h3>
+          <div class="rowbtns">
+            <button type="button" class="cam" data-cam="last" data-i18n="take">Take photo</button>
+            <button type="button" class="up" data-up="last" data-i18n="upload">Upload</button>
+          </div>
+          <img class="shot" id="prev-last" alt="" hidden>
+        </div>
+        <div class="slot" data-photo="visa">
+          <h3 data-i18n="ppVisa">Visa or e-Visa</h3>
+          <div class="rowbtns">
+            <button type="button" class="cam" data-cam="visa" data-i18n="take">Take photo</button>
+            <button type="button" class="up" data-up="visa" data-i18n="upload">Upload</button>
+          </div>
+          <img class="shot" id="prev-visa" alt="" hidden>
+        </div>
+        <div class="slot" data-photo="portrait">
+          <h3 data-i18n="ppFace">Your passport-size photo</h3>
+          <p class="hint" data-i18n="faceHelp">Take it now, or upload a passport-size photo. Face centered, plain background.</p>
+          <div class="rowbtns">
+            <button type="button" class="cam" data-cam="portrait" data-i18n="takeNow">Take photo now</button>
+            <button type="button" class="up" data-up="portrait" data-i18n="upload">Upload</button>
+          </div>
+          <img class="shot" id="prev-portrait" alt="" hidden>
         </div>
       </div>
+
+      <div class="step" data-step="3" hidden>
+        <h2 data-i18n="s4">Which country are you coming from?</h2>
+        <label for="comingFrom"><span data-i18n="comingFrom">Country</span> <span class="req">*</span></label>
+        <input id="comingFrom" maxlength="80" placeholder="For example, Spain">
+      </div>
+
+      <div class="step" data-step="4" hidden>
+        <h2 data-i18n="s5">Departure from Raj Vidya Kender</h2>
+        <p data-i18n="dropQ">Do you need a drop from RVK?</p>
+        <div class="picks">
+          <button type="button" class="pick" data-group="drop" data-value="Yes" data-i18n="dropYes">Yes — I need a drop</button>
+          <button type="button" class="pick" data-group="drop" data-value="No" data-i18n="dropNo">No drop needed</button>
+        </div>
+        <div id="dropBlock" hidden>
+          <label for="dropPlace"><span data-i18n="dropPlace">Where should we drop you?</span> <span class="req">*</span></label>
+          <input id="dropPlace" maxlength="160" placeholder="Airport, railway station, or address">
+          <label for="dropDate"><span data-i18n="dropDate">Drop date</span> <span class="req">*</span></label>
+          <input id="dropDate" type="date">
+          <label for="dropTime"><span data-i18n="dropTime">Drop time</span> <span class="req">*</span></label>
+          <input id="dropTime" type="time">
+        </div>
+        <p data-i18n="nextQ">After RVK, where do you go?</p>
+        <div class="picks">
+          <button type="button" class="pick" data-group="next" data-value="country" data-i18n="nextCountryBtn">Another country</button>
+          <button type="button" class="pick" data-group="next" data-value="state" data-i18n="nextStateBtn">Another state in India</button>
+        </div>
+        <div id="countryBlock" hidden>
+          <label for="nextCountry"><span data-i18n="nextCountry">Which country?</span> <span class="req">*</span></label>
+          <input id="nextCountry" maxlength="80">
+        </div>
+        <div id="stateBlock" hidden>
+          <label for="nextState"><span data-i18n="nextState">Which state?</span> <span class="req">*</span></label>
+          <input id="nextState" maxlength="80">
+          <label for="nextCity" data-i18n="nextCity">City</label>
+          <input id="nextCity" maxlength="80">
+        </div>
+        <label for="departDate"><span data-i18n="departDate">Date you leave Raj Vidya Kender</span> <span class="req">*</span></label>
+        <input id="departDate" type="date">
+        <label for="departTime"><span data-i18n="departTime">Time you leave</span> <span class="req">*</span></label>
+        <input id="departTime" type="time">
+        <div class="note" data-i18n="photocopy">Please also bring a photocopy of your passport and your visa when you arrive.</div>
+      </div>
+
+      <p class="err" id="formError" role="alert"></p>
+      <div class="nav">
+        <button type="button" class="action ghost" id="backBtn" data-i18n="back">Back</button>
+        <button type="button" class="action next" id="nextBtn" data-i18n="next">Next</button>
+      </div>
     </div>
+  </section>
 
-    <div class="card">
-      <h2>Contact Details</h2>
-      <div class="hint" style="margin-bottom:6px">A filled copy of this form will be emailed to you for your records.</div>
-      <label>Email <span class="req">*</span></label>
-      <input type="email" name="email" required placeholder="you@example.com">
-      <label>Residential Mobile/Phone Number <span class="req">*</span></label>
-      <input name="mobile" inputmode="tel" required placeholder="+country code number">
-      <label>New / Temporary Number (in India)</label>
-      <div class="hint">An Indian SIM or temporary number where we can reach you during your stay, if any.</div>
-      <input name="tempMobile" inputmode="tel" placeholder="+91 number (optional)">
-      <label>Booking Reference (Optional)</label><input name="bookingRef">
-    </div>
+  <section class="card screen" id="done" hidden>
+    <div class="tick" aria-hidden="true">✓</div>
+    <h2 data-i18n="doneTitle">Registration received</h2>
+    <p class="big" id="doneName"></p>
+    <p data-i18n="doneBody">You are finished. Bring your passport, your visa, and a photocopy of both to reception.</p>
+  </section>
+</main>
 
-    <div class="note" style="margin-top:18px"><b>Note for Nepal / Bhutan passport holders:</b> Form C is not required for you under bilateral treaty — please inform the front desk directly instead of submitting this form.</div>
-
-    <button type="submit" class="submit" id="submitBtn">Submit Registration</button>
-  </form>
-  </div><!-- /formSection -->
-
-  <div class="overlay" id="overlay">
-    <div class="box">
-      <div class="spinner"></div>
-      <h3>Submitting…</h3>
-      <div class="step" id="progStep">Preparing your details</div>
-      <div class="bar"><span id="progBar"></span></div>
-    </div>
-  </div>
-
-  <div class="done-msg" id="done">
-    <div class="tick">✓</div>
-    <h2 style="border:none;justify-content:center">Registration Received</h2>
-    <p>Thank you. A filled copy has been <b>emailed to you</b> for your records — you can print it.<br><br>
-    Please show your passport at check-in — it will take only seconds.</p>
+<div class="overlay" id="overlay" hidden>
+  <div class="box">
+    <div class="spinner" aria-hidden="true"></div>
+    <p id="overlayText" data-i18n="sending">Sending your registration. Please keep this page open.</p>
   </div>
 </div>
+<input id="camInput" type="file" accept="image/*" capture="environment" hidden>
+<input id="libInput" type="file" accept="image/*" hidden>
 
 <script>
-const SCRIPT_URL = 'PASTE_YOUR_APPS_SCRIPT_EXEC_URL_HERE';
-let verifiedCard = '';
-let verifiedName = '';
-
-/* ============ i18n: English → Spanish ============ */
-const I18N = {
+var I18N = {
+  en: {
+    blacklist:'Do not pass this form to anyone else. You will be blacklisted for future events.',
+    gov:'Government of India — Form C', title:'Guest Registration Form',
+    private:'Private registration', gateTitle:'Enter your registered email',
+    gateBody:'This form opens only for the email address Raj Vidya Kender registered. A shared link is not enough.',
+    email:'Email', openForm:'Open my form',
+    chooseTitle:'Which guest are you?', chooseBody:'This email is registered for more than one person. Choose the right name.',
+    usedTitle:'Already received', usedBody:'We already have the registration for {name}. Bring your passport, visa, and photocopies to reception.',
+    forGuest:'Registration for {name}',
+    stepOf:'Step {n} of {total}',
+    s1:'Your details', s2:'Transport', s3:'Passport, visa, and photo', s4:'Which country are you coming from?', s5:'Departure from Raj Vidya Kender',
+    name:'Full name', contact:'Contact number', emergencyName:'Emergency contact name', emergencyPhone:'Emergency contact number',
+    address:'Home address', city:'City', country:'Country',
+    indiaAddr:'Address in India for this stay: Raj Vidya Kender, Shahurpur Chhatarpur, New Delhi 110074.',
+    pickupQ:'Do you need a pickup from the airport?', pickupYes:'Yes — pick me up', pickupNo:'No — I will reach RVK myself',
+    pickupPlace:'Pickup airport', airline:'Airline', flightNo:'Flight number', flightFrom:'Flying from (city)',
+    flightDate:'Flight arrival date', flightTime:'Flight arrival time',
+    rvkDate:'Date you arrive at Raj Vidya Kender, Delhi', rvkTime:'Time you arrive at Raj Vidya Kender',
+    photoHelp:'Take a photo now, or upload a scan. The numbers must be readable.',
+    photocopy:'Please also bring a photocopy of your passport and your visa when you arrive.',
+    ppFront:'Passport — photo page', ppLast:'Passport — last page', ppVisa:'Visa or e-Visa', ppFace:'Your passport-size photo',
+    faceHelp:'Take it now, or upload a passport-size photo. Face centered, plain background.',
+    take:'Take photo', takeNow:'Take photo now', upload:'Upload',
+    comingFrom:'Country',
+    dropQ:'Do you need a drop from RVK?', dropYes:'Yes — I need a drop', dropNo:'No drop needed',
+    dropPlace:'Where should we drop you?', dropDate:'Drop date', dropTime:'Drop time',
+    nextQ:'After RVK, where do you go?', nextCountryBtn:'Another country', nextStateBtn:'Another state in India',
+    nextCountry:'Which country?', nextState:'Which state?', nextCity:'City',
+    departDate:'Date you leave Raj Vidya Kender', departTime:'Time you leave',
+    back:'Back', next:'Next', submit:'Submit registration',
+    doneTitle:'Registration received',
+    doneBody:'You are finished. Bring your passport, your visa, and a photocopy of both to reception.',
+    sending:'Sending your registration. Please keep this page open.',
+    errEmail:'Enter the email address this registration was sent to.',
+    errName:'Enter your full name.', errContact:'Enter your contact number.',
+    errEmergency:'Enter an emergency contact name and number.',
+    errAddress:'Enter your home address, city, and country.',
+    errPickup:'Say whether you need an airport pickup.',
+    errFlight:'Enter the airport, airline, flight number, city, date, and time.',
+    errRvk:'Enter the date and time you arrive at Raj Vidya Kender.',
+    errPhotos:'Add a photo of the passport photo page, the last page, the visa, and your face.',
+    errCountry:'Enter the country you are coming from.',
+    errDrop:'Say whether you need a drop, and complete those details.',
+    errNext:'Say whether you go to another country or another state, and name it.',
+    errDepart:'Enter the date and time you leave Raj Vidya Kender.',
+    errNetwork:'Could not reach the desk. Check the internet and try again.',
+    errGeneric:'Please try again, or contact reception.',
+    badImage:'That photo could not be read. Please take it again.'
+  },
   es: {
-    // Headings
-    'Verify Your Smartcard':'Verifique su tarjeta inteligente',
-    'Passport Photos':'Fotos del pasaporte',
-    'Personal Details':'Datos personales',
-    'Permanent Address (Abroad)':'Domicilio permanente (en el extranjero)',
-    'Address / Reference in India':'Dirección / referencia en la India',
-    'Passport Details':'Datos del pasaporte',
-    'Visa Details':'Datos del visado',
-    'Arrival Information':'Información de llegada',
-    'Departure from RVK':'Salida de RVK',
-    'Other Details':'Otros datos',
-    'Contact Details':'Datos de contacto',
-    'Registration Received':'Registro recibido',
-    // Gate
-    'Enter the smartcard code from your invitation to begin registration.':'Introduzca el código de la tarjeta inteligente de su invitación para comenzar el registro.',
-    'Smartcard Code':'Código de tarjeta inteligente',
-    'Verify & Continue':'Verificar y continuar',
-    'Enter your smart card number':'Introduzca el número de su tarjeta inteligente',
-    // Buttons / photo
-    '📷 Take Photo':'📷 Tomar foto',
-    '🖼️ Upload':'🖼️ Subir',
-    'Passport-Size Photo (Headshot)':'Foto tamaño pasaporte (rostro)',
-    'A passport-style portrait — face centered, plain background. Auto-compressed to under 50 KB for the portal.':'Retrato tipo pasaporte — rostro centrado, fondo liso. Se comprime automáticamente a menos de 50 KB para el portal.',
-    'Passport — Front Page':'Pasaporte — página frontal',
-    'Passport — Last Page':'Pasaporte — última página',
-    'Visa / eVisa':'Visado / eVisa',
-    'Please provide the three images below. They are kept with your record for verification and the portal upload.':'Proporcione las imágenes a continuación. Se guardan con su registro para verificación y para subirlas al portal.',
-    'Photo of the visa sticker in your passport, or a clear image/screenshot of your eVisa.':'Foto del visado en su pasaporte, o una imagen/captura clara de su eVisa.',
-    'I confirm I have uploaded a clear photo of this document':'Confirmo que he subido una foto clara de este documento',
-    // Personal
-    'Registered Name (Smartcard)':'Nombre registrado (tarjeta inteligente)',
-    'Linked to your smartcard. Fill your passport name below exactly as printed.':'Vinculado a su tarjeta inteligente. Escriba su nombre del pasaporte tal como aparece impreso.',
-    'Surname':'Apellido(s)',
-    'Given Name':'Nombre(s)',
-    'Sex':'Sexo',
-    'Date of Birth':'Fecha de nacimiento',
-    'Nationality':'Nacionalidad',
-    'Special Category':'Categoría especial',
-    'Select':'Seleccione',
-    'Male':'Hombre','Female':'Mujer','Transgender':'Transgénero',
-    'Others (general)':'Otros (general)','Tibetan Refugee':'Refugiado tibetano',
-    // Addresses
-    'Address':'Dirección','City':'Ciudad','Country':'País','State':'Estado/Provincia',
-    'City/District':'Ciudad/Distrito','Pin Code':'Código postal',
-    'You may use the hotel address if you have no other reference.':'Puede usar la dirección del hotel si no tiene otra referencia.',
-    // Passport / visa
-    'Passport No':'Número de pasaporte',
-    'Place of Issue — City':'Lugar de emisión — Ciudad',
-    'Place of Issue — Country':'Lugar de emisión — País',
-    'Date of Issue':'Fecha de emisión',
-    'Valid Till':'Válido hasta',
-    'Visa No':'Número de visado',
-    'Type of Visa':'Tipo de visado',
-    'Visa Sub Type':'Subtipo de visado',
-    'Tourist':'Turista','Business':'Negocios','Employment':'Empleo','Student':'Estudiante',
-    'Medical':'Médico','Conference':'Conferencia','Other':'Otro',
-    // Arrival / departure
-    'Arrived From — Country':'Procedente de — País',
-    'Arrived From — City':'Procedente de — Ciudad',
-    'Arrived From — Place':'Procedente de — Lugar',
-    'Date of Arrival in India':'Fecha de llegada a la India',
-    'The day you landed at the airport in India.':'El día que aterrizó en el aeropuerto de la India.',
-    'Date of Arrival at Hotel':'Fecha de llegada al hotel',
-    'The day you arrive at Raj Vidya Kender.':'El día que llega a Raj Vidya Kender.',
-    'Time of Arrival':'Hora de llegada',
-    '24-hour (e.g. 22:30)':'Formato 24 h (p. ej., 22:30)',
-    'Duration of Stay (days)':'Duración de la estancia (días)',
-    'The date and time you will leave Raj Vidya Kender. This is required for the departure report.':'La fecha y hora en que saldrá de Raj Vidya Kender. Es obligatorio para el informe de salida.',
-    'Date of Departure':'Fecha de salida',
-    'Time of Departure':'Hora de salida',
-    '24-hour (e.g. 09:30)':'Formato 24 h (p. ej., 09:30)',
-    // Other
-    'Employed in India?':'¿Empleado en la India?',
-    'No':'No','Yes':'Sí',
-    'Purpose of Visit':'Motivo de la visita',
-    'Tourism':'Turismo','Spiritual / Religious':'Espiritual / religioso',
-    'Conference / Event':'Conferencia / evento','Education':'Educación',
-    'Next Destination':'Próximo destino',
-    'Inside India':'Dentro de la India','Outside India':'Fuera de la India',
-    'Which State & City / Hotel in India?':'¿Qué estado y ciudad / hotel en la India?',
-    'Residential Mobile/Phone Number':'Número de móvil / teléfono residencial',
-    'Booking Reference (Optional)':'Referencia de reserva (opcional)',
-    // Contact
-    'A filled copy of this form will be emailed to you for your records.':'Se le enviará por correo una copia completa de este formulario para sus registros.',
-    'Email':'Correo electrónico',
-    'Residential Mobile Number':'Número de móvil residencial',
-    'New / Temporary Number (in India)':'Número nuevo / temporal (en la India)',
-    'An Indian SIM or temporary number where we can reach you during your stay, if any.':'Una SIM india o número temporal donde podamos contactarlo durante su estancia, si lo tiene.',
-    'Booking Reference':'Referencia de reserva',
-    // Note / submit / done
-    'Note for Nepal / Bhutan passport holders:':'Aviso para titulares de pasaporte de Nepal / Bután:',
-    'Form C is not required for you under bilateral treaty — please inform the front desk directly instead of submitting this form.':'El Formulario C no es necesario para usted según el tratado bilateral — informe directamente en recepción en lugar de enviar este formulario.',
-    'Submit Registration':'Enviar registro',
-    'Submitting…':'Enviando…',
-    'Preparing your details':'Preparando sus datos',
-    'Uploading your photos':'Subiendo sus fotos',
-    'Done! Sending your copy…':'¡Listo! Enviando su copia…',
-    'Thank you. A filled copy has been':'Gracias. Se ha enviado una copia completa',
-    'emailed to you':'por correo electrónico',
-    'for your records — you can print it.':'para sus registros — puede imprimirla.',
-    'Please show your passport at check-in — it will take only seconds.':'Muestre su pasaporte al registrarse — solo tomará unos segundos.',
-    '✓ Verified — welcome,':'✓ Verificado — bienvenido,'
+    blacklist:'No pase este formulario a nadie. Si lo hace, quedará en la lista negra para futuros eventos.',
+    gov:'Gobierno de la India — Formulario C', title:'Formulario de registro de huésped',
+    private:'Registro privado', gateTitle:'Escriba su correo registrado',
+    gateBody:'Este formulario se abre solo con el correo que registró Raj Vidya Kender. Un enlace compartido no basta.',
+    email:'Correo electrónico', openForm:'Abrir mi formulario',
+    chooseTitle:'¿Qué huésped es usted?', chooseBody:'Este correo está registrado para más de una persona. Elija el nombre correcto.',
+    usedTitle:'Ya recibido', usedBody:'Ya tenemos el registro de {name}. Traiga el pasaporte, el visado y las fotocopias a recepción.',
+    forGuest:'Registro de {name}',
+    stepOf:'Paso {n} de {total}',
+    s1:'Sus datos', s2:'Transporte', s3:'Pasaporte, visado y foto', s4:'¿De qué país viene?', s5:'Salida de Raj Vidya Kender',
+    name:'Nombre completo', contact:'Teléfono de contacto', emergencyName:'Nombre del contacto de emergencia', emergencyPhone:'Teléfono de emergencia',
+    address:'Domicilio', city:'Ciudad', country:'País',
+    indiaAddr:'Dirección en la India durante la estancia: Raj Vidya Kender, Shahurpur Chhatarpur, Nueva Delhi 110074.',
+    pickupQ:'¿Necesita que lo recojan en el aeropuerto?', pickupYes:'Sí — recójame', pickupNo:'No — llegaré a RVK por mi cuenta',
+    pickupPlace:'Aeropuerto de recogida', airline:'Aerolínea', flightNo:'Número de vuelo', flightFrom:'Sale de (ciudad)',
+    flightDate:'Fecha de llegada del vuelo', flightTime:'Hora de llegada del vuelo',
+    rvkDate:'Fecha en que llega a Raj Vidya Kender, Delhi', rvkTime:'Hora en que llega a Raj Vidya Kender',
+    photoHelp:'Tome una foto ahora, o suba un escaneo. Los números deben leerse.',
+    photocopy:'Traiga también una fotocopia del pasaporte y del visado al llegar.',
+    ppFront:'Pasaporte — página de la foto', ppLast:'Pasaporte — última página', ppVisa:'Visado o e-Visa', ppFace:'Su foto tamaño pasaporte',
+    faceHelp:'Tómela ahora, o suba una foto tamaño pasaporte. Rostro centrado, fondo liso.',
+    take:'Tomar foto', takeNow:'Tomar foto ahora', upload:'Subir',
+    comingFrom:'País',
+    dropQ:'¿Necesita traslado de salida desde RVK?', dropYes:'Sí — necesito traslado', dropNo:'No necesito traslado',
+    dropPlace:'¿Dónde lo dejamos?', dropDate:'Fecha del traslado', dropTime:'Hora del traslado',
+    nextQ:'Después de RVK, ¿a dónde va?', nextCountryBtn:'Otro país', nextStateBtn:'Otro estado de la India',
+    nextCountry:'¿Qué país?', nextState:'¿Qué estado?', nextCity:'Ciudad',
+    departDate:'Fecha en que sale de Raj Vidya Kender', departTime:'Hora de salida',
+    back:'Atrás', next:'Siguiente', submit:'Enviar registro',
+    doneTitle:'Registro recibido',
+    doneBody:'Ya terminó. Traiga el pasaporte, el visado y una fotocopia de ambos a recepción.',
+    sending:'Enviando su registro. No cierre esta página.',
+    errEmail:'Escriba el correo al que se envió este registro.',
+    errName:'Escriba su nombre completo.', errContact:'Escriba su teléfono.',
+    errEmergency:'Escriba el nombre y el teléfono de emergencia.',
+    errAddress:'Escriba su domicilio, ciudad y país.',
+    errPickup:'Indique si necesita recogida en el aeropuerto.',
+    errFlight:'Escriba el aeropuerto, la aerolínea, el vuelo, la ciudad, la fecha y la hora.',
+    errRvk:'Escriba la fecha y la hora en que llega a Raj Vidya Kender.',
+    errPhotos:'Añada la foto de la página del pasaporte, la última página, el visado y su rostro.',
+    errCountry:'Escriba el país del que viene.',
+    errDrop:'Indique si necesita traslado y complete esos datos.',
+    errNext:'Indique si va a otro país o a otro estado, y escríbalo.',
+    errDepart:'Escriba la fecha y la hora en que sale de Raj Vidya Kender.',
+    errNetwork:'No se pudo contactar con recepción. Revise internet e inténtelo de nuevo.',
+    errGeneric:'Inténtelo de nuevo o contacte con recepción.',
+    badImage:'Esa foto no se pudo leer. Tómela de nuevo.'
   }
 };
-let LANG='en';
-// Capture original English text for each translatable element (leading text node).
-function i18nInit(){
-  const sel = 'h2, label, .hint, .note, option, h3, button.submit, .verified-banner, #done p';
-  document.querySelectorAll(sel).forEach(el=>{
-    if(el.hasAttribute('data-en')) return;
-    // Use the concatenated text of direct text nodes only (ignore child element text like the * span)
-    let t='';
-    el.childNodes.forEach(n=>{ if(n.nodeType===3) t+=n.textContent; });
-    t=t.trim();
-    if(t) el.setAttribute('data-en', t);
+
+var params = new URLSearchParams(location.search);
+var localHost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+var PREVIEW = localHost && params.get('t') === 'preview';
+var linkToken = (params.get('t') || '').trim().toLowerCase();
+if (linkToken === 'preview') linkToken = '';
+var LANG = (navigator.language || '').toLowerCase().indexOf('es') === 0 ? 'es' : 'en';
+var guestName = '';
+var guestEmail = '';
+var activeToken = '';
+var step = 0;
+var pickup = '';
+var dropNeed = '';
+var nextKind = '';
+var photos = { front:'', last:'', visa:'', portrait:'' };
+var photoTarget = '';
+var sending = false;
+var finished = false;
+
+function t(key) {
+  var pack = I18N[LANG] || I18N.en;
+  return pack[key] || I18N.en[key] || key;
+}
+function applyI18n() {
+  document.documentElement.lang = LANG;
+  document.querySelectorAll('[data-i18n]').forEach(function (el) {
+    el.textContent = t(el.getAttribute('data-i18n'));
   });
-  document.querySelectorAll('input[placeholder]').forEach(el=>{
-    if(!el.hasAttribute('data-en-ph')) el.setAttribute('data-en-ph', el.getAttribute('placeholder'));
+  document.querySelectorAll('.langbtn').forEach(function (btn) {
+    btn.setAttribute('aria-pressed', btn.getAttribute('data-lang') === LANG ? 'true' : 'false');
+  });
+  document.title = t('title') + ' — Raj Vidya Kender';
+  var next = document.getElementById('nextBtn');
+  if (next && document.getElementById('wizard') && !document.getElementById('wizard').hidden) {
+    next.textContent = step === 4 ? t('submit') : t('next');
+  }
+}
+function scriptUrl() {
+  if (localHost && params.get('script')) return params.get('script');
+  var url = window.RVK_SCRIPT_URL || '';
+  if (!url || url.indexOf('PASTE_') !== -1) return '';
+  return url;
+}
+function showOnly(id) {
+  document.querySelectorAll('.screen').forEach(function (el) { el.hidden = el.id !== id; });
+  window.scrollTo(0, 0);
+}
+function postJson(payload) {
+  var url = scriptUrl();
+  if (!url) return Promise.resolve({ ok:false, code:'config', error:t('errGeneric') });
+  var ctrl = new AbortController();
+  var timer = setTimeout(function () { ctrl.abort(); }, 90000);
+  return fetch(url, {
+    method:'POST',
+    headers:{ 'Content-Type':'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload),
+    signal: ctrl.signal
+  }).then(function (res) { return res.text(); }).then(function (text) {
+    try { return JSON.parse(text); }
+    catch (e) { return { ok:false, code:'network' }; }
+  }).catch(function () { return { ok:false, code:'network' }; })
+    .finally(function () { clearTimeout(timer); });
+}
+function gateFail(data) {
+  var code = data && data.code;
+  if (code === 'network' || code === 'busy') return t('errNetwork');
+  if (code === 'email') return t('errEmail');
+  if (data && data.error) return data.error;
+  return t('errGeneric');
+}
+
+function openGuest(name, email, token) {
+  guestName = name || '';
+  guestEmail = email || '';
+  activeToken = token || '';
+  document.getElementById('fullName').value = guestName;
+  document.getElementById('emailLocked').value = guestEmail;
+  document.getElementById('who').textContent = t('forGuest').replace('{name}', guestName);
+  step = 0;
+  showOnly('wizard');
+  renderStep();
+}
+function renderStep() {
+  document.querySelectorAll('.step').forEach(function (el) {
+    el.hidden = Number(el.getAttribute('data-step')) !== step;
+  });
+  document.getElementById('stepNo').textContent = t('stepOf').replace('{n}', String(step + 1)).replace('{total}', '5');
+  document.getElementById('who').textContent = t('forGuest').replace('{name}', guestName);
+  document.querySelectorAll('#progress i').forEach(function (bar, i) {
+    bar.className = i < step ? 'done' : (i === step ? 'on' : '');
+  });
+  document.getElementById('backBtn').hidden = step === 0;
+  document.getElementById('nextBtn').textContent = step === 4 ? t('submit') : t('next');
+  document.getElementById('formError').textContent = '';
+  window.scrollTo(0, 0);
+}
+function setError(key) {
+  document.getElementById('formError').textContent = t(key);
+}
+
+function valText(id, min) {
+  return (document.getElementById(id).value || '').trim().length >= (min || 1);
+}
+function validate() {
+  if (step === 0) {
+    if (!valText('fullName', 2)) return 'errName';
+    if (!valText('contact', 6)) return 'errContact';
+    if (!valText('emergencyName', 2) || !valText('emergencyPhone', 6)) return 'errEmergency';
+    if (!valText('address', 3) || !valText('addrCity', 2) || !valText('addrCountry', 2)) return 'errAddress';
+  }
+  if (step === 1) {
+    if (pickup !== 'Yes' && pickup !== 'No') return 'errPickup';
+    if (pickup === 'Yes' && (!valText('pickupPlace') || !valText('airline') || !valText('flightNo') || !valText('flightFrom') || !document.getElementById('flightDate').value || !document.getElementById('flightTime').value)) return 'errFlight';
+    if (pickup === 'No' && (!document.getElementById('rvkDate').value || !document.getElementById('rvkTime').value)) return 'errRvk';
+  }
+  if (step === 2) {
+    if (!photos.front || !photos.last || !photos.visa || !photos.portrait) return 'errPhotos';
+  }
+  if (step === 3) {
+    if (!valText('comingFrom', 2)) return 'errCountry';
+  }
+  if (step === 4) {
+    if (dropNeed !== 'Yes' && dropNeed !== 'No') return 'errDrop';
+    if (dropNeed === 'Yes' && (!valText('dropPlace') || !document.getElementById('dropDate').value || !document.getElementById('dropTime').value)) return 'errDrop';
+    if (nextKind !== 'country' && nextKind !== 'state') return 'errNext';
+    if (nextKind === 'country' && !valText('nextCountry', 2)) return 'errNext';
+    if (nextKind === 'state' && !valText('nextState', 2)) return 'errNext';
+    if (!document.getElementById('departDate').value || !document.getElementById('departTime').value) return 'errDepart';
+  }
+  return '';
+}
+
+function v(id) { return (document.getElementById(id).value || '').trim(); }
+
+function submitForm() {
+  if (sending) return;
+  if (PREVIEW) {
+    document.getElementById('overlay').hidden = false;
+    document.getElementById('overlayText').textContent = t('sending');
+    setTimeout(function () {
+      document.getElementById('overlay').hidden = true;
+      finish(false);
+    }, 500);
+    return;
+  }
+  sending = true;
+  document.getElementById('nextBtn').disabled = true;
+  document.getElementById('overlay').hidden = false;
+  document.getElementById('overlayText').textContent = t('sending');
+  postJson({
+    action:'submitForm',
+    token: activeToken,
+    email: guestEmail,
+    formLang: LANG,
+    name: v('fullName'),
+    contact: v('contact'),
+    emergencyName: v('emergencyName'),
+    emergencyPhone: v('emergencyPhone'),
+    address: v('address'),
+    city: v('addrCity'),
+    country: v('addrCountry'),
+    airportPickup: pickup,
+    pickupPlace: v('pickupPlace'),
+    airline: v('airline'),
+    flightNo: v('flightNo'),
+    flightFrom: v('flightFrom'),
+    flightDate: v('flightDate'),
+    flightTime: v('flightTime'),
+    rvkDate: v('rvkDate'),
+    rvkTime: v('rvkTime'),
+    comingFrom: v('comingFrom'),
+    dropNeeded: dropNeed,
+    dropPlace: v('dropPlace'),
+    dropDate: v('dropDate'),
+    dropTime: v('dropTime'),
+    nextKind: nextKind,
+    nextCountry: v('nextCountry'),
+    nextState: v('nextState'),
+    nextCity: v('nextCity'),
+    departDate: v('departDate'),
+    departTime: v('departTime'),
+    ppFront: photos.front,
+    ppLast: photos.last,
+    visaImg: photos.visa,
+    portrait: photos.portrait
+  }).then(function (data) {
+    document.getElementById('overlay').hidden = true;
+    if (data.ok || data.code === 'used') { finish(data.code === 'used'); return; }
+    sending = false;
+    document.getElementById('nextBtn').disabled = false;
+    document.getElementById('formError').textContent = data.error || t('errNetwork');
   });
 }
-function applyLang(lang){
-  LANG=lang;
-  const dict = lang==='es' ? I18N.es : null;
-  const tr = s => (dict && dict[s]) ? dict[s] : s;
-  document.querySelectorAll('[data-en]').forEach(el=>{
-    const en = el.getAttribute('data-en');
-    const translated = tr(en);
-    // Replace the FIRST text node, keep child elements (e.g. the required * span) intact
-    let done=false;
-    for(const n of el.childNodes){
-      if(n.nodeType===3 && n.textContent.trim()){ n.textContent = (el.tagName==='OPTION'? '':' ') + translated + ' '; done=true; break; }
-    }
-    if(!done && el.childNodes.length===0) el.textContent = translated;
-  });
-  document.querySelectorAll('[data-en-ph]').forEach(el=>{
-    el.setAttribute('placeholder', tr(el.getAttribute('data-en-ph')));
-  });
-  document.querySelectorAll('.langbtn').forEach(b=>b.classList.toggle('active', b.dataset.lang===lang));
-  document.documentElement.lang = lang;
-}
-document.querySelectorAll('.langbtn').forEach(b=>{
-  b.addEventListener('click', ()=>applyLang(b.dataset.lang));
-});
-function msg(en, es){ return LANG==='es' ? es : en; }
-
-// ---------- STEP 1: Smartcard verification ----------
-const cardInput = document.getElementById('cardInput');
-document.getElementById('verifyBtn').addEventListener('click', verify);
-cardInput.addEventListener('keydown', e=>{ if(e.key==='Enter') verify(); });
-
-async function verify(){
-  const code = cardInput.value.trim().toUpperCase();
-  const st = document.getElementById('gateStatus');
-  if(!code){ st.className='status err'; st.textContent='Please enter your smartcard code.'; return; }
-  const btn = document.getElementById('verifyBtn');
-  btn.disabled=true; btn.textContent='Verifying…';
-  st.className='status busy'; st.textContent='Checking…';
-  try{
-    const res = await fetch(SCRIPT_URL,{method:'POST',
-      body:JSON.stringify({action:'verify', smartcard:code}),
-      headers:{'Content-Type':'text/plain;charset=utf-8'}});
-    const data = await res.json();
-    if(data.ok){
-      verifiedCard = data.smartcard; verifiedName = data.name || '';
-      document.getElementById('guestName').textContent = verifiedName;
-      document.getElementById('registeredName').value = verifiedName;
-      document.getElementById('gate').style.display='none';
-      document.getElementById('formSection').style.display='block';
-      window.scrollTo(0,0);
-    } else {
-      st.className='status err'; st.textContent = data.error || 'Verification failed.';
-      btn.disabled=false; btn.textContent='Verify & Continue';
-    }
-  }catch(err){
-    st.className='status err'; st.textContent='Network error. Please try again.';
-    btn.disabled=false; btn.textContent='Verify & Continue';
+function finish(already) {
+  finished = true;
+  showOnly('done');
+  document.getElementById('doneName').textContent = guestName;
+  if (already) {
+    document.querySelector('#done p[data-i18n="doneBody"]').textContent = t('usedBody').replace('{name}', guestName);
   }
 }
 
-// ---------- Passport photos: compress each, store separately ----------
-let portraitB64='', ppFrontB64='', ppLastB64='', visaB64='';
-function compress(file, cb, statusEl, maxKB, maxDim){
-  if(!file) return;
-  statusEl.className='status busy'; statusEl.textContent='Processing photo…';
-  const img=new Image();
-  img.onload=()=>{
-    const canvas=document.createElement('canvas');
-    let w=img.width,h=img.height;
-    if(w>h && w>maxDim){h=h*maxDim/w;w=maxDim;} else if(h>maxDim){w=w*maxDim/h;h=maxDim;}
-    canvas.width=w;canvas.height=h;
-    canvas.getContext('2d').drawImage(img,0,0,w,h);
-    let q=0.8,data;
-    do{ data=canvas.toDataURL('image/jpeg',q); q-=0.05; }
-    while(data.length>maxKB*1024*1.37 && q>0.2);
-    const kb=Math.round(data.length/1.37/1024);
-    statusEl.className='status done'; statusEl.textContent='Photo ready ('+kb+' KB).';
-    cb(data);
-  };
-  img.onerror=()=>{ statusEl.className='status err'; statusEl.textContent='Could not read that image — try another.'; };
-  img.src=URL.createObjectURL(file);
+document.getElementById('unlockBtn').addEventListener('click', unlock);
+document.getElementById('gateEmail').addEventListener('keydown', function (e) { if (e.key === 'Enter') unlock(); });
+function unlock() {
+  var email = v('gateEmail').toLowerCase();
+  var err = document.getElementById('gateError');
+  err.textContent = '';
+  if (!/^[^\s@,]+@[^\s@,]+\.[^\s@,]+$/.test(email)) { err.textContent = t('errEmail'); return; }
+  if (PREVIEW) { openGuest('Maria Lopez', email, 'preview'); return; }
+  document.getElementById('unlockBtn').disabled = true;
+  postJson({ action:'unlockEmail', email: email, token: linkToken }).then(function (data) {
+    document.getElementById('unlockBtn').disabled = false;
+    if (!data.ok) { err.textContent = gateFail(data); return; }
+    if (data.state === 'used') {
+      guestName = data.name || '';
+      showOnly('used');
+      document.getElementById('usedText').textContent = t('usedBody').replace('{name}', guestName);
+      return;
+    }
+    if (data.state === 'choose') {
+      guestEmail = email;
+      var list = document.getElementById('chooseList');
+      list.textContent = '';
+      (data.guests || []).forEach(function (g) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'action';
+        btn.style.marginTop = '10px';
+        btn.textContent = g.name;
+        btn.addEventListener('click', function () {
+          postJson({ action:'unlockEmail', email: email, token: g.token }).then(function (again) {
+            if (again.ok && again.state === 'open') openGuest(again.name, again.email || email, again.token);
+            else err.textContent = gateFail(again);
+          });
+        });
+        list.appendChild(btn);
+      });
+      showOnly('choose');
+      return;
+    }
+    openGuest(data.name, data.email || email, data.token);
+  });
 }
-function bindPhoto(camId, upId, prevId, statusId, setter, maxKB, maxDim){
-  const st=document.getElementById(statusId), prev=document.getElementById(prevId);
-  const handle=file=>compress(file, data=>{ setter(data); prev.src=data; prev.style.display='block'; }, st, maxKB, maxDim);
-  document.getElementById(camId).addEventListener('change', e=>handle(e.target.files[0]));
-  document.getElementById(upId).addEventListener('change', e=>handle(e.target.files[0]));
-}
-// Portrait: passport-size headshot, ≤50 KB. Passport pages: keep readable, ~200 KB.
-bindPhoto('portraitCam','portrait','portraitPrev','portraitStatus', d=>portraitB64=d, 50, 600);
-bindPhoto('ppFrontCam','ppFront','ppFrontPrev','ppFrontStatus', d=>ppFrontB64=d, 200, 1000);
-bindPhoto('ppLastCam','ppLast','ppLastPrev','ppLastStatus', d=>ppLastB64=d, 200, 1000);
-bindPhoto('visaCam','visaImg','visaPrev','visaStatus', d=>visaB64=d, 200, 1000);
 
-// ---------- Next destination: show relevant detail field ----------
-const nextDest=document.getElementById('nextDest');
-function toggleDest(){
-  const inside = nextDest.value==='Inside India';
-  document.getElementById('destInside').style.display = inside?'block':'none';
-  document.getElementById('destOutside').style.display = inside?'none':'block';
-  document.querySelector('[name="nextInsideState"]').required = inside;
-  document.querySelector('[name="nextInsideCity"]').required = inside;
-  document.querySelector('[name="nextOutsideCountry"]').required = !inside;
-  document.querySelector('[name="nextOutsideState"]').required = !inside;
-}
-nextDest.addEventListener('change', toggleDest);
-toggleDest();
-i18nInit(); // capture English strings for translation toggle
+document.querySelectorAll('.pick').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var group = btn.getAttribute('data-group');
+    var value = btn.getAttribute('data-value');
+    document.querySelectorAll('.pick[data-group="' + group + '"]').forEach(function (el) {
+      el.setAttribute('aria-pressed', el === btn ? 'true' : 'false');
+    });
+    if (group === 'pickup') {
+      pickup = value;
+      document.getElementById('flightBlock').hidden = value !== 'Yes';
+      document.getElementById('rvkBlock').hidden = value !== 'No';
+    }
+    if (group === 'drop') {
+      dropNeed = value;
+      document.getElementById('dropBlock').hidden = value !== 'Yes';
+    }
+    if (group === 'next') {
+      nextKind = value;
+      document.getElementById('countryBlock').hidden = value !== 'country';
+      document.getElementById('stateBlock').hidden = value !== 'state';
+    }
+  });
+});
 
-// ---------- Submit ----------
-document.getElementById('f').addEventListener('submit', async e=>{
+document.getElementById('backBtn').addEventListener('click', function () {
+  if (step === 0) return;
+  step -= 1;
+  renderStep();
+});
+document.getElementById('nextBtn').addEventListener('click', function () {
+  var problem = validate();
+  if (problem) { setError(problem); return; }
+  if (step < 4) { step += 1; renderStep(); return; }
+  submitForm();
+});
+
+document.querySelectorAll('.langbtn').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    LANG = btn.getAttribute('data-lang');
+    applyI18n();
+    if (!document.getElementById('wizard').hidden) renderStep();
+    if (!document.getElementById('used').hidden) {
+      document.getElementById('usedText').textContent = t('usedBody').replace('{name}', guestName);
+    }
+  });
+});
+
+function orientationFromBuffer(buf) {
+  var view = new DataView(buf);
+  if (view.byteLength < 2 || view.getUint16(0, false) !== 0xFFD8) return 1;
+  var offset = 2, length = view.byteLength;
+  while (offset + 4 < length) {
+    var marker = view.getUint16(offset, false);
+    offset += 2;
+    if (marker === 0xFFE1) {
+      if (offset + 8 > length || view.getUint32(offset + 2, false) !== 0x45786966) return 1;
+      var tiff = offset + 8;
+      var little = view.getUint16(tiff, false) === 0x4949;
+      if (view.getUint16(tiff + 2, little) !== 0x002A) return 1;
+      var dir = tiff + view.getUint32(tiff + 4, little);
+      if (dir + 2 > length) return 1;
+      var entries = view.getUint16(dir, little);
+      dir += 2;
+      for (var i = 0; i < entries; i++) {
+        var entry = dir + i * 12;
+        if (entry + 12 > length) return 1;
+        if (view.getUint16(entry, little) === 0x0112) return view.getUint16(entry + 8, little);
+      }
+      return 1;
+    }
+    if ((marker & 0xFF00) !== 0xFF00) break;
+    offset += view.getUint16(offset, false);
+  }
+  return 1;
+}
+function preparePhoto(file, maxKB, maxDim) {
+  return new Promise(function (resolve, reject) {
+    var reader = new FileReader();
+    reader.onload = function () {
+      var orientation = 1;
+      try { orientation = orientationFromBuffer(reader.result) || 1; } catch (e) {}
+      var url = URL.createObjectURL(file);
+      var img = new Image();
+      img.onload = function () {
+        URL.revokeObjectURL(url);
+        var w = img.naturalWidth || img.width, h = img.naturalHeight || img.height;
+        var longer = Math.max(w, h);
+        if (longer > maxDim) { var scale = maxDim / longer; w = Math.round(w * scale); h = Math.round(h * scale); }
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        if (orientation > 4 && orientation < 9) { canvas.width = h; canvas.height = w; }
+        else { canvas.width = w; canvas.height = h; }
+        switch (orientation) {
+          case 2: ctx.transform(-1, 0, 0, 1, w, 0); break;
+          case 3: ctx.transform(-1, 0, 0, -1, w, h); break;
+          case 4: ctx.transform(1, 0, 0, -1, 0, h); break;
+          case 5: ctx.transform(0, 1, 1, 0, 0, 0); break;
+          case 6: ctx.transform(0, 1, -1, 0, h, 0); break;
+          case 7: ctx.transform(0, -1, -1, 0, h, w); break;
+          case 8: ctx.transform(0, -1, 1, 0, 0, w); break;
+          default: break;
+        }
+        ctx.drawImage(img, 0, 0, w, h);
+        var q = 0.82, data = canvas.toDataURL('image/jpeg', q);
+        while (data.length > maxKB * 1024 * 1.37 && q > 0.42) { q -= 0.08; data = canvas.toDataURL('image/jpeg', q); }
+        if (data.indexOf('data:image/jpeg') !== 0) reject(new Error('photo'));
+        else resolve(data);
+      };
+      img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('photo')); };
+      img.src = url;
+    };
+    reader.onerror = function () { reject(new Error('photo')); };
+    reader.readAsArrayBuffer(file.slice(0, 131072));
+  });
+}
+var LIMITS = { front:[250,1600], last:[250,1600], visa:[250,1600], portrait:[50,800] };
+function useFile(file) {
+  if (!file || !photoTarget) return;
+  var id = photoTarget;
+  var lim = LIMITS[id];
+  preparePhoto(file, lim[0], lim[1]).then(function (data) {
+    photos[id] = data;
+    var img = document.getElementById('prev-' + id);
+    img.src = data;
+    img.hidden = false;
+    img.alt = t('ppFace');
+    document.getElementById('formError').textContent = '';
+  }).catch(function () {
+    document.getElementById('formError').textContent = t('badImage');
+  });
+  document.getElementById('camInput').value = '';
+  document.getElementById('libInput').value = '';
+}
+document.querySelectorAll('[data-cam]').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    photoTarget = btn.getAttribute('data-cam');
+    var cam = document.getElementById('camInput');
+    cam.setAttribute('capture', photoTarget === 'portrait' ? 'user' : 'environment');
+    cam.click();
+  });
+});
+document.querySelectorAll('[data-up]').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    photoTarget = btn.getAttribute('data-up');
+    document.getElementById('libInput').click();
+  });
+});
+document.getElementById('camInput').addEventListener('change', function (e) { useFile(e.target.files && e.target.files[0]); });
+document.getElementById('libInput').addEventListener('change', function (e) { useFile(e.target.files && e.target.files[0]); });
+
+window.addEventListener('beforeunload', function (e) {
+  if (PREVIEW || finished || document.getElementById('wizard').hidden) return;
+  if (!v('fullName') && !photos.front) return;
   e.preventDefault();
-  if(!portraitB64){ alert(msg('Please add your passport-size photo (headshot).','Añada su foto tamaño pasaporte (rostro).')); return; }
-  if(!document.getElementById('confirmPortrait').checked){ alert(msg('Please tick the confirmation box under your passport-size photo.','Marque la casilla de confirmación debajo de su foto tamaño pasaporte.')); return; }
-  if(!ppFrontB64){ alert(msg('Please add a photo of your passport front page.','Añada una foto de la página frontal del pasaporte.')); return; }
-  if(!document.getElementById('confirmFront').checked){ alert(msg('Please tick the confirmation box under your passport front page.','Marque la casilla de confirmación debajo de la página frontal del pasaporte.')); return; }
-  if(!ppLastB64){ alert(msg('Please add a photo of your passport last page.','Añada una foto de la última página del pasaporte.')); return; }
-  if(!document.getElementById('confirmLast').checked){ alert(msg('Please tick the confirmation box under your passport last page.','Marque la casilla de confirmación debajo de la última página del pasaporte.')); return; }
-  if(!visaB64){ alert(msg('Please add a photo of your Visa / eVisa.','Añada una foto de su visado / eVisa.')); return; }
-  if(!document.getElementById('confirmVisa').checked){ alert(msg('Please tick the confirmation box under your Visa / eVisa.','Marque la casilla de confirmación debajo de su visado / eVisa.')); return; }
-
-  const overlay=document.getElementById('overlay');
-  const progStep=document.getElementById('progStep');
-  const progBar=document.getElementById('progBar');
-  const setProg=(pct,msg)=>{ progBar.style.width=pct+'%'; if(msg) progStep.textContent=msg; };
-  overlay.classList.add('show');
-  setProg(15,'Preparing your details');
-
-  const btn=document.getElementById('submitBtn');
-  btn.disabled=true; btn.textContent='Submitting…';
-  const fd=new FormData(e.target);
-  const payload=Object.fromEntries(fd.entries());
-  payload.portrait=portraitB64;
-  payload.ppFront=ppFrontB64;
-  payload.ppLast=ppLastB64;
-  payload.visaImg=visaB64;
-  payload.confirmations='portrait,front,last,visa'; // all confirmed to reach here
-  payload.formLang=LANG;
-  payload.smartcard=verifiedCard;   // re-checked server-side
-
-  setProg(40,'Uploading your photos');
-  // gentle animation while the request is in flight
-  let p=40;
-  const tick=setInterval(()=>{ p=Math.min(p+3,88); setProg(p); }, 500);
-
-  try{
-    await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify(payload),
-      headers:{'Content-Type':'text/plain;charset=utf-8'}}); // text/plain avoids CORS preflight
-    clearInterval(tick);
-    setProg(100,'Done! Sending your copy…');
-    setTimeout(()=>{
-      overlay.classList.remove('show');
-      document.getElementById('f').style.display='none';
-      document.getElementById('done').style.display='block';
-      window.scrollTo(0,0);
-    }, 600);
-  }catch(err){
-    clearInterval(tick);
-    overlay.classList.remove('show');
-    alert('Submission failed. Please try again or see the front desk.');
-    btn.disabled=false; btn.textContent='Submit Registration';
-  }
+  e.returnValue = '';
 });
+
+applyI18n();
+showOnly('gate');
+if (PREVIEW) {
+  window.__rvkTest = {
+    fill: function () {
+      document.getElementById('fullName').value = 'Maria Lopez';
+      document.getElementById('contact').value = '+34 600 000 000';
+      document.getElementById('emergencyName').value = 'Ana Lopez';
+      document.getElementById('emergencyPhone').value = '+34 611 111 111';
+      document.getElementById('address').value = '12 Calle Mayor';
+      document.getElementById('addrCity').value = 'Madrid';
+      document.getElementById('addrCountry').value = 'Spain';
+      document.querySelector('.pick[data-group="pickup"][data-value="Yes"]').click();
+      document.getElementById('pickupPlace').value = 'Delhi Airport T3';
+      document.getElementById('airline').value = 'Air India';
+      document.getElementById('flightNo').value = 'AI146';
+      document.getElementById('flightFrom').value = 'Madrid';
+      document.getElementById('flightDate').value = '2026-11-02';
+      document.getElementById('flightTime').value = '14:30';
+      document.getElementById('comingFrom').value = 'Spain';
+      document.querySelector('.pick[data-group="drop"][data-value="No"]').click();
+      document.querySelector('.pick[data-group="next"][data-value="country"]').click();
+      document.getElementById('nextCountry').value = 'Spain';
+      document.getElementById('departDate').value = '2026-11-09';
+      document.getElementById('departTime').value = '10:00';
+    },
+    photo: function (id) {
+      var canvas = document.createElement('canvas');
+      canvas.width = id === 'portrait' ? 600 : 1200;
+      canvas.height = id === 'portrait' ? 800 : 800;
+      var ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#f4f7fb';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#12315f';
+      ctx.font = 'bold 42px sans-serif';
+      ctx.fillText(id.toUpperCase(), 40, 120);
+      ctx.fillText('P1234567', 40, 190);
+      return new Promise(function (resolve) {
+        canvas.toBlob(function (blob) {
+          photoTarget = id;
+          useFile(blob);
+          setTimeout(resolve, 400);
+        }, 'image/jpeg', 0.9);
+      });
+    }
+  };
+}
 </script>
 </body>
 </html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow">
+<title>Staff — Raj Vidya Kender</title>
+<script src="config.js"></script>
+<style>
+  :root{
+    --ink:#172033; --muted:#3d4a5c; --line:#e4ddd0; --bg:#f6f1e8;
+    --accent:#1a3a6b; --gold:#e2c57a; --ok:#0f6b3c; --warn:#8a2b22;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",system-ui,sans-serif;font-size:17px;line-height:1.45}
+  header{background:var(--accent);color:#fff;padding:18px 16px}
+  header .org{margin:0;color:var(--gold);font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+  header h1{margin:6px 0 0;font-size:26px;font-weight:700}
+  main{max-width:680px;margin:0 auto;padding:22px 16px 64px}
+  h2{font-size:20px;margin:0 0 8px}
+  label{display:block;font-weight:700;margin:14px 0 6px}
+  input{width:100%;font:inherit;padding:12px 14px;border:1px solid #cfc6b8;border-radius:10px;background:#fff}
+  input:focus-visible,button:focus-visible{outline:3px solid #9a7424;outline-offset:2px}
+  button{font:700 17px/1.2 inherit;min-height:48px;padding:12px 16px;border-radius:10px;border:0;cursor:pointer;background:var(--accent);color:#fff}
+  button.secondary{background:#fff;color:var(--accent);border:2px solid var(--accent)}
+  button.quiet{background:transparent;color:var(--accent);text-decoration:underline;min-height:44px}
+  button:disabled{opacity:.55}
+  .row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:12px}
+  .note{color:var(--muted);font-size:15px}
+  .okbox{background:#e7f5ee;border:1px solid #b7dfc8;border-radius:12px;padding:14px;margin-top:14px}
+  .warnbox{background:#fff6d8;border:1px solid #e2c57a;border-radius:12px;padding:14px;margin-top:14px}
+  .err{color:var(--warn);font-weight:700;min-height:1.2em}
+  .top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .meta{color:var(--muted);font-size:15px;margin:0}
+  .linkbox{width:100%;font-size:14px;margin-top:8px}
+  [hidden]{display:none !important}
+</style>
+</head>
+<body>
+<header>
+  <p class="org">Raj Vidya Kender · Staff</p>
+  <h1>Send the registration form</h1>
+</header>
+<main>
+  <section id="setup" hidden>
+    <div class="warnbox">Add the web app URL to <b>config.js</b> and upload that file next to this page.</div>
+  </section>
+
+  <section id="locked">
+    <p>This page is for reception. The guest must enter the email you register here. A shared link does not open the form by itself.</p>
+    <label for="pin">Staff password</label>
+    <input id="pin" type="password" autocomplete="current-password">
+    <div class="row"><button type="button" id="unlockBtn">Unlock</button></div>
+    <p class="err" id="lockError" role="alert"></p>
+  </section>
+
+  <section id="app" hidden>
+    <div class="top">
+      <p class="note" id="intro"></p>
+      <button type="button" class="quiet" id="lockBtn">Lock</button>
+    </div>
+    <div class="card">
+      <h2>New guest</h2>
+      <label for="name">Guest’s full name</label>
+      <input id="name" autocomplete="name" maxlength="120">
+      <label for="email">Email that is allowed to open the form</label>
+      <input id="email" type="email" autocomplete="email" inputmode="email" maxlength="120">
+      <p class="note">Nepal and Bhutan passports do not need a link.</p>
+      <div class="row"><button type="button" id="sendBtn">Send registration link</button></div>
+      <p class="err" id="formError" role="alert"></p>
+      <div id="success" hidden></div>
+    </div>
+    <div class="top" style="margin-top:22px">
+      <h2>Recent links</h2>
+      <button type="button" class="secondary" id="refreshBtn">Refresh</button>
+    </div>
+    <label for="search">Search</label>
+    <input id="search" placeholder="Name or email" autocomplete="off">
+    <div id="list"></div>
+  </section>
+</main>
+<script>
+var PIN_KEY = 'rvkStaffPin';
+var params = new URLSearchParams(location.search);
+var localHost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+var pin = '';
+var invites = [];
+var validDays = 14;
+var busy = false;
+
+var STATUS = {
+  SENT: 'Link sent',
+  OPENED: 'Link opened',
+  USED: 'Photos received',
+  REPLACED: 'Replaced by a newer link',
+  EXPIRED: 'Expired'
+};
+
+function scriptUrl() {
+  if (localHost && params.get('script')) return params.get('script');
+  var url = window.RVK_SCRIPT_URL || '';
+  if (!url || url.indexOf('PASTE_') !== -1) return '';
+  return url;
+}
+function safeLink(url) {
+  if (/^https:\/\//i.test(url)) return url;
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?\//i.test(url)) return url;
+  return '';
+}
+function postJson(payload) {
+  var url = scriptUrl();
+  if (!url) return Promise.resolve({ ok: false, code: 'config', error: 'Add the web app URL to config.js.' });
+  var ctrl = new AbortController();
+  var timer = setTimeout(function () { ctrl.abort(); }, 60000);
+  return fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload),
+    signal: ctrl.signal
+  }).then(function (res) { return res.text(); }).then(function (text) {
+    try { return JSON.parse(text); }
+    catch (e) { return { ok: false, code: 'network', error: 'Could not reach the server.' }; }
+  }).catch(function () {
+    return { ok: false, code: 'network', error: 'Could not reach the server.' };
+  }).finally(function () { clearTimeout(timer); });
+}
+
+function showLocked(message) {
+  document.getElementById('locked').hidden = false;
+  document.getElementById('app').hidden = true;
+  document.getElementById('lockError').textContent = message || '';
+}
+function showApp() {
+  document.getElementById('locked').hidden = true;
+  document.getElementById('app').hidden = false;
+  document.getElementById('intro').textContent = 'Only this email can open the form, even if the link is shared. It works once and expires after ' + validDays + ' days.';
+}
+
+function unlock(password) {
+  if (busy) return;
+  busy = true;
+  document.getElementById('unlockBtn').disabled = true;
+  postJson({ action: 'listInvites', pin: password }).then(function (data) {
+    busy = false;
+    document.getElementById('unlockBtn').disabled = false;
+    if (!data.ok) {
+      if (data.code === 'pin' || data.code === 'locked' || data.code === 'config') {
+        sessionStorage.removeItem(PIN_KEY);
+        pin = '';
+      }
+      showLocked(data.error || 'Could not unlock.');
+      return;
+    }
+    pin = password;
+    sessionStorage.setItem(PIN_KEY, password);
+    validDays = data.validDays || 14;
+    invites = data.invites || [];
+    showApp();
+    renderList();
+  });
+}
+
+function refresh() {
+  if (!pin || busy) return;
+  busy = true;
+  postJson({ action: 'listInvites', pin: pin }).then(function (data) {
+    busy = false;
+    if (!data.ok) {
+      if (data.code === 'pin' || data.code === 'locked') {
+        sessionStorage.removeItem(PIN_KEY);
+        pin = '';
+        showLocked(data.error || 'Please enter the password again.');
+      } else {
+        document.getElementById('formError').textContent = data.error || 'Could not refresh.';
+      }
+      return;
+    }
+    invites = data.invites || [];
+    validDays = data.validDays || validDays;
+    renderList();
+  });
+}
+
+function renderList() {
+  var q = document.getElementById('search').value.trim().toLowerCase();
+  var list = document.getElementById('list');
+  list.textContent = '';
+  var shown = 0;
+  invites.forEach(function (item) {
+    var hay = (item.name + ' ' + item.email).toLowerCase();
+    if (q && hay.indexOf(q) === -1) return;
+    shown += 1;
+    list.appendChild(card(item));
+  });
+  if (!shown) {
+    var empty = document.createElement('p');
+    empty.className = 'note';
+    empty.textContent = invites.length ? 'No matches.' : 'No links sent yet.';
+    list.appendChild(empty);
+  }
+}
+
+function card(item) {
+  var el = document.createElement('article');
+  el.className = 'card';
+  var h = document.createElement('h2');
+  h.textContent = item.name || 'Guest';
+  var mail = document.createElement('p');
+  mail.className = 'meta';
+  mail.textContent = item.email || '';
+  var meta = document.createElement('p');
+  meta.className = 'meta';
+  meta.textContent = (STATUS[item.status] || item.status || '') + (item.expires ? ' · until ' + item.expires : '') + (item.created ? ' · sent ' + item.created : '');
+  el.appendChild(h);
+  el.appendChild(mail);
+  el.appendChild(meta);
+  var row = document.createElement('div');
+  row.className = 'row';
+  var link = safeLink(item.link || '');
+  if (link && (item.status === 'SENT' || item.status === 'OPENED')) {
+    row.appendChild(action('Copy link', function (btn) { copyLink(link, btn); }));
+    row.appendChild(action('Send the email again', function () { resend(item); }, true));
+    row.appendChild(action('Open on this tablet', function () { openTablet(link); }, true));
+  } else {
+    row.appendChild(action('Send a new link', function () { sendNew(item); }));
+  }
+  el.appendChild(row);
+  return el;
+}
+function action(label, fn, secondary) {
+  var btn = document.createElement('button');
+  btn.type = 'button';
+  btn.textContent = label;
+  if (secondary) btn.className = 'secondary';
+  btn.addEventListener('click', function () { fn(btn); });
+  return btn;
+}
+function copyLink(link, btn) {
+  var done = function () {
+    var old = btn.textContent;
+    btn.textContent = 'Copied';
+    setTimeout(function () { btn.textContent = old; }, 1600);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(link).then(done).catch(function () { fallbackCopy(link); done(); });
+  } else {
+    fallbackCopy(link);
+    done();
+  }
+}
+function fallbackCopy(link) {
+  var ta = document.createElement('textarea');
+  ta.value = link;
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch (e) {}
+  ta.remove();
+}
+function openTablet(link) {
+  sessionStorage.removeItem(PIN_KEY);
+  pin = '';
+  location.href = link;
+}
+
+function showResult(data) {
+  var box = document.getElementById('success');
+  box.hidden = false;
+  box.className = data.emailSent ? 'okbox' : 'warnbox';
+  box.textContent = '';
+  var p = document.createElement('p');
+  p.textContent = data.emailSent
+    ? 'Email sent to ' + data.email + '. The link is only for ' + data.name + '. It works once, until ' + (data.expires || '') + '.'
+    : 'The email could not be sent. Copy the link and send it to ' + data.email + ' yourself.' + (data.emailError ? ' (' + data.emailError + ')' : '');
+  box.appendChild(p);
+  var link = safeLink(data.link || '');
+  if (link) {
+    var input = document.createElement('input');
+    input.className = 'linkbox';
+    input.readOnly = true;
+    input.value = link;
+    box.appendChild(input);
+    var row = document.createElement('div');
+    row.className = 'row';
+    row.appendChild(action('Copy link', function (btn) { copyLink(link, btn); }));
+    row.appendChild(action('Open on this tablet', function () { openTablet(link); }, true));
+    box.appendChild(row);
+  }
+}
+
+function sendNewGuest() {
+  if (busy) return;
+  var name = document.getElementById('name').value.trim();
+  var email = document.getElementById('email').value.trim();
+  var err = document.getElementById('formError');
+  err.textContent = '';
+  if (name.length < 2) { err.textContent = 'Enter the full name.'; return; }
+  if (!/^[^\s@,]+@[^\s@,]+\.[^\s@,]+$/.test(email)) { err.textContent = 'Enter a valid email address.'; return; }
+  busy = true;
+  document.getElementById('sendBtn').disabled = true;
+  postJson({ action: 'createInvite', pin: pin, name: name, email: email }).then(function (data) {
+    busy = false;
+    document.getElementById('sendBtn').disabled = false;
+    if (!data.ok) {
+      if (data.code === 'pin' || data.code === 'locked') {
+        sessionStorage.removeItem(PIN_KEY);
+        showLocked(data.error || 'Please enter the password again.');
+        return;
+      }
+      err.textContent = data.error || 'Could not send the link.';
+      return;
+    }
+    document.getElementById('name').value = '';
+    document.getElementById('email').value = '';
+    showResult(data);
+    refresh();
+    document.getElementById('name').focus();
+  });
+}
+function resend(item) {
+  if (busy || !item.token) return;
+  busy = true;
+  postJson({ action: 'resendInvite', pin: pin, token: item.token }).then(function (data) {
+    busy = false;
+    if (!data.ok) {
+      document.getElementById('formError').textContent = data.error || 'Could not send the email again.';
+      return;
+    }
+    showResult(data);
+    refresh();
+  });
+}
+function sendNew(item) {
+  if (item.status === 'USED') {
+    if (!window.confirm('Photos are already in the sheet. Send a new link only if they must take the photos again.')) return;
+  }
+  if (busy) return;
+  busy = true;
+  postJson({ action: 'createInvite', pin: pin, name: item.name, email: item.email }).then(function (data) {
+    busy = false;
+    if (!data.ok) {
+      document.getElementById('formError').textContent = data.error || 'Could not send a new link.';
+      return;
+    }
+    showResult(data);
+    refresh();
+  });
+}
+
+document.getElementById('unlockBtn').addEventListener('click', function () {
+  unlock(document.getElementById('pin').value);
+});
+document.getElementById('pin').addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') unlock(document.getElementById('pin').value);
+});
+document.getElementById('sendBtn').addEventListener('click', sendNewGuest);
+document.getElementById('email').addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') sendNewGuest();
+});
+document.getElementById('lockBtn').addEventListener('click', function () {
+  sessionStorage.removeItem(PIN_KEY);
+  pin = '';
+  document.getElementById('pin').value = '';
+  showLocked('');
+});
+document.getElementById('refreshBtn').addEventListener('click', refresh);
+document.getElementById('search').addEventListener('input', renderList);
+
+if (!scriptUrl()) {
+  document.getElementById('setup').hidden = false;
+  document.getElementById('locked').hidden = true;
+} else {
+  var saved = sessionStorage.getItem(PIN_KEY);
+  if (saved) unlock(saved);
+}
+</script>
+</body>
+</html>
