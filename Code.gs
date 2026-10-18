@@ -166,6 +166,9 @@ function handle_(d) {
   if (action === 'listInvites') return listInvites_(d.pin);
   if (action === 'createInvite') return createInvite_(d);
   if (action === 'resendInvite') return resendInvite_(d);
+  if (action === 'findGuests') return findGuests_(d);
+  if (action === 'getGuest') return getGuest_(d);
+  if (action === 'updateGuest') return updateGuest_(d);
   return { ok: false, code: 'bad-request', error: 'Unknown action.' };
 }
 
@@ -289,14 +292,7 @@ function submitForm_(d) {
   if (contact.length < 6) return { ok: false, code: 'missing', field: 'contact', error: 'Enter your contact number.' };
   if (emergencyName.length < 2 || emergencyPhone.length < 6) return { ok: false, code: 'missing', field: 'emergency', error: 'Enter an emergency contact name and number.' };
   if (!address || !city || !country) return { ok: false, code: 'missing', field: 'address', error: 'Enter your home address, city, and country.' };
-  if (pickup !== 'Yes' && pickup !== 'No') return { ok: false, code: 'missing', field: 'pickup', error: 'Say whether you need an airport pickup.' };
-  if (pickup === 'Yes') {
-    if (!oneLine_(d.pickupPlace) || !oneLine_(d.airline) || !oneLine_(d.flightNo) || !oneLine_(d.flightFrom) || !oneLine_(d.flightDate) || !oneLine_(d.flightTime)) {
-      return { ok: false, code: 'missing', field: 'flight', error: 'Enter the full flight and pickup details.' };
-    }
-  } else if (!oneLine_(d.rvkDate) || !oneLine_(d.rvkTime)) {
-    return { ok: false, code: 'missing', field: 'rvk', error: 'Enter the date and time you will arrive at Raj Vidya Kender.' };
-  }
+  if (pickup && pickup !== 'Yes' && pickup !== 'No') return { ok: false, code: 'missing', field: 'pickup', error: 'Say whether you need an airport pickup.' };
   if (!comingFrom) return { ok: false, code: 'missing', field: 'comingFrom', error: 'Enter the country you are coming from.' };
   if (dropNeeded !== 'Yes' && dropNeeded !== 'No') return { ok: false, code: 'missing', field: 'drop', error: 'Say whether you need a drop from Raj Vidya Kender.' };
   if (dropNeeded === 'Yes' && (!oneLine_(d.dropPlace) || !oneLine_(d.dropDate) || !oneLine_(d.dropTime))) {
@@ -306,17 +302,13 @@ function submitForm_(d) {
   if (nextKind === 'country' && !oneLine_(d.nextCountry)) return { ok: false, code: 'missing', field: 'next', error: 'Enter the country you will go to.' };
   if (nextKind === 'state' && !oneLine_(d.nextState)) return { ok: false, code: 'missing', field: 'next', error: 'Enter the state you will go to.' };
   if (!oneLine_(d.departDate) || !oneLine_(d.departTime)) return { ok: false, code: 'missing', field: 'depart', error: 'Enter the date and time you leave Raj Vidya Kender.' };
-  if (!isJpeg_(d.ppFront) || !isJpeg_(d.ppLast) || !isJpeg_(d.visaImg) || !isJpeg_(d.portrait)) {
-    return { ok: false, code: 'missing-photo', error: 'Add the passport, visa, and your photo.' };
-  }
-
-  const folder = getPhotoFolder_();
+  const photos = { folder: null };
   const stamp = Utilities.formatDate(new Date(), TIMEZONE, 'yyyyMMdd_HHmmss');
   const base = safeName_(name) + '_' + stamp;
-  const frontLink = saveImage_(folder, d.ppFront, 'passport_front_' + base + '.jpg');
-  const lastLink = saveImage_(folder, d.ppLast, 'passport_last_' + base + '.jpg');
-  const visaLink = saveImage_(folder, d.visaImg, 'visa_' + base + '.jpg');
-  const portraitLink = saveImage_(folder, d.portrait, 'portrait_' + base + '.jpg');
+  const frontLink = optionalImage_(photos, d.ppFront, 'passport_front_' + base + '.jpg');
+  const lastLink = optionalImage_(photos, d.ppLast, 'passport_last_' + base + '.jpg');
+  const visaLink = optionalImage_(photos, d.visaImg, 'visa_' + base + '.jpg');
+  const portraitLink = optionalImage_(photos, d.portrait, 'portrait_' + base + '.jpg');
   const nextDetail = nextKind === 'country'
     ? oneLine_(d.nextCountry)
     : [oneLine_(d.nextState), oneLine_(d.nextCity)].filter(function (s) { return !!s; }).join(', ');
@@ -424,6 +416,186 @@ function listInvites_(pin) {
     items.push(toListItem_(pack.rows[i]));
   }
   return { ok: true, validDays: validDays_(), invites: items };
+}
+
+const DESK_FIELDS = [
+  { key: 'fullName', header: 'Full Name', label: 'Full name' },
+  { key: 'contact', header: 'Contact Number', label: 'Contact number' },
+  { key: 'emergencyName', header: 'Emergency Contact Name', label: 'Emergency contact name' },
+  { key: 'emergencyPhone', header: 'Emergency Contact Number', label: 'Emergency contact number' },
+  { key: 'address', header: 'Perm Address', label: 'Home address' },
+  { key: 'city', header: 'Perm City', label: 'City' },
+  { key: 'country', header: 'Perm Country', label: 'Country' },
+  { key: 'comingFrom', header: 'Coming From Country', label: 'Country coming from' },
+  { key: 'airportPickup', header: 'Airport Pickup', label: 'Airport pickup (Yes or No)' },
+  { key: 'pickupPlace', header: 'Pickup Place', label: 'Pickup airport' },
+  { key: 'airline', header: 'Airline', label: 'Airline' },
+  { key: 'flightNo', header: 'Flight Number', label: 'Flight number' },
+  { key: 'flightFrom', header: 'Flight From', label: 'Flying from' },
+  { key: 'flightDate', header: 'Flight Arrival Date', label: 'Flight arrival date' },
+  { key: 'flightTime', header: 'Flight Arrival Time', label: 'Flight arrival time' },
+  { key: 'rvkDate', header: 'RVK Arrival Date', label: 'Date of arrival at RVK' },
+  { key: 'rvkTime', header: 'RVK Arrival Time', label: 'Time of arrival at RVK' },
+  { key: 'dropNeeded', header: 'Drop Facility', label: 'Drop from RVK (Yes or No)' },
+  { key: 'dropPlace', header: 'Drop Place', label: 'Drop place' },
+  { key: 'dropDate', header: 'Drop Date', label: 'Drop date' },
+  { key: 'dropTime', header: 'Drop Time', label: 'Drop time' },
+  { key: 'nextCountry', header: 'Next Country', label: 'Next country' },
+  { key: 'nextState', header: 'Next State', label: 'Next state' },
+  { key: 'nextCity', header: 'Next City', label: 'Next city' },
+  { key: 'departDate', header: 'Departure Date', label: 'Date leaving RVK' },
+  { key: 'departTime', header: 'Departure Time', label: 'Time leaving RVK' }
+];
+
+function findGuests_(d) {
+  const auth = checkPin_(d.pin);
+  if (!auth.ok) return auth;
+  const query = normName_(d.query);
+  if (query.length < 2) return { ok: false, code: 'missing', error: 'Enter at least two letters of the name or email.' };
+  const pack = readSubmissions_();
+  const matches = [];
+  for (let i = pack.rows.length - 1; i >= 0 && matches.length < 15; i--) {
+    const row = pack.rows[i];
+    const name = showCell_(cell_(row.values, pack.map, 'Full Name')) || showCell_(cell_(row.values, pack.map, 'Verified Name'));
+    const email = showCell_(cell_(row.values, pack.map, 'Guest Email'));
+    const hay = normName_(name + ' ' + email);
+    if (hay.indexOf(query) === -1) continue;
+    matches.push({
+      row: row.row,
+      name: name,
+      email: email,
+      submitted: showCell_(cell_(row.values, pack.map, 'Timestamp')),
+      blanks: blankCount_(pack.map, row.values)
+    });
+  }
+  return { ok: true, guests: matches };
+}
+
+function getGuest_(d) {
+  const auth = checkPin_(d.pin);
+  if (!auth.ok) return auth;
+  const pack = readSubmissions_();
+  const row = submissionRow_(pack, d.row);
+  if (!row) return { ok: false, code: 'missing', error: 'That registration could not be found.' };
+  return { ok: true, guest: guestRecord_(pack, row) };
+}
+
+function updateGuest_(d) {
+  const auth = checkPin_(d.pin);
+  if (!auth.ok) return auth;
+  const pack = readSubmissions_();
+  const row = submissionRow_(pack, d.row);
+  if (!row) return { ok: false, code: 'missing', error: 'That registration could not be found.' };
+  const incoming = d.fields || {};
+  const written = {};
+  for (let i = 0; i < DESK_FIELDS.length; i++) {
+    const field = DESK_FIELDS[i];
+    if (!Object.prototype.hasOwnProperty.call(incoming, field.key)) continue;
+    const value = sheetText_(incoming[field.key]);
+    setCell_(pack.sh, pack.map, row.row, field.header, value);
+    written[field.key] = value;
+  }
+  const current = {};
+  for (let i = 0; i < DESK_FIELDS.length; i++) {
+    const field = DESK_FIELDS[i];
+    current[field.key] = Object.prototype.hasOwnProperty.call(written, field.key)
+      ? written[field.key]
+      : showCell_(cell_(row.values, pack.map, field.header));
+  }
+  const pickup = current.airportPickup;
+  const nextDetail = current.nextCountry
+    ? current.nextCountry
+    : [current.nextState, current.nextCity].filter(function (s) { return !!s; }).join(', ');
+  setCell_(pack.sh, pack.map, row.row, 'Given Name', current.fullName);
+  setCell_(pack.sh, pack.map, row.row, 'Residential Mobile', current.contact);
+  setCell_(pack.sh, pack.map, row.row, 'Arrived From Country', current.comingFrom);
+  setCell_(pack.sh, pack.map, row.row, 'Coming From Country', current.comingFrom);
+  if (pickup === 'Yes') {
+    setCell_(pack.sh, pack.map, row.row, 'Arrival Date India', current.flightDate);
+    setCell_(pack.sh, pack.map, row.row, 'Arrival Time', current.flightTime);
+    setCell_(pack.sh, pack.map, row.row, 'Arrival Date Hotel', '');
+  } else if (pickup === 'No') {
+    setCell_(pack.sh, pack.map, row.row, 'Arrival Date Hotel', current.rvkDate);
+    setCell_(pack.sh, pack.map, row.row, 'Arrival Time', current.rvkTime);
+    setCell_(pack.sh, pack.map, row.row, 'Arrival Date India', '');
+  }
+  setCell_(pack.sh, pack.map, row.row, 'Departure Date', current.departDate);
+  setCell_(pack.sh, pack.map, row.row, 'Departure Time', current.departTime);
+  if (current.nextCountry) setCell_(pack.sh, pack.map, row.row, 'Next Destination', 'Outside India');
+  else if (current.nextState) setCell_(pack.sh, pack.map, row.row, 'Next Destination', 'Inside India');
+  setCell_(pack.sh, pack.map, row.row, 'Next Dest Detail', nextDetail);
+  const fresh = readSubmissions_();
+  const saved = submissionRow_(fresh, row.row);
+  return { ok: true, guest: guestRecord_(fresh, saved) };
+}
+
+function readSubmissions_() {
+  const sh = submissionSheet_();
+  ensureHeaders_(sh, HEADERS);
+  const map = headerMap_(sh);
+  const last = sh.getLastRow();
+  if (last < 2) return { sh: sh, map: map, rows: [] };
+  const width = Math.max(sh.getLastColumn(), 1);
+  const values = sh.getRange(2, 1, last - 1, width).getValues();
+  const rows = [];
+  for (let i = 0; i < values.length; i++) rows.push({ row: i + 2, values: values[i] });
+  return { sh: sh, map: map, rows: rows };
+}
+
+function submissionRow_(pack, rowNumber) {
+  const row = Number(rowNumber);
+  if (!row || row < 2) return null;
+  for (let i = 0; i < pack.rows.length; i++) {
+    if (pack.rows[i].row === row) return pack.rows[i];
+  }
+  return null;
+}
+
+function blankCount_(map, values) {
+  let n = 0;
+  for (let i = 0; i < DESK_FIELDS.length; i++) {
+    if (!showCell_(cell_(values, map, DESK_FIELDS[i].header))) n += 1;
+  }
+  return n;
+}
+
+function guestRecord_(pack, row) {
+  const fields = [];
+  for (let i = 0; i < DESK_FIELDS.length; i++) {
+    const field = DESK_FIELDS[i];
+    const value = showCell_(cell_(row.values, pack.map, field.header));
+    fields.push({ key: field.key, label: field.label, value: value, blank: !value });
+  }
+  const photos = [
+    { label: 'Passport photo page', url: showCell_(cell_(row.values, pack.map, 'Passport Front')) },
+    { label: 'Passport last page', url: showCell_(cell_(row.values, pack.map, 'Passport Last')) },
+    { label: 'Visa', url: showCell_(cell_(row.values, pack.map, 'Visa Photo')) },
+    { label: 'Passport-size photo', url: showCell_(cell_(row.values, pack.map, 'Passport Photo')) }
+  ];
+  return {
+    row: row.row,
+    name: showCell_(cell_(row.values, pack.map, 'Full Name')) || showCell_(cell_(row.values, pack.map, 'Verified Name')),
+    email: showCell_(cell_(row.values, pack.map, 'Guest Email')),
+    status: showCell_(cell_(row.values, pack.map, 'Status')),
+    submitted: showCell_(cell_(row.values, pack.map, 'Timestamp')),
+    blanks: blankCount_(pack.map, row.values),
+    fields: fields,
+    photos: photos
+  };
+}
+
+function showCell_(value) {
+  if (Object.prototype.toString.call(value) === '[object Date]' && !isNaN(value.getTime())) {
+    const year = Number(Utilities.formatDate(value, TIMEZONE, 'yyyy'));
+    if (year < 1971) return Utilities.formatDate(value, TIMEZONE, 'HH:mm');
+    return Utilities.formatDate(value, TIMEZONE, 'dd/MM/yyyy');
+  }
+  return oneLine_(value);
+}
+
+function sheetText_(value) {
+  const text = oneLine_(value);
+  return /^[=+\-@]/.test(text) ? "'" + text : text;
 }
 
 function createInvite_(d) {
@@ -597,10 +769,10 @@ function sendReceivedEmails_(info) {
     + 'Drop: ' + info.dropNeeded + ' — ' + info.dropDetail + '\n'
     + 'Next: ' + info.nextDetail + '\n'
     + 'Departs RVK: ' + info.depart + '\n\n'
-    + 'Portrait: ' + info.portraitLink + '\n'
-    + 'Passport front: ' + info.frontLink + '\n'
-    + 'Passport last: ' + info.lastLink + '\n'
-    + 'Visa: ' + info.visaLink + '\n\n'
+    + 'Portrait: ' + (info.portraitLink || 'Not uploaded') + '\n'
+    + 'Passport front: ' + (info.frontLink || 'Not uploaded') + '\n'
+    + 'Passport last: ' + (info.lastLink || 'Not uploaded') + '\n'
+    + 'Visa: ' + (info.visaLink || 'Not uploaded') + '\n\n'
     + 'At check-in, match the physical passport and collect the photocopies.\n'
     + 'Within 24 hours, punch e-FRRO, paste Application ID and ACK No, set Status to DONE.\n';
   const staffHtml =
@@ -641,7 +813,8 @@ function toListItem_(row) {
     created: formatWhen_(row.created),
     expires: formatDay_(row.expires),
     link: link,
-    token: active ? row.token : ''
+    token: active ? row.token : '',
+    submissionRow: Number(row.submissionRow) || 0
   };
 }
 
@@ -772,6 +945,12 @@ function cell_(row, map, header) {
 function setCell_(sh, map, row, header, value) {
   if (!map[header]) return;
   sh.getRange(row, map[header]).setValue(value);
+}
+
+function optionalImage_(holder, dataUrl, filename) {
+  if (!String(dataUrl || '').trim()) return '';
+  if (!holder.folder) holder.folder = getPhotoFolder_();
+  return saveImage_(holder.folder, dataUrl, filename);
 }
 
 function saveImage_(folder, dataUrl, filename) {

@@ -94,8 +94,8 @@ Every page starts with: do not pass this form on, or you will be blacklisted for
 
 1. Registered email. A different email cannot continue.
 2. Name, contact, emergency contact, and home address. The India address shown is Raj Vidya Kender.
-3. Airport pickup: if yes, the airport and the full flight; if no, the date and time they reach RVK.
-4. Passport photo page, passport last page, visa, and a passport-size photo (take it now or upload).
+3. Airport pickup and flight details. These are optional. Reception can fill them in on arrival.
+4. Passport photo page, passport last page, visa, and a passport-size photo. These are optional. Reception can take them on arrival.
 5. Country they are coming from.
 6. Drop from RVK or not, and whether they go on to another country or another state in India, plus the date and time they leave RVK.
 
@@ -109,9 +109,9 @@ The form asks them to bring a photocopy of the passport and the visa.
 
 **At the desk**
 
-1. Open **FormC_Submissions**. Search the guest’s name.
-2. Match the physical passport to the photos. Collect the **photocopy of the passport and the visa**.
-3. Check the passport-size photo. The portal needs it under 50 KB.
+1. On the staff page, search the guest under **Guest at reception**.
+2. Fill any field they left blank, then **Save**. **Print form** prints Form C.
+3. Match the physical passport. Collect the **photocopy of the passport and the visa**. Two or three reception computers can stay signed in at once.
 4. Hand over the key.
 
 **Within 24 hours, in a batch**

@@ -136,29 +136,30 @@
 
       <div class="step" data-step="1" hidden>
         <h2 data-i18n="s2">Transport</h2>
+        <p class="hint" data-i18n="travelOptional">Optional. You can continue without this. Reception can fill it in when you arrive.</p>
         <p data-i18n="pickupQ">Do you need a pickup from the airport?</p>
         <div class="picks">
           <button type="button" class="pick" data-group="pickup" data-value="Yes" data-i18n="pickupYes">Yes — pick me up</button>
           <button type="button" class="pick" data-group="pickup" data-value="No" data-i18n="pickupNo">No — I will reach RVK myself</button>
         </div>
         <div id="flightBlock" hidden>
-          <label for="pickupPlace"><span data-i18n="pickupPlace">Pickup airport</span> <span class="req">*</span></label>
+          <label for="pickupPlace" data-i18n="pickupPlace">Pickup airport</label>
           <input id="pickupPlace" maxlength="120" placeholder="Delhi airport, terminal">
-          <label for="airline"><span data-i18n="airline">Airline</span> <span class="req">*</span></label>
+          <label for="airline" data-i18n="airline">Airline</label>
           <input id="airline" maxlength="80">
-          <label for="flightNo"><span data-i18n="flightNo">Flight number</span> <span class="req">*</span></label>
+          <label for="flightNo" data-i18n="flightNo">Flight number</label>
           <input id="flightNo" maxlength="20">
-          <label for="flightFrom"><span data-i18n="flightFrom">Flying from (city)</span> <span class="req">*</span></label>
+          <label for="flightFrom" data-i18n="flightFrom">Flying from (city)</label>
           <input id="flightFrom" maxlength="80">
-          <label for="flightDate"><span data-i18n="flightDate">Flight arrival date</span> <span class="req">*</span></label>
+          <label for="flightDate" data-i18n="flightDate">Flight arrival date</label>
           <input id="flightDate" type="date">
-          <label for="flightTime"><span data-i18n="flightTime">Flight arrival time</span> <span class="req">*</span></label>
+          <label for="flightTime" data-i18n="flightTime">Flight arrival time</label>
           <input id="flightTime" type="time">
         </div>
         <div id="rvkBlock" hidden>
-          <label for="rvkDate"><span data-i18n="rvkDate">Date you arrive at Raj Vidya Kender, Delhi</span> <span class="req">*</span></label>
+          <label for="rvkDate" data-i18n="rvkDate">Date you arrive at Raj Vidya Kender, Delhi</label>
           <input id="rvkDate" type="date">
-          <label for="rvkTime"><span data-i18n="rvkTime">Time you arrive at Raj Vidya Kender</span> <span class="req">*</span></label>
+          <label for="rvkTime" data-i18n="rvkTime">Time you arrive at Raj Vidya Kender</label>
           <input id="rvkTime" type="time">
         </div>
       </div>
@@ -286,11 +287,12 @@ var I18N = {
     name:'Full name', contact:'Contact number', emergencyName:'Emergency contact name', emergencyPhone:'Emergency contact number',
     address:'Home address', city:'City', country:'Country',
     indiaAddr:'Address in India for this stay: Raj Vidya Kender, Shahurpur Chhatarpur, New Delhi 110074.',
+    travelOptional:'Optional. You can continue without this. Reception can fill it in when you arrive.',
     pickupQ:'Do you need a pickup from the airport?', pickupYes:'Yes — pick me up', pickupNo:'No — I will reach RVK myself',
     pickupPlace:'Pickup airport', airline:'Airline', flightNo:'Flight number', flightFrom:'Flying from (city)',
     flightDate:'Flight arrival date', flightTime:'Flight arrival time',
     rvkDate:'Date you arrive at Raj Vidya Kender, Delhi', rvkTime:'Time you arrive at Raj Vidya Kender',
-    photoHelp:'Take a photo now, or upload a scan. The numbers must be readable.',
+    photoHelp:'Optional. You can continue without photos. Reception can take them when you arrive. If you add one, the numbers must be readable.',
     photocopy:'Please also bring a photocopy of your passport and your visa when you arrive.',
     ppFront:'Passport — photo page', ppLast:'Passport — last page', ppVisa:'Visa or e-Visa', ppFace:'Your passport-size photo',
     faceHelp:'Take it now, or upload a passport-size photo. Face centered, plain background.',
@@ -335,11 +337,12 @@ var I18N = {
     name:'Nombre completo', contact:'Teléfono de contacto', emergencyName:'Nombre del contacto de emergencia', emergencyPhone:'Teléfono de emergencia',
     address:'Domicilio', city:'Ciudad', country:'País',
     indiaAddr:'Dirección en la India durante la estancia: Raj Vidya Kender, Shahurpur Chhatarpur, Nueva Delhi 110074.',
+    travelOptional:'Opcional. Puede continuar sin esto. Recepción puede completarlo cuando llegue.',
     pickupQ:'¿Necesita que lo recojan en el aeropuerto?', pickupYes:'Sí — recójame', pickupNo:'No — llegaré a RVK por mi cuenta',
     pickupPlace:'Aeropuerto de recogida', airline:'Aerolínea', flightNo:'Número de vuelo', flightFrom:'Sale de (ciudad)',
     flightDate:'Fecha de llegada del vuelo', flightTime:'Hora de llegada del vuelo',
     rvkDate:'Fecha en que llega a Raj Vidya Kender, Delhi', rvkTime:'Hora en que llega a Raj Vidya Kender',
-    photoHelp:'Tome una foto ahora, o suba un escaneo. Los números deben leerse.',
+    photoHelp:'Opcional. Puede continuar sin fotos. Recepción puede tomarlas cuando llegue. Si añade una, los números deben leerse.',
     photocopy:'Traiga también una fotocopia del pasaporte y del visado al llegar.',
     ppFront:'Pasaporte — página de la foto', ppLast:'Pasaporte — última página', ppVisa:'Visado o e-Visa', ppFace:'Su foto tamaño pasaporte',
     faceHelp:'Tómela ahora, o suba una foto tamaño pasaporte. Rostro centrado, fondo liso.',
@@ -480,14 +483,6 @@ function validate() {
     if (!valText('contact', 6)) return 'errContact';
     if (!valText('emergencyName', 2) || !valText('emergencyPhone', 6)) return 'errEmergency';
     if (!valText('address', 3) || !valText('addrCity', 2) || !valText('addrCountry', 2)) return 'errAddress';
-  }
-  if (step === 1) {
-    if (pickup !== 'Yes' && pickup !== 'No') return 'errPickup';
-    if (pickup === 'Yes' && (!valText('pickupPlace') || !valText('airline') || !valText('flightNo') || !valText('flightFrom') || !document.getElementById('flightDate').value || !document.getElementById('flightTime').value)) return 'errFlight';
-    if (pickup === 'No' && (!document.getElementById('rvkDate').value || !document.getElementById('rvkTime').value)) return 'errRvk';
-  }
-  if (step === 2) {
-    if (!photos.front || !photos.last || !photos.visa || !photos.portrait) return 'errPhotos';
   }
   if (step === 3) {
     if (!valText('comingFrom', 2)) return 'errCountry';
