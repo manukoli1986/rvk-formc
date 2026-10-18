@@ -23,7 +23,7 @@ Open **`Code.gs`** and set the block at the top:
 |---|---|
 | `SHEET_ID` | The id in the Google Sheet URL, between `/d/` and `/edit` |
 | `STAFF_PIN` | A staff password of **at least 8 characters**. Use a phrase, not a 4-digit code. |
-| `FORM_BASE_URL` | The guest page address, **no slash at the end**. Use `https://formc.rajvidyakender.org` once that domain serves this site. Until then, use the real address that opens `index.html`. |
+| `FORM_BASE_URL` | The guest page address, **no slash at the end**. Use `https://formc.parakhforpr.org`. |
 | `VERIFY_EMAIL` | `indiaogm@gmail.com` (already set). Copies of invites, and the photo links, go here. |
 
 `Code.gs` stays in **Apps Script only**. Do not upload it to GitHub. It contains the staff password.
@@ -58,14 +58,14 @@ Upload **only** these files to the GitHub Pages repo (`rvk-formc`), at the top o
 - `staff.html` — reception
 - `config.js` — paste the `/exec` URL into `RVK_SCRIPT_URL`
 - `robots.txt`
-- `CNAME` — already contains `formc.rajvidyakender.org`
+- `CNAME` — already contains `formc.parakhforpr.org`
 
 Do **not** upload `Code.gs`.
 
-DNS stays as it is: one CNAME, `formc` → `yourusername.github.io`.
+At the domain registrar, add one CNAME: name `formc`, value `manukoli1986.github.io`.
 
-The guest page is `https://formc.rajvidyakender.org/`.  
-Bookmark the staff page on the reception computer: `https://formc.rajvidyakender.org/staff.html`.
+The guest page is `https://formc.parakhforpr.org/`.  
+Bookmark the staff page on the reception computer: `https://formc.parakhforpr.org/staff.html`.
 
 The guest address can be shared. It still asks for the registered email before any question appears. Do not print a lobby QR of a guest’s personal link.
 

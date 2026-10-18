@@ -24,7 +24,7 @@
 /* ============================ CONFIG ============================ */
 const SHEET_ID = 'PASTE_YOUR_SHEET_ID_HERE';
 const STAFF_PIN = 'PASTE_A_STAFF_PIN_HERE'; // at least 8 characters
-const FORM_BASE_URL = 'https://formc.rajvidyakender.org'; // no slash at the end
+const FORM_BASE_URL = 'https://formc.parakhforpr.org'; // no slash at the end
 const VERIFY_EMAIL = 'indiaogm@gmail.com';
 const LINK_VALID_DAYS = 14;
 const TIMEZONE = 'Asia/Kolkata';
