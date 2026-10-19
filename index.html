@@ -43,6 +43,7 @@
   input[readonly]{background:#f3f5f8;color:var(--muted)}
   .hint{color:var(--muted);font-size:14.5px;margin:4px 0 0}
   .note{background:#fff8ea;border-left:4px solid var(--gold);padding:10px 12px;border-radius:0 10px 10px 0;margin:12px 0}
+  .note a{color:var(--navy);font-weight:750}
   .err{color:var(--warn);font-weight:750;min-height:1.2em;margin:8px 0}
   button.action{font:750 18px/1.2 inherit;min-height:54px;padding:14px 18px;border-radius:12px;border:0;cursor:pointer;background:var(--navy);color:#fff}
   button.action.next{background:var(--green)}
@@ -168,6 +169,7 @@
         <h2 data-i18n="s3">Passport, visa, and photo</h2>
         <p class="hint" data-i18n="photoHelp">Optional. Add a photo or a PDF. If the numbers are in the file, they must be readable. If you skip the passport and visa, bring a soft copy when you arrive.</p>
         <div class="note" data-i18n="photocopy">In case you were unable to upload your passport and visa to this form, kindly bring a soft copy of each with you.</div>
+        <div class="note"><span data-i18n="fileSize">A large photo is made smaller on this form, so you can upload it. A PDF must be under 1.5 MB. If your photo or PDF is larger, please email it to us at</span> <a href="mailto:indiaogm@gmail.com">indiaogm@gmail.com</a>.</div>
         <div class="slot" data-photo="front">
           <h3 data-i18n="ppFront">Passport — photo page</h3>
           <div class="rowbtns">
@@ -311,6 +313,8 @@ var I18N = {
     rvkDate:'Date you arrive at Raj Vidya Kender, Delhi', rvkTime:'Time you arrive at Raj Vidya Kender',
     photoHelp:'Optional. Add a photo or a PDF. If the numbers are in the file, they must be readable. If you skip the passport and visa, bring a soft copy when you arrive.',
     photocopy:'In case you were unable to upload your passport and visa to this form, kindly bring a soft copy of each with you.',
+    fileSize:'A large photo is made smaller on this form, so you can upload it. A PDF must be under 1.5 MB. If your photo or PDF is larger, please email it to us at',
+    fileTooBig:'This file is over 1.5 MB. Please email it to indiaogm@gmail.com.',
     docQ:'Visa or OCI card', docHelp:'OCI card holders do not fill visa details.',
     docVisa:'Visa', docOci:'OCI card',
     docVisaHelp:'Take a photo, or upload a photo or PDF of the visa.',
@@ -344,7 +348,7 @@ var I18N = {
     errDepart:'Enter the date and time you leave Raj Vidya Kender.',
     errNetwork:'Could not reach the desk. Check the internet and try again.',
     errGeneric:'Please try again, or contact reception.',
-    badImage:'That file could not be read. Please try a photo or a smaller PDF.'
+    badImage:'That file could not be added. If it is too large, please email it to indiaogm@gmail.com.'
   },
   es: {
     blacklist:'Este formulario es solo para usted. No lo pase a nadie, o quedará en la lista negra para futuros eventos. Por favor coopere con los voluntarios para que su llegada sea sencilla.',
@@ -367,6 +371,8 @@ var I18N = {
     rvkDate:'Fecha en que llega a Raj Vidya Kender, Delhi', rvkTime:'Hora en que llega a Raj Vidya Kender',
     photoHelp:'Opcional. Añada una foto o un PDF. Si el archivo tiene números, deben leerse. Si no sube el pasaporte y el visado, traiga una copia digital al llegar.',
     photocopy:'Si no pudo subir el pasaporte y el visado a este formulario, traiga una copia digital de cada uno.',
+    fileSize:'Una foto grande se reduce en este formulario, así que puede subirla. Un PDF debe ser de menos de 1,5 MB. Si su foto o PDF es más grande, envíenoslo por correo a',
+    fileTooBig:'Este archivo supera 1,5 MB. Envíelo por correo a indiaogm@gmail.com.',
     docQ:'Visado o tarjeta OCI', docHelp:'Quien tiene tarjeta OCI no completa datos de visado.',
     docVisa:'Visado', docOci:'Tarjeta OCI',
     docVisaHelp:'Tome una foto, o suba una foto o PDF del visado.',
@@ -400,7 +406,7 @@ var I18N = {
     errDepart:'Escriba la fecha y la hora en que sale de Raj Vidya Kender.',
     errNetwork:'No se pudo contactar con recepción. Revise internet e inténtelo de nuevo.',
     errGeneric:'Inténtelo de nuevo o contacte con recepción.',
-    badImage:'Ese archivo no se pudo leer. Pruebe una foto o un PDF más pequeño.'
+    badImage:'Ese archivo no se pudo añadir. Si es demasiado grande, envíelo por correo a indiaogm@gmail.com.'
   }
 };
 
@@ -791,7 +797,7 @@ function useFile(file) {
   var isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name || '');
   if (isPdf) {
     if (file.size > 1500000) {
-      document.getElementById('formError').textContent = t('badImage');
+      document.getElementById('formError').textContent = t('fileTooBig');
       return;
     }
     var reader = new FileReader();
