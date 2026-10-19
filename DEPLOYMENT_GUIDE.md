@@ -95,7 +95,7 @@ Every page starts with: do not pass this form on, or you will be blacklisted for
 1. Registered email. A different email cannot continue.
 2. Name, contact, emergency contact, and home address. The India address shown is Raj Vidya Kender.
 3. Airport pickup and flight details. These are optional. Reception can fill them in on arrival.
-4. Passport photo page, passport last page, visa, and a passport-size photo, as a photo or a PDF. These are optional. If they are not uploaded, the guest brings a soft copy. Reception can upload them on arrival.
+4. Passport photo page, visa or e-Visa or OCI card, and a passport-size photo, as a photo or a PDF. These are optional. Passport dates and visa country, city, and type are optional. Smart card is optional and is stored beside the name. If the files are not uploaded, the guest brings a soft copy. Reception can upload them on arrival.
 5. Country they are coming from.
 6. Drop from RVK or not, and whether they go on to another country or another state in India, plus the date and time they leave RVK. These are optional.
 

@@ -564,7 +564,7 @@ function saveDeskThen(done) {
 }
 
 var deskPhotoKey = '';
-var PHOTO_LIMITS = { front: [250, 1600], last: [250, 1600], visa: [250, 1600], oci: [250, 1600], portrait: [50, 800] };
+var PHOTO_LIMITS = { front: [250, 1600], visa: [250, 1600], oci: [250, 1600], portrait: [50, 800] };
 function pickDeskPhoto(key) {
   if (!deskGuest || busy) return;
   deskPhotoKey = key;

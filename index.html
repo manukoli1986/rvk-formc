@@ -38,8 +38,8 @@
   h2{margin:4px 0 14px;font-size:26px;line-height:1.2}
   label{display:block;font-weight:700;margin:14px 0 6px}
   .req{color:#b42318}
-  input,textarea{width:100%;font:inherit;padding:12px 14px;border:1.5px solid #d5dce8;border-radius:10px;background:#fbfcff}
-  input:focus,textarea:focus,button:focus-visible{outline:3px solid #e2c57a;outline-offset:2px}
+  input,textarea,select{width:100%;font:inherit;padding:12px 14px;border:1.5px solid #d5dce8;border-radius:10px;background:#fbfcff}
+  input:focus,textarea:focus,select:focus,button:focus-visible{outline:3px solid #e2c57a;outline-offset:2px}
   input[readonly]{background:#f3f5f8;color:var(--muted)}
   .hint{color:var(--muted);font-size:14.5px;margin:4px 0 0}
   .note{background:#fff8ea;border-left:4px solid var(--gold);padding:10px 12px;border-radius:0 10px 10px 0;margin:12px 0}
@@ -118,6 +118,8 @@
         <h2 data-i18n="s1">Your details</h2>
         <label for="fullName"><span data-i18n="name">Full name</span> <span class="req">*</span></label>
         <input id="fullName" autocomplete="name" maxlength="120">
+        <label for="smartCard"><span data-i18n="smartCard">Smart card</span> <span data-i18n="optionalMark">(optional)</span></label>
+        <input id="smartCard" maxlength="40" autocomplete="off">
         <label for="emailLocked" data-i18n="email">Email</label>
         <input id="emailLocked" type="email" readonly>
         <label for="contact"><span data-i18n="contact">Contact number</span> <span class="req">*</span></label>
@@ -178,28 +180,35 @@
           </div>
           <img class="shot" id="prev-front" alt="" hidden>
         </div>
-        <div class="slot" data-photo="last">
-          <h3 data-i18n="ppLast">Passport — last page</h3>
-          <div class="rowbtns">
-            <button type="button" class="cam" data-cam="last" data-i18n="take">Take photo</button>
-            <button type="button" class="up" data-up="last" data-i18n="upload">Upload</button>
-          </div>
-          <img class="shot" id="prev-last" alt="" hidden>
-        </div>
+        <label for="passportIssue"><span data-i18n="passportIssue">Passport issue date</span> <span data-i18n="optionalMark">(optional)</span></label>
+        <input id="passportIssue" type="date">
+        <label for="passportExpiry"><span data-i18n="passportExpiry">Passport expiry date</span> <span data-i18n="optionalMark">(optional)</span></label>
+        <input id="passportExpiry" type="date">
         <div class="slot">
-          <h3 data-i18n="docQ">Visa or OCI card</h3>
+          <h3 data-i18n="docQ">Visa, e-Visa, or OCI card</h3>
           <p class="hint" data-i18n="docHelp">OCI card holders do not fill visa details.</p>
           <div class="picks">
             <button type="button" class="pick" data-group="doc" data-value="Visa" data-i18n="docVisa">Visa</button>
+            <button type="button" class="pick" data-group="doc" data-value="e-Visa" data-i18n="docEvisa">e-Visa</button>
             <button type="button" class="pick" data-group="doc" data-value="OCI" data-i18n="docOci">OCI card</button>
           </div>
           <div id="visaBlock" hidden>
-            <p class="hint" data-i18n="docVisaHelp">Take a photo, or upload a photo or PDF of the visa.</p>
+            <p class="hint" data-i18n="docVisaHelp">Take a photo, or upload a photo or PDF of the visa or e-Visa.</p>
             <div class="rowbtns">
               <button type="button" class="cam" data-cam="visa" data-i18n="take">Take photo</button>
               <button type="button" class="up" data-up="visa" data-i18n="upload">Upload photo or PDF</button>
             </div>
             <img class="shot" id="prev-visa" alt="" hidden>
+            <label for="visaCountry"><span data-i18n="visaCountry">Visa issued country</span> <span data-i18n="optionalMark">(optional)</span></label>
+            <input id="visaCountry" maxlength="80">
+            <label for="visaCity"><span data-i18n="visaCity">Visa issued city</span> <span data-i18n="optionalMark">(optional)</span></label>
+            <input id="visaCity" maxlength="80">
+            <label for="visaType"><span data-i18n="visaType">Type of visa</span> <span data-i18n="optionalMark">(optional)</span></label>
+            <select id="visaType">
+              <option value="" data-i18n="visaTypeBlank">Select</option>
+              <option value="Tourist" data-i18n="visaTourist">Tourist</option>
+              <option value="Other" data-i18n="visaOther">Other</option>
+            </select>
           </div>
           <div id="ociBlock" hidden>
             <p class="hint" data-i18n="docOciHelp">Take a photo, or upload a photo or PDF of the OCI card.</p>
@@ -303,7 +312,7 @@ var I18N = {
     forGuest:'Registration for {name}',
     stepOf:'Step {n} of {total}',
     s1:'Your details', s2:'Transport', s3:'Passport, visa, and photo', s4:'Which country are you coming from?', s5:'Departure from Raj Vidya Kender',
-    name:'Full name', contact:'Contact number', emergencyName:'Emergency contact name', emergencyPhone:'Emergency contact number',
+    name:'Full name', smartCard:'Smart card', contact:'Contact number', emergencyName:'Emergency contact name', emergencyPhone:'Emergency contact number',
     address:'Home address', city:'City', country:'Country',
     indiaAddr:'Address in India for this stay: Raj Vidya Kender, Shahurpur Chhatarpur, New Delhi 110074.',
     travelOptional:'If you do not have the flight details yet, you can send them later by email. You can also leave this blank, and reception will add it when you arrive.',
@@ -315,12 +324,15 @@ var I18N = {
     photocopy:'In case you were unable to upload your passport and visa to this form, kindly bring a soft copy of each with you.',
     fileSize:'A large photo is made smaller on this form, so you can upload it. A PDF must be under 1.5 MB. If your photo or PDF is larger, please email it to us at',
     fileTooBig:'This file is over 1.5 MB. Please email it to indiaogm@gmail.com.',
-    docQ:'Visa or OCI card', docHelp:'OCI card holders do not fill visa details.',
-    docVisa:'Visa', docOci:'OCI card',
-    docVisaHelp:'Take a photo, or upload a photo or PDF of the visa.',
+    docQ:'Visa, e-Visa, or OCI card', docHelp:'OCI card holders do not fill visa details.',
+    docVisa:'Visa', docEvisa:'e-Visa', docOci:'OCI card',
+    docVisaHelp:'Take a photo, or upload a photo or PDF of the visa or e-Visa.',
     docOciHelp:'Take a photo, or upload a photo or PDF of the OCI card.',
+    passportIssue:'Passport issue date', passportExpiry:'Passport expiry date',
+    visaCountry:'Visa issued country', visaCity:'Visa issued city', visaType:'Type of visa',
+    visaTypeBlank:'Select', visaTourist:'Tourist', visaOther:'Other',
     optionalMark:'(optional)',
-    ppFront:'Passport — photo page', ppLast:'Passport — last page', ppVisa:'Visa or e-Visa', ppFace:'Your passport-size photo',
+    ppFront:'Passport — photo page', ppVisa:'Visa or e-Visa', ppFace:'Your passport-size photo',
     faceHelp:'Take it now, or upload a passport-size photo. Face centered, plain background.',
     take:'Take photo', takeNow:'Take photo now', upload:'Upload photo or PDF',
     comingFrom:'Country',
@@ -341,7 +353,7 @@ var I18N = {
     errPickup:'Say whether you need an airport pickup.',
     errFlight:'Enter the airport, airline, flight number, city, date, and time.',
     errRvk:'Enter the date and time you arrive at Raj Vidya Kender.',
-    errPhotos:'Add a photo of the passport photo page, the last page, the visa, and your face.',
+    errPhotos:'Add a photo of the passport photo page, the visa, and your face.',
     errCountry:'Enter the country you are coming from.',
     errDrop:'Say whether you need a drop, and complete those details.',
     errNext:'Say whether you go to another country or another state, and name it.',
@@ -361,7 +373,7 @@ var I18N = {
     forGuest:'Registro de {name}',
     stepOf:'Paso {n} de {total}',
     s1:'Sus datos', s2:'Transporte', s3:'Pasaporte, visado y foto', s4:'¿De qué país viene?', s5:'Salida de Raj Vidya Kender',
-    name:'Nombre completo', contact:'Teléfono de contacto', emergencyName:'Nombre del contacto de emergencia', emergencyPhone:'Teléfono de emergencia',
+    name:'Nombre completo', smartCard:'Tarjeta inteligente', contact:'Teléfono de contacto', emergencyName:'Nombre del contacto de emergencia', emergencyPhone:'Teléfono de emergencia',
     address:'Domicilio', city:'Ciudad', country:'País',
     indiaAddr:'Dirección en la India durante la estancia: Raj Vidya Kender, Shahurpur Chhatarpur, Nueva Delhi 110074.',
     travelOptional:'Si aún no tiene los datos del vuelo, puede enviarlos después por correo. También puede dejarlo en blanco y recepción lo añadirá cuando llegue.',
@@ -373,12 +385,15 @@ var I18N = {
     photocopy:'Si no pudo subir el pasaporte y el visado a este formulario, traiga una copia digital de cada uno.',
     fileSize:'Una foto grande se reduce en este formulario, así que puede subirla. Un PDF debe ser de menos de 1,5 MB. Si su foto o PDF es más grande, envíenoslo por correo a',
     fileTooBig:'Este archivo supera 1,5 MB. Envíelo por correo a indiaogm@gmail.com.',
-    docQ:'Visado o tarjeta OCI', docHelp:'Quien tiene tarjeta OCI no completa datos de visado.',
-    docVisa:'Visado', docOci:'Tarjeta OCI',
-    docVisaHelp:'Tome una foto, o suba una foto o PDF del visado.',
+    docQ:'Visado, e-Visa o tarjeta OCI', docHelp:'Quien tiene tarjeta OCI no completa datos de visado.',
+    docVisa:'Visado', docEvisa:'e-Visa', docOci:'Tarjeta OCI',
+    docVisaHelp:'Tome una foto, o suba una foto o PDF del visado o e-Visa.',
     docOciHelp:'Tome una foto, o suba una foto o PDF de la tarjeta OCI.',
+    passportIssue:'Fecha de emisión del pasaporte', passportExpiry:'Fecha de vencimiento del pasaporte',
+    visaCountry:'País de emisión del visado', visaCity:'Ciudad de emisión del visado', visaType:'Tipo de visado',
+    visaTypeBlank:'Seleccionar', visaTourist:'Turista', visaOther:'Otro',
     optionalMark:'(opcional)',
-    ppFront:'Pasaporte — página de la foto', ppLast:'Pasaporte — última página', ppVisa:'Visado o e-Visa', ppFace:'Su foto tamaño pasaporte',
+    ppFront:'Pasaporte — página de la foto', ppVisa:'Visado o e-Visa', ppFace:'Su foto tamaño pasaporte',
     faceHelp:'Tómela ahora, o suba una foto tamaño pasaporte. Rostro centrado, fondo liso.',
     take:'Tomar foto', takeNow:'Tomar foto ahora', upload:'Subir foto o PDF',
     comingFrom:'País',
@@ -399,7 +414,7 @@ var I18N = {
     errPickup:'Indique si necesita recogida en el aeropuerto.',
     errFlight:'Escriba el aeropuerto, la aerolínea, el vuelo, la ciudad, la fecha y la hora.',
     errRvk:'Escriba la fecha y la hora en que llega a Raj Vidya Kender.',
-    errPhotos:'Añada la foto de la página del pasaporte, la última página, el visado y su rostro.',
+    errPhotos:'Añada la foto de la página del pasaporte, el visado y su rostro.',
     errCountry:'Escriba el país del que viene.',
     errDrop:'Indique si necesita traslado y complete esos datos.',
     errNext:'Indique si va a otro país o a otro estado, y escríbalo.',
@@ -423,7 +438,7 @@ var step = 0;
 var pickup = '';
 var dropNeed = '';
 var nextKind = '';
-var photos = { front:'', last:'', visa:'', oci:'', portrait:'' };
+var photos = { front:'', visa:'', oci:'', portrait:'' };
 var docKind = '';
 var photoTarget = '';
 var sending = false;
@@ -549,6 +564,12 @@ function submitForm() {
     email: guestEmail,
     formLang: LANG,
     name: v('fullName'),
+    smartCard: v('smartCard'),
+    passportIssue: v('passportIssue'),
+    passportExpiry: v('passportExpiry'),
+    visaCountry: docKind === 'Visa' || docKind === 'e-Visa' ? v('visaCountry') : '',
+    visaCity: docKind === 'Visa' || docKind === 'e-Visa' ? v('visaCity') : '',
+    visaType: docKind === 'Visa' || docKind === 'e-Visa' ? v('visaType') : '',
     contact: v('contact'),
     emergencyName: v('emergencyName'),
     emergencyPhone: v('emergencyPhone'),
@@ -576,9 +597,8 @@ function submitForm() {
     departDate: v('departDate'),
     departTime: v('departTime'),
     ppFront: photos.front,
-    ppLast: photos.last,
     docType: docKind,
-    visaImg: docKind === 'OCI' ? '' : photos.visa,
+    visaImg: docKind === 'Visa' || docKind === 'e-Visa' ? photos.visa : '',
     ociImg: docKind === 'OCI' ? photos.oci : '',
     portrait: photos.portrait
   }).then(function (data) {
@@ -659,7 +679,7 @@ document.querySelectorAll('.pick').forEach(function (btn) {
     }
     if (group === 'doc') {
       docKind = value;
-      document.getElementById('visaBlock').hidden = value !== 'Visa';
+      document.getElementById('visaBlock').hidden = value !== 'Visa' && value !== 'e-Visa';
       document.getElementById('ociBlock').hidden = value !== 'OCI';
     }
     if (group === 'next') {
@@ -761,7 +781,7 @@ function preparePhoto(file, maxKB, maxDim) {
     reader.readAsArrayBuffer(file.slice(0, 131072));
   });
 }
-var LIMITS = { front:[250,1600], last:[250,1600], visa:[250,1600], oci:[250,1600], portrait:[50,800] };
+var LIMITS = { front:[250,1600], visa:[250,1600], oci:[250,1600], portrait:[50,800] };
 function pdfData(result) {
   var s = String(result || '');
   var i = s.toLowerCase().indexOf('base64,');

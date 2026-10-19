@@ -297,13 +297,20 @@ function submitForm_(d) {
   if (!comingFrom) return { ok: false, code: 'missing', field: 'comingFrom', error: 'Enter the country you are coming from.' };
   if (dropNeeded && dropNeeded !== 'Yes' && dropNeeded !== 'No') return { ok: false, code: 'missing', field: 'drop', error: 'Say whether you need a drop from Raj Vidya Kender.' };
   if (nextKind && nextKind !== 'country' && nextKind !== 'state') return { ok: false, code: 'missing', field: 'next', error: 'Say whether you go to another country or another state.' };
+  const docType = oneLine_(d.docType);
+  if (docType && docType !== 'Visa' && docType !== 'e-Visa' && docType !== 'OCI') {
+    return { ok: false, code: 'missing', field: 'doc', error: 'Choose visa, e-Visa, or OCI.' };
+  }
+  const visaKind = oneLine_(d.visaType);
+  if (visaKind && visaKind !== 'Tourist' && visaKind !== 'Other') {
+    return { ok: false, code: 'missing', field: 'visaType', error: 'Choose Tourist or Other for the visa type.' };
+  }
+  const isVisa = docType === 'Visa' || docType === 'e-Visa';
   const photos = { folder: null };
   const stamp = Utilities.formatDate(new Date(), TIMEZONE, 'yyyyMMdd_HHmmss');
   const base = safeName_(name) + '_' + stamp;
   const frontLink = optionalImage_(photos, d.ppFront, 'passport_front_' + base + '.jpg');
-  const lastLink = optionalImage_(photos, d.ppLast, 'passport_last_' + base + '.jpg');
-  const docType = oneLine_(d.docType);
-  const visaLink = docType === 'OCI' ? '' : optionalImage_(photos, d.visaImg, 'visa_' + base + '.jpg');
+  const visaLink = isVisa ? optionalImage_(photos, d.visaImg, 'visa_' + base + '.jpg') : '';
   const ociLink = docType === 'OCI' ? optionalImage_(photos, d.ociImg, 'oci_' + base + '.jpg') : '';
   const portraitLink = optionalImage_(photos, d.portrait, 'portrait_' + base + '.jpg');
   const nextDetail = nextKind === 'country'
@@ -315,7 +322,7 @@ function submitForm_(d) {
   const submissionRow = appendSubmission_(sub, {
     'Timestamp': new Date(),
     'Status': 'PENDING',
-    'SmartCard': 'Registered email',
+    'SmartCard': oneLine_(d.smartCard),
     'Verified Name': row.name,
     'Full Name': name,
     'Given Name': name,
@@ -334,13 +341,16 @@ function submitForm_(d) {
     'Departure Time': oneLine_(d.departTime),
     'Next Destination': nextKind === 'country' ? 'Outside India' : (nextKind === 'state' ? 'Inside India' : ''),
     'Next Dest Detail': nextDetail,
+    'Passport Issue Date': fmtDate_(d.passportIssue),
+    'Passport Valid Till': fmtDate_(d.passportExpiry),
+    'Visa Place (Country)': isVisa ? oneLine_(d.visaCountry) : '',
+    'Visa Place (City)': isVisa ? oneLine_(d.visaCity) : '',
     'Passport Photo': portraitLink,
     'Passport Front': frontLink,
-    'Passport Last': lastLink,
     'Visa Photo': visaLink,
     'OCI Card': ociLink,
     'Document Type': docType,
-    'Visa Type': docType === 'OCI' ? 'OCI' : '',
+    'Visa Type': docType === 'OCI' ? 'OCI' : (isVisa ? visaKind : ''),
     'Guest Email': row.email,
     'Email': row.email,
     'Residential Mobile': contact,
@@ -392,8 +402,8 @@ function submitForm_(d) {
       nextDetail: nextDetail,
       depart: fmtDate_(d.departDate) + ' ' + oneLine_(d.departTime),
       frontLink: frontLink,
-      lastLink: lastLink,
       visaLink: visaLink,
+      ociLink: ociLink,
       portraitLink: portraitLink
     });
   } catch (mailErr) {
@@ -421,7 +431,13 @@ function listInvites_(pin) {
 
 const DESK_FIELDS = [
   { key: 'fullName', header: 'Full Name', label: 'Full name' },
-  { key: 'docType', header: 'Document Type', label: 'Visa or OCI' },
+  { key: 'smartCard', header: 'SmartCard', label: 'Smart card' },
+  { key: 'docType', header: 'Document Type', label: 'Visa, e-Visa, or OCI' },
+  { key: 'passportIssue', header: 'Passport Issue Date', label: 'Passport issue date' },
+  { key: 'passportExpiry', header: 'Passport Valid Till', label: 'Passport expiry date' },
+  { key: 'visaCountry', header: 'Visa Place (Country)', label: 'Visa issued country' },
+  { key: 'visaCity', header: 'Visa Place (City)', label: 'Visa issued city' },
+  { key: 'visaType', header: 'Visa Type', label: 'Type of visa (Tourist or Other)' },
   { key: 'contact', header: 'Contact Number', label: 'Contact number' },
   { key: 'emergencyName', header: 'Emergency Contact Name', label: 'Emergency contact name' },
   { key: 'emergencyPhone', header: 'Emergency Contact Number', label: 'Emergency contact number' },
@@ -451,8 +467,7 @@ const DESK_FIELDS = [
 
 const PHOTO_SLOTS = [
   { key: 'front', header: 'Passport Front', label: 'Passport photo page', file: 'passport_front_' },
-  { key: 'last', header: 'Passport Last', label: 'Passport last page', file: 'passport_last_' },
-  { key: 'visa', header: 'Visa Photo', label: 'Visa', file: 'visa_' },
+  { key: 'visa', header: 'Visa Photo', label: 'Visa or e-Visa', file: 'visa_' },
   { key: 'oci', header: 'OCI Card', label: 'OCI card', file: 'oci_' },
   { key: 'portrait', header: 'Passport Photo', label: 'Passport-size photo', file: 'portrait_' }
 ];
@@ -531,6 +546,7 @@ function updateGuest_(d) {
   }
   setCell_(pack.sh, pack.map, row.row, 'Departure Date', current.departDate);
   setCell_(pack.sh, pack.map, row.row, 'Departure Time', current.departTime);
+  if (current.docType === 'OCI' && !current.visaType) setCell_(pack.sh, pack.map, row.row, 'Visa Type', 'OCI');
   if (current.nextCountry) setCell_(pack.sh, pack.map, row.row, 'Next Destination', 'Outside India');
   else if (current.nextState) setCell_(pack.sh, pack.map, row.row, 'Next Destination', 'Inside India');
   setCell_(pack.sh, pack.map, row.row, 'Next Dest Detail', nextDetail);
@@ -808,8 +824,8 @@ function sendReceivedEmails_(info) {
     + 'Departs RVK: ' + info.depart + '\n\n'
     + 'Portrait: ' + (info.portraitLink || 'Not uploaded') + '\n'
     + 'Passport front: ' + (info.frontLink || 'Not uploaded') + '\n'
-    + 'Passport last: ' + (info.lastLink || 'Not uploaded') + '\n'
-    + 'Visa: ' + (info.visaLink || 'Not uploaded') + '\n\n'
+    + 'Visa or e-Visa: ' + (info.visaLink || 'Not uploaded') + '\n'
+    + 'OCI card: ' + (info.ociLink || 'Not uploaded') + '\n\n'
     + 'At check-in, match the physical passport and collect the photocopies.\n'
     + 'Within 24 hours, punch e-FRRO, paste Application ID and ACK No, set Status to DONE.\n';
   const staffHtml =
@@ -822,8 +838,8 @@ function sendReceivedEmails_(info) {
     + 'Next: ' + escapeHtml_(info.nextDetail) + '<br>Departs RVK: ' + escapeHtml_(info.depart) + '</p>'
     + '<p><a href="' + escapeHtml_(info.portraitLink) + '">Passport-size photo</a><br>'
     + '<a href="' + escapeHtml_(info.frontLink) + '">Passport front</a><br>'
-    + '<a href="' + escapeHtml_(info.lastLink) + '">Passport last page</a><br>'
-    + '<a href="' + escapeHtml_(info.visaLink) + '">Visa</a></p>'
+    + '<a href="' + escapeHtml_(info.visaLink) + '">Visa or e-Visa</a><br>'
+    + '<a href="' + escapeHtml_(info.ociLink) + '">OCI card</a></p>'
     + '<p>At check-in, match the physical passport and collect photocopies of the passport and visa. Within 24 hours, punch e-FRRO and set Status to DONE.</p></div>';
 
   MailApp.sendEmail({
@@ -909,6 +925,7 @@ function submissionSheet_() {
 function appendSubmission_(sh, byHeader) {
   ensureHeaders_(sh, HEADERS);
   placeColumnAfter_(sh, 'Email', 'Full Name');
+  placeColumnAfter_(sh, 'SmartCard', 'Full Name');
   backfillEmail_(sh);
   return appendByHeader_(sh, byHeader);
 }
