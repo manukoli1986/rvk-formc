@@ -295,14 +295,8 @@ function submitForm_(d) {
   if (!address || !city || !country) return { ok: false, code: 'missing', field: 'address', error: 'Enter your home address, city, and country.' };
   if (pickup && pickup !== 'Yes' && pickup !== 'No') return { ok: false, code: 'missing', field: 'pickup', error: 'Say whether you need an airport pickup.' };
   if (!comingFrom) return { ok: false, code: 'missing', field: 'comingFrom', error: 'Enter the country you are coming from.' };
-  if (dropNeeded !== 'Yes' && dropNeeded !== 'No') return { ok: false, code: 'missing', field: 'drop', error: 'Say whether you need a drop from Raj Vidya Kender.' };
-  if (dropNeeded === 'Yes' && (!oneLine_(d.dropPlace) || !oneLine_(d.dropDate) || !oneLine_(d.dropTime))) {
-    return { ok: false, code: 'missing', field: 'drop', error: 'Enter where and when you need the drop.' };
-  }
-  if (nextKind !== 'country' && nextKind !== 'state') return { ok: false, code: 'missing', field: 'next', error: 'Say whether you go to another country or another state.' };
-  if (nextKind === 'country' && !oneLine_(d.nextCountry)) return { ok: false, code: 'missing', field: 'next', error: 'Enter the country you will go to.' };
-  if (nextKind === 'state' && !oneLine_(d.nextState)) return { ok: false, code: 'missing', field: 'next', error: 'Enter the state you will go to.' };
-  if (!oneLine_(d.departDate) || !oneLine_(d.departTime)) return { ok: false, code: 'missing', field: 'depart', error: 'Enter the date and time you leave Raj Vidya Kender.' };
+  if (dropNeeded && dropNeeded !== 'Yes' && dropNeeded !== 'No') return { ok: false, code: 'missing', field: 'drop', error: 'Say whether you need a drop from Raj Vidya Kender.' };
+  if (nextKind && nextKind !== 'country' && nextKind !== 'state') return { ok: false, code: 'missing', field: 'next', error: 'Say whether you go to another country or another state.' };
   const photos = { folder: null };
   const stamp = Utilities.formatDate(new Date(), TIMEZONE, 'yyyyMMdd_HHmmss');
   const base = safeName_(name) + '_' + stamp;
@@ -312,7 +306,7 @@ function submitForm_(d) {
   const portraitLink = optionalImage_(photos, d.portrait, 'portrait_' + base + '.jpg');
   const nextDetail = nextKind === 'country'
     ? oneLine_(d.nextCountry)
-    : [oneLine_(d.nextState), oneLine_(d.nextCity)].filter(function (s) { return !!s; }).join(', ');
+    : (nextKind === 'state' ? [oneLine_(d.nextState), oneLine_(d.nextCity)].filter(function (s) { return !!s; }).join(', ') : '');
   const lang = String(d.formLang || '') === 'es' ? 'Español' : 'English';
 
   const sub = submissionSheet_();
@@ -336,7 +330,7 @@ function submitForm_(d) {
     'Arrival Time': pickup === 'Yes' ? oneLine_(d.flightTime) : oneLine_(d.rvkTime),
     'Departure Date': fmtDate_(d.departDate),
     'Departure Time': oneLine_(d.departTime),
-    'Next Destination': nextKind === 'country' ? 'Outside India' : 'Inside India',
+    'Next Destination': nextKind === 'country' ? 'Outside India' : (nextKind === 'state' ? 'Inside India' : ''),
     'Next Dest Detail': nextDetail,
     'Passport Photo': portraitLink,
     'Passport Front': frontLink,
@@ -556,7 +550,7 @@ function uploadGuestPhoto_(d) {
   try {
     link = optionalImage_(holder, d.image, slot.file + safeName_(name) + '_' + stamp + '.jpg');
   } catch (err) {
-    return { ok: false, code: 'bad-image', error: 'That photo could not be read. Please try a JPEG again.' };
+    return { ok: false, code: 'bad-image', error: 'That file could not be read. Use a photo or a PDF under 1.5 MB.' };
   }
   if (!link) return { ok: false, code: 'missing-photo', error: 'Choose a photo to upload.' };
   setCell_(pack.sh, pack.map, row.row, slot.header, link);
@@ -732,12 +726,12 @@ function sendInviteEmail_(name, email, link, expires) {
     + '<p style="margin:18px 0"><a href="' + safeLink + '" style="display:inline-block;background:#1a3a6b;color:#fff;text-decoration:none;padding:14px 22px;border-radius:10px;font-size:18px;font-weight:700">Open the registration form</a></p>'
     + '<p style="font-size:15px;word-break:break-all">' + safeLink + '</p>'
     + '<p>A shared link does not open the form by itself. It stops working on <b>' + escapeHtml_(day) + '</b>, and it stops after you submit.</p>'
-    + '<p>Please also bring a photocopy of your passport and visa.</p>'
+    + '<p>If you did not upload your passport and visa on the form, please bring a soft copy of both.</p>'
     + '<hr style="border:none;border-top:1px solid #e4ddd0;margin:22px 0">'
     + '<p>Este formulario es solo para usted. No lo pase a nadie, o quedará en la lista negra para futuros eventos. Por favor coopere con los voluntarios para que su llegada sea sencilla.</p>'
     + '<p>Complete el registro de <b>' + safeName + '</b>. El formulario se abre solo con este correo: <b>' + escapeHtml_(email) + '</b></p>'
     + '<p style="font-size:15px;word-break:break-all">' + safeLink + '</p>'
-    + '<p>Traiga también una fotocopia del pasaporte y del visado. Deja de funcionar el <b>' + escapeHtml_(day) + '</b>.</p>'
+    + '<p>Si no subió el pasaporte y el visado, traiga una copia digital de ambos. Deja de funcionar el <b>' + escapeHtml_(day) + '</b>.</p>'
     + '<p style="color:#3d4a5c;font-size:14px">Raj Vidya Kender · Shahurpur Chhatarpur, New Delhi 110074</p>'
     + '</div></div>';
   const plain = invitePlain_(name, link, day, email);
@@ -765,7 +759,7 @@ function invitePlain_(name, link, day, email) {
     + 'Open the form and enter this email address:\n' + email + '\n\n'
     + link + '\n\n'
     + 'The link alone does not open the form. It stops working on ' + day + '.\n'
-    + 'Please also bring a photocopy of your passport and visa.\n\n'
+    + 'If you did not upload your passport and visa on the form, please bring a soft copy of both.\n\n'
     + 'Raj Vidya Kender\nGovernment of India — Form C\nShahurpur Chhatarpur, New Delhi 110074\n';
 }
 
@@ -777,11 +771,11 @@ function sendReceivedEmails_(info) {
     + '<div style="font-size:20px;margin-top:4px">Registration received</div></div>'
     + '<div style="border:1px solid #e4ddd0;border-top:none;padding:20px;border-radius:0 0 12px 12px">'
     + '<p>We have the registration for <b>' + escapeHtml_(info.name) + '</b>.</p>'
-    + '<p>Please bring your passport, your visa, and a <b>photocopy of both</b> to reception.</p>'
+    + '<p>If you did not upload your passport and visa, please bring a <b>soft copy of both</b> to reception.</p>'
     + '<p style="color:#3d4a5c;font-size:14px">Raj Vidya Kender · Shahurpur Chhatarpur, New Delhi 110074</p>'
     + '</div></div>';
   const guestPlain = 'We have the registration for ' + info.name + '.\n\n'
-    + 'Please bring your passport, your visa, and a photocopy of both to reception.\n\n'
+    + 'If you did not upload your passport and visa, please bring a soft copy of both to reception.\n\n'
     + 'Raj Vidya Kender\nShahurpur Chhatarpur, New Delhi 110074\n';
 
   if (validEmail_(info.email)) {
@@ -989,23 +983,29 @@ function optionalImage_(holder, dataUrl, filename) {
 }
 
 function saveImage_(folder, dataUrl, filename) {
-  if (!isJpeg_(dataUrl)) fail_('bad-image', 'A photo could not be read. Please take it again.');
+  if (!isAllowedFile_(dataUrl)) fail_('bad-image', 'That file could not be read. Use a photo or a PDF under 1.5 MB.');
+  const isPdf = String(dataUrl).indexOf('data:application/pdf;base64,') === 0;
   const b64 = String(dataUrl).split(',')[1];
   let bytes;
   try { bytes = Utilities.base64Decode(b64); } catch (e) {
-    fail_('bad-image', 'A photo could not be read. Please take it again.');
+    fail_('bad-image', 'That file could not be read. Use a photo or a PDF under 1.5 MB.');
   }
-  const blob = Utilities.newBlob(bytes, 'image/jpeg', filename);
+  const name = isPdf ? String(filename).replace(/\.jpe?g$/i, '.pdf') : filename;
+  const blob = Utilities.newBlob(bytes, isPdf ? 'application/pdf' : 'image/jpeg', name);
   const file = folder.createFile(blob);
   return file.getUrl();
 }
 
 function isJpeg_(value) {
+  return isAllowedFile_(value) && String(value).indexOf('data:image/jpeg;base64,') === 0;
+}
+
+function isAllowedFile_(value) {
   const s = String(value || '');
-  if (s.indexOf('data:image/jpeg;base64,') !== 0) return false;
   const b64 = s.split(',')[1] || '';
-  if (b64.length < 100 || b64.length > 500000) return false;
-  return true;
+  if (s.indexOf('data:image/jpeg;base64,') === 0) return b64.length >= 100 && b64.length <= 500000;
+  if (s.indexOf('data:application/pdf;base64,') === 0) return b64.length >= 100 && b64.length <= 2100000;
+  return false;
 }
 
 function getPhotoFolder_() {

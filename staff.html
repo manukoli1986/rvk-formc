@@ -106,7 +106,7 @@
   </section>
 </main>
 <section id="printSheet" hidden></section>
-<input id="deskPhoto" type="file" accept="image/*" hidden>
+<input id="deskPhoto" type="file" accept="image/*,application/pdf,.pdf" hidden>
 <script>
 var PIN_KEY = 'rvkStaffPin';
 var params = new URLSearchParams(location.search);
@@ -436,7 +436,7 @@ function renderDesk(guest) {
       label.textContent = photo.label + ' — not uploaded';
     }
     line.appendChild(label);
-    line.appendChild(action(photo.url ? 'Replace' : 'Upload', function () { pickDeskPhoto(photo.key); }, true));
+    line.appendChild(action(photo.url ? 'Replace' : 'Upload photo or PDF', function () { pickDeskPhoto(photo.key); }, true));
     photos.appendChild(line);
   });
   box.appendChild(photos);
@@ -547,7 +547,7 @@ function printDesk() {
   });
   sheet.appendChild(table);
   var note = document.createElement('p');
-  note.textContent = 'Bring a photocopy of the passport and the visa. Address in India: Raj Vidya Kender, Shahurpur Chhatarpur, New Delhi 110074.';
+  note.textContent = 'If the passport and visa were not uploaded, bring a soft copy of both. Address in India: Raj Vidya Kender, Shahurpur Chhatarpur, New Delhi 110074.';
   sheet.appendChild(note);
   sheet.hidden = false;
   window.print();
@@ -592,15 +592,26 @@ function compressDeskPhoto(file, maxKB, maxDim) {
     img.src = url;
   });
 }
+function readDeskPdf(file) {
+  return new Promise(function (resolve, reject) {
+    if (file.size > 1500000) { reject(new Error('large')); return; }
+    var reader = new FileReader();
+    reader.onload = function () { resolve(reader.result); };
+    reader.onerror = function () { reject(new Error('photo')); };
+    reader.readAsDataURL(file);
+  });
+}
 function uploadDeskPhoto(file) {
   if (!file || !deskGuest || !deskPhotoKey) return;
   var key = deskPhotoKey;
   var row = deskGuest.row;
   var lim = PHOTO_LIMITS[key] || [250, 1600];
   var err = document.getElementById('deskError');
-  err.textContent = 'Uploading photo…';
+  var isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name || '');
+  err.textContent = isPdf ? 'Uploading PDF…' : 'Uploading photo…';
   busy = true;
-  compressDeskPhoto(file, lim[0], lim[1]).then(function (image) {
+  var ready = isPdf ? readDeskPdf(file) : compressDeskPhoto(file, lim[0], lim[1]);
+  ready.then(function (image) {
     return postJson({ action: 'uploadGuestPhoto', pin: pin, row: row, photoKey: key, image: image });
   }).then(function (data) {
     busy = false;
@@ -609,7 +620,7 @@ function uploadDeskPhoto(file) {
     err.textContent = 'Photo saved.';
   }).catch(function () {
     busy = false;
-    err.textContent = 'That photo could not be read. Please try again.';
+    err.textContent = 'That file could not be read. Use a photo or a PDF under 1.5 MB.';
   });
   document.getElementById('deskPhoto').value = '';
 }

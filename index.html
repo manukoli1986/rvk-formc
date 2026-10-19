@@ -166,8 +166,8 @@
 
       <div class="step" data-step="2" hidden>
         <h2 data-i18n="s3">Passport, visa, and photo</h2>
-        <p class="hint" data-i18n="photoHelp">Take a photo now, or upload a scan. The numbers must be readable.</p>
-        <div class="note" data-i18n="photocopy">Please also bring a photocopy of your passport and your visa when you arrive.</div>
+        <p class="hint" data-i18n="photoHelp">Optional. Add a photo or a PDF. If the numbers are in the file, they must be readable. If you skip the passport and visa, bring a soft copy when you arrive.</p>
+        <div class="note" data-i18n="photocopy">If you did not upload your passport and visa on this form, please bring a soft copy of both when you arrive.</div>
         <div class="slot" data-photo="front">
           <h3 data-i18n="ppFront">Passport — photo page</h3>
           <div class="rowbtns">
@@ -211,17 +211,18 @@
 
       <div class="step" data-step="4" hidden>
         <h2 data-i18n="s5">Departure from Raj Vidya Kender</h2>
+        <p class="hint" data-i18n="departOptional">If you do not have these details yet, you can send them later by email. You can also leave this blank, and reception will add it when you arrive.</p>
         <p data-i18n="dropQ">Do you need a drop from RVK?</p>
         <div class="picks">
           <button type="button" class="pick" data-group="drop" data-value="Yes" data-i18n="dropYes">Yes — I need a drop</button>
           <button type="button" class="pick" data-group="drop" data-value="No" data-i18n="dropNo">No drop needed</button>
         </div>
         <div id="dropBlock" hidden>
-          <label for="dropPlace"><span data-i18n="dropPlace">Where should we drop you?</span> <span class="req">*</span></label>
+          <label for="dropPlace" data-i18n="dropPlace">Where should we drop you?</label>
           <input id="dropPlace" maxlength="160" placeholder="Airport, railway station, or address">
-          <label for="dropDate"><span data-i18n="dropDate">Drop date</span> <span class="req">*</span></label>
+          <label for="dropDate" data-i18n="dropDate">Drop date</label>
           <input id="dropDate" type="date">
-          <label for="dropTime"><span data-i18n="dropTime">Drop time</span> <span class="req">*</span></label>
+          <label for="dropTime" data-i18n="dropTime">Drop time</label>
           <input id="dropTime" type="time">
         </div>
         <p data-i18n="nextQ">After RVK, where do you go?</p>
@@ -230,20 +231,20 @@
           <button type="button" class="pick" data-group="next" data-value="state" data-i18n="nextStateBtn">Another state in India</button>
         </div>
         <div id="countryBlock" hidden>
-          <label for="nextCountry"><span data-i18n="nextCountry">Which country?</span> <span class="req">*</span></label>
+          <label for="nextCountry" data-i18n="nextCountry">Which country?</label>
           <input id="nextCountry" maxlength="80">
         </div>
         <div id="stateBlock" hidden>
-          <label for="nextState"><span data-i18n="nextState">Which state?</span> <span class="req">*</span></label>
+          <label for="nextState" data-i18n="nextState">Which state?</label>
           <input id="nextState" maxlength="80">
           <label for="nextCity" data-i18n="nextCity">City</label>
           <input id="nextCity" maxlength="80">
         </div>
-        <label for="departDate"><span data-i18n="departDate">Date you leave Raj Vidya Kender</span> <span class="req">*</span></label>
+        <label for="departDate" data-i18n="departDate">Date you leave Raj Vidya Kender</label>
         <input id="departDate" type="date">
-        <label for="departTime"><span data-i18n="departTime">Time you leave</span> <span class="req">*</span></label>
+        <label for="departTime" data-i18n="departTime">Time you leave</label>
         <input id="departTime" type="time">
-        <div class="note" data-i18n="photocopy">Please also bring a photocopy of your passport and your visa when you arrive.</div>
+        <div class="note" data-i18n="photocopy">If you did not upload your passport and visa on this form, please bring a soft copy of both when you arrive.</div>
       </div>
 
       <p class="err" id="formError" role="alert"></p>
@@ -258,7 +259,7 @@
     <div class="tick" aria-hidden="true">✓</div>
     <h2 data-i18n="doneTitle">Registration received</h2>
     <p class="big" id="doneName"></p>
-    <p data-i18n="doneBody">You are finished. Bring your passport, your visa, and a photocopy of both to reception.</p>
+    <p data-i18n="doneBody">You are finished. If you did not upload your passport and visa, bring a soft copy of both to reception.</p>
   </section>
 </main>
 
@@ -269,7 +270,7 @@
   </div>
 </div>
 <input id="camInput" type="file" accept="image/*" capture="environment" hidden>
-<input id="libInput" type="file" accept="image/*" hidden>
+<input id="libInput" type="file" accept="image/*,application/pdf,.pdf" hidden>
 
 <script>
 var I18N = {
@@ -292,20 +293,21 @@ var I18N = {
     pickupPlace:'Pickup airport', airline:'Airline', flightNo:'Flight number', flightFrom:'Flying from (city)',
     flightDate:'Flight arrival date', flightTime:'Flight arrival time',
     rvkDate:'Date you arrive at Raj Vidya Kender, Delhi', rvkTime:'Time you arrive at Raj Vidya Kender',
-    photoHelp:'Optional. You can continue without photos. Reception can take them when you arrive. If you add one, the numbers must be readable.',
-    photocopy:'Please also bring a photocopy of your passport and your visa when you arrive.',
+    photoHelp:'Optional. Add a photo or a PDF. If the numbers are in the file, they must be readable. If you skip the passport and visa, bring a soft copy when you arrive.',
+    photocopy:'If you did not upload your passport and visa on this form, please bring a soft copy of both when you arrive.',
     ppFront:'Passport — photo page', ppLast:'Passport — last page', ppVisa:'Visa or e-Visa', ppFace:'Your passport-size photo',
     faceHelp:'Take it now, or upload a passport-size photo. Face centered, plain background.',
-    take:'Take photo', takeNow:'Take photo now', upload:'Upload',
+    take:'Take photo', takeNow:'Take photo now', upload:'Upload photo or PDF',
     comingFrom:'Country',
     dropQ:'Do you need a drop from RVK?', dropYes:'Yes — I need a drop', dropNo:'No drop needed',
     dropPlace:'Where should we drop you?', dropDate:'Drop date', dropTime:'Drop time',
     nextQ:'After RVK, where do you go?', nextCountryBtn:'Another country', nextStateBtn:'Another state in India',
     nextCountry:'Which country?', nextState:'Which state?', nextCity:'City',
+    departOptional:'If you do not have these details yet, you can send them later by email. You can also leave this blank, and reception will add it when you arrive.',
     departDate:'Date you leave Raj Vidya Kender', departTime:'Time you leave',
     back:'Back', next:'Next', submit:'Submit registration',
     doneTitle:'Registration received',
-    doneBody:'You are finished. Bring your passport, your visa, and a photocopy of both to reception.',
+    doneBody:'You are finished. If you did not upload your passport and visa, bring a soft copy of both to reception.',
     sending:'Sending your registration. Please keep this page open.',
     errEmail:'Enter the email address this registration was sent to.',
     errName:'Enter your full name.', errContact:'Enter your contact number.',
@@ -321,7 +323,7 @@ var I18N = {
     errDepart:'Enter the date and time you leave Raj Vidya Kender.',
     errNetwork:'Could not reach the desk. Check the internet and try again.',
     errGeneric:'Please try again, or contact reception.',
-    badImage:'That photo could not be read. Please take it again.'
+    badImage:'That file could not be read. Please try a photo or a smaller PDF.'
   },
   es: {
     blacklist:'Este formulario es solo para usted. No lo pase a nadie, o quedará en la lista negra para futuros eventos. Por favor coopere con los voluntarios para que su llegada sea sencilla.',
@@ -342,20 +344,21 @@ var I18N = {
     pickupPlace:'Aeropuerto de recogida', airline:'Aerolínea', flightNo:'Número de vuelo', flightFrom:'Sale de (ciudad)',
     flightDate:'Fecha de llegada del vuelo', flightTime:'Hora de llegada del vuelo',
     rvkDate:'Fecha en que llega a Raj Vidya Kender, Delhi', rvkTime:'Hora en que llega a Raj Vidya Kender',
-    photoHelp:'Opcional. Puede continuar sin fotos. Recepción puede tomarlas cuando llegue. Si añade una, los números deben leerse.',
-    photocopy:'Traiga también una fotocopia del pasaporte y del visado al llegar.',
+    photoHelp:'Opcional. Añada una foto o un PDF. Si el archivo tiene números, deben leerse. Si no sube el pasaporte y el visado, traiga una copia digital al llegar.',
+    photocopy:'Si no subió el pasaporte y el visado en este formulario, traiga una copia digital de ambos al llegar.',
     ppFront:'Pasaporte — página de la foto', ppLast:'Pasaporte — última página', ppVisa:'Visado o e-Visa', ppFace:'Su foto tamaño pasaporte',
     faceHelp:'Tómela ahora, o suba una foto tamaño pasaporte. Rostro centrado, fondo liso.',
-    take:'Tomar foto', takeNow:'Tomar foto ahora', upload:'Subir',
+    take:'Tomar foto', takeNow:'Tomar foto ahora', upload:'Subir foto o PDF',
     comingFrom:'País',
     dropQ:'¿Necesita traslado de salida desde RVK?', dropYes:'Sí — necesito traslado', dropNo:'No necesito traslado',
     dropPlace:'¿Dónde lo dejamos?', dropDate:'Fecha del traslado', dropTime:'Hora del traslado',
     nextQ:'Después de RVK, ¿a dónde va?', nextCountryBtn:'Otro país', nextStateBtn:'Otro estado de la India',
     nextCountry:'¿Qué país?', nextState:'¿Qué estado?', nextCity:'Ciudad',
+    departOptional:'Si aún no tiene estos datos, puede enviarlos después por correo. También puede dejarlos en blanco y recepción los añadirá cuando llegue.',
     departDate:'Fecha en que sale de Raj Vidya Kender', departTime:'Hora de salida',
     back:'Atrás', next:'Siguiente', submit:'Enviar registro',
     doneTitle:'Registro recibido',
-    doneBody:'Ya terminó. Traiga el pasaporte, el visado y una fotocopia de ambos a recepción.',
+    doneBody:'Ya terminó. Si no subió el pasaporte y el visado, traiga una copia digital de ambos a recepción.',
     sending:'Enviando su registro. No cierre esta página.',
     errEmail:'Escriba el correo al que se envió este registro.',
     errName:'Escriba su nombre completo.', errContact:'Escriba su teléfono.',
@@ -371,7 +374,7 @@ var I18N = {
     errDepart:'Escriba la fecha y la hora en que sale de Raj Vidya Kender.',
     errNetwork:'No se pudo contactar con recepción. Revise internet e inténtelo de nuevo.',
     errGeneric:'Inténtelo de nuevo o contacte con recepción.',
-    badImage:'Esa foto no se pudo leer. Tómela de nuevo.'
+    badImage:'Ese archivo no se pudo leer. Pruebe una foto o un PDF más pequeño.'
   }
 };
 
@@ -486,14 +489,6 @@ function validate() {
   }
   if (step === 3) {
     if (!valText('comingFrom', 2)) return 'errCountry';
-  }
-  if (step === 4) {
-    if (dropNeed !== 'Yes' && dropNeed !== 'No') return 'errDrop';
-    if (dropNeed === 'Yes' && (!valText('dropPlace') || !document.getElementById('dropDate').value || !document.getElementById('dropTime').value)) return 'errDrop';
-    if (nextKind !== 'country' && nextKind !== 'state') return 'errNext';
-    if (nextKind === 'country' && !valText('nextCountry', 2)) return 'errNext';
-    if (nextKind === 'state' && !valText('nextState', 2)) return 'errNext';
-    if (!document.getElementById('departDate').value || !document.getElementById('departTime').value) return 'errDepart';
   }
   return '';
 }
@@ -727,17 +722,49 @@ function preparePhoto(file, maxKB, maxDim) {
   });
 }
 var LIMITS = { front:[250,1600], last:[250,1600], visa:[250,1600], portrait:[50,800] };
-function useFile(file) {
-  if (!file || !photoTarget) return;
-  var id = photoTarget;
-  var lim = LIMITS[id];
-  preparePhoto(file, lim[0], lim[1]).then(function (data) {
-    photos[id] = data;
-    var img = document.getElementById('prev-' + id);
+function markFile(id, data, label) {
+  photos[id] = data;
+  var img = document.getElementById('prev-' + id);
+  var note = document.getElementById('file-' + id);
+  if (!note) {
+    note = document.createElement('p');
+    note.id = 'file-' + id;
+    note.className = 'hint';
+    img.parentNode.insertBefore(note, img);
+  }
+  if (String(data).indexOf('data:application/pdf') === 0) {
+    img.hidden = true;
+    img.removeAttribute('src');
+    note.hidden = false;
+    note.textContent = label || 'PDF attached';
+  } else {
+    note.hidden = true;
     img.src = data;
     img.hidden = false;
     img.alt = t('ppFace');
-    document.getElementById('formError').textContent = '';
+  }
+  document.getElementById('formError').textContent = '';
+}
+function useFile(file) {
+  if (!file || !photoTarget) return;
+  var id = photoTarget;
+  var isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name || '');
+  if (isPdf) {
+    if (file.size > 1500000) {
+      document.getElementById('formError').textContent = t('badImage');
+    } else {
+      var reader = new FileReader();
+      reader.onload = function () { markFile(id, reader.result, 'PDF attached'); };
+      reader.onerror = function () { document.getElementById('formError').textContent = t('badImage'); };
+      reader.readAsDataURL(file);
+    }
+    document.getElementById('camInput').value = '';
+    document.getElementById('libInput').value = '';
+    return;
+  }
+  var lim = LIMITS[id];
+  preparePhoto(file, lim[0], lim[1]).then(function (data) {
+    markFile(id, data);
   }).catch(function () {
     document.getElementById('formError').textContent = t('badImage');
   });

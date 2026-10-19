@@ -28,11 +28,11 @@ The pages are:
 
 1. Name, email, contact, emergency contact, and home address. The India address is Raj Vidya Kender.
 2. Airport pickup and flight details. Optional. If the guest does not have the flight yet, they can email it later, or reception can add it on arrival.
-3. Passport photo page, passport last page, visa, and a passport-size photo. Optional. Reception can upload them at the desk.
+3. Passport photo page, passport last page, visa, and a passport-size photo. A photo or a PDF. Optional. If they are not uploaded, the guest brings a soft copy. Reception can also upload them at the desk.
 4. Country they are coming from.
-5. Drop from RVK or not, the next country or Indian state, and when they leave RVK.
+5. Drop from RVK or not, the next country or Indian state, and when they leave RVK. Optional. They can email the details later, or reception can add them on arrival.
 
-Every page says the form is only for that guest: do not pass it on, or they will be blacklisted for future events, and please cooperate with the volunteers. English and Español. The form also asks them to bring a photocopy of the passport and the visa.
+Every page says the form is only for that guest: do not pass it on, or they will be blacklisted for future events, and please cooperate with the volunteers. English and Español. If the passport and visa were not uploaded, the guest brings a soft copy of both.
 
 Nepal and Bhutan passports do not need this link.
 
