@@ -44,10 +44,10 @@ const HEADERS = [
   'Arrived From Country', 'Arrived From City', 'Arrived From Place', 'Arrival Date India', 'Arrival Date Hotel', 'Arrival Time', 'Duration (days)',
   'Departure Date', 'Departure Time',
   'Employed in India', 'Purpose of Visit', 'Next Destination', 'Next Dest Detail',
-  'Passport Photo', 'Passport Front', 'Passport Last', 'Visa Photo',
+  'Passport Photo', 'Passport Front', 'Passport Last', 'Visa Photo', 'OCI Card', 'Document Type',
   'Booking Ref', 'Guest Email', 'Residential Mobile', 'Temp/New Mobile', 'Form Language',
   'Capture Method',
-  'Full Name', 'Contact Number', 'Emergency Contact Name', 'Emergency Contact Number',
+  'Full Name', 'Email', 'Contact Number', 'Emergency Contact Name', 'Emergency Contact Number',
   'Airport Pickup', 'Pickup Place', 'Airline', 'Flight Number', 'Flight From',
   'Flight Arrival Date', 'Flight Arrival Time', 'RVK Arrival Date', 'RVK Arrival Time',
   'Coming From Country', 'Drop Facility', 'Drop Place', 'Drop Date', 'Drop Time',
@@ -302,7 +302,9 @@ function submitForm_(d) {
   const base = safeName_(name) + '_' + stamp;
   const frontLink = optionalImage_(photos, d.ppFront, 'passport_front_' + base + '.jpg');
   const lastLink = optionalImage_(photos, d.ppLast, 'passport_last_' + base + '.jpg');
-  const visaLink = optionalImage_(photos, d.visaImg, 'visa_' + base + '.jpg');
+  const docType = oneLine_(d.docType);
+  const visaLink = docType === 'OCI' ? '' : optionalImage_(photos, d.visaImg, 'visa_' + base + '.jpg');
+  const ociLink = docType === 'OCI' ? optionalImage_(photos, d.ociImg, 'oci_' + base + '.jpg') : '';
   const portraitLink = optionalImage_(photos, d.portrait, 'portrait_' + base + '.jpg');
   const nextDetail = nextKind === 'country'
     ? oneLine_(d.nextCountry)
@@ -336,7 +338,11 @@ function submitForm_(d) {
     'Passport Front': frontLink,
     'Passport Last': lastLink,
     'Visa Photo': visaLink,
+    'OCI Card': ociLink,
+    'Document Type': docType,
+    'Visa Type': docType === 'OCI' ? 'OCI' : '',
     'Guest Email': row.email,
+    'Email': row.email,
     'Residential Mobile': contact,
     'Form Language': lang,
     'Capture Method': 'Guest registration form',
@@ -415,6 +421,7 @@ function listInvites_(pin) {
 
 const DESK_FIELDS = [
   { key: 'fullName', header: 'Full Name', label: 'Full name' },
+  { key: 'docType', header: 'Document Type', label: 'Visa or OCI' },
   { key: 'contact', header: 'Contact Number', label: 'Contact number' },
   { key: 'emergencyName', header: 'Emergency Contact Name', label: 'Emergency contact name' },
   { key: 'emergencyPhone', header: 'Emergency Contact Number', label: 'Emergency contact number' },
@@ -446,6 +453,7 @@ const PHOTO_SLOTS = [
   { key: 'front', header: 'Passport Front', label: 'Passport photo page', file: 'passport_front_' },
   { key: 'last', header: 'Passport Last', label: 'Passport last page', file: 'passport_last_' },
   { key: 'visa', header: 'Visa Photo', label: 'Visa', file: 'visa_' },
+  { key: 'oci', header: 'OCI Card', label: 'OCI card', file: 'oci_' },
   { key: 'portrait', header: 'Passport Photo', label: 'Passport-size photo', file: 'portrait_' }
 ];
 
@@ -900,7 +908,37 @@ function submissionSheet_() {
 
 function appendSubmission_(sh, byHeader) {
   ensureHeaders_(sh, HEADERS);
+  placeColumnAfter_(sh, 'Email', 'Full Name');
+  backfillEmail_(sh);
   return appendByHeader_(sh, byHeader);
+}
+
+function placeColumnAfter_(sh, header, afterHeader) {
+  try {
+    const width = Math.max(sh.getLastColumn(), 1);
+    const headers = sh.getRange(1, 1, 1, width).getValues()[0].map(function (h) { return String(h || ''); });
+    const from = headers.indexOf(header) + 1;
+    const after = headers.indexOf(afterHeader) + 1;
+    if (!from || !after || from === after + 1) return;
+    sh.moveColumns(sh.getRange(1, from, Math.max(sh.getMaxRows(), 1), 1), after + 1);
+  } catch (ignore) {}
+}
+
+function backfillEmail_(sh) {
+  const map = headerMap_(sh);
+  if (!map.Email || !map['Guest Email']) return;
+  const last = sh.getLastRow();
+  if (last < 2) return;
+  const emails = sh.getRange(2, map.Email, last - 1, 1).getValues();
+  const guests = sh.getRange(2, map['Guest Email'], last - 1, 1).getValues();
+  let changed = false;
+  for (let i = 0; i < emails.length; i++) {
+    if (!oneLine_(emails[i][0]) && oneLine_(guests[i][0])) {
+      emails[i][0] = guests[i][0];
+      changed = true;
+    }
+  }
+  if (changed) sh.getRange(2, map.Email, emails.length, 1).setValues(emails);
 }
 
 function appendByHeader_(sh, byHeader) {
@@ -983,9 +1021,10 @@ function optionalImage_(holder, dataUrl, filename) {
 }
 
 function saveImage_(folder, dataUrl, filename) {
-  if (!isAllowedFile_(dataUrl)) fail_('bad-image', 'That file could not be read. Use a photo or a PDF under 1.5 MB.');
-  const isPdf = String(dataUrl).indexOf('data:application/pdf;base64,') === 0;
-  const b64 = String(dataUrl).split(',')[1];
+  const normalized = normalizeUpload_(dataUrl);
+  if (!normalized) fail_('bad-image', 'That file could not be read. Use a photo or a PDF under 1.5 MB.');
+  const isPdf = normalized.indexOf('data:application/pdf;base64,') === 0;
+  const b64 = normalized.split(',')[1];
   let bytes;
   try { bytes = Utilities.base64Decode(b64); } catch (e) {
     fail_('bad-image', 'That file could not be read. Use a photo or a PDF under 1.5 MB.');
@@ -997,15 +1036,30 @@ function saveImage_(folder, dataUrl, filename) {
 }
 
 function isJpeg_(value) {
-  return isAllowedFile_(value) && String(value).indexOf('data:image/jpeg;base64,') === 0;
+  return normalizeUpload_(value).indexOf('data:image/jpeg;base64,') === 0;
+}
+
+function normalizeUpload_(value) {
+  const s = String(value || '');
+  const marker = 'base64,';
+  const i = s.toLowerCase().indexOf(marker);
+  if (i < 0) return '';
+  const meta = s.slice(0, i).toLowerCase();
+  const b64 = s.slice(i + marker.length).replace(/\s/g, '');
+  if (b64.length < 100) return '';
+  if (meta.indexOf('pdf') !== -1) {
+    if (b64.length > 2100000) return '';
+    return 'data:application/pdf;base64,' + b64;
+  }
+  if (meta.indexOf('jpeg') !== -1 || meta.indexOf('jpg') !== -1) {
+    if (b64.length > 500000) return '';
+    return 'data:image/jpeg;base64,' + b64;
+  }
+  return '';
 }
 
 function isAllowedFile_(value) {
-  const s = String(value || '');
-  const b64 = s.split(',')[1] || '';
-  if (s.indexOf('data:image/jpeg;base64,') === 0) return b64.length >= 100 && b64.length <= 500000;
-  if (s.indexOf('data:application/pdf;base64,') === 0) return b64.length >= 100 && b64.length <= 2100000;
-  return false;
+  return !!normalizeUpload_(value);
 }
 
 function getPhotoFolder_() {

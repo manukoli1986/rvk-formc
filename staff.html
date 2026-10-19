@@ -564,7 +564,7 @@ function saveDeskThen(done) {
 }
 
 var deskPhotoKey = '';
-var PHOTO_LIMITS = { front: [250, 1600], last: [250, 1600], visa: [250, 1600], portrait: [50, 800] };
+var PHOTO_LIMITS = { front: [250, 1600], last: [250, 1600], visa: [250, 1600], oci: [250, 1600], portrait: [50, 800] };
 function pickDeskPhoto(key) {
   if (!deskGuest || busy) return;
   deskPhotoKey = key;
@@ -596,7 +596,12 @@ function readDeskPdf(file) {
   return new Promise(function (resolve, reject) {
     if (file.size > 1500000) { reject(new Error('large')); return; }
     var reader = new FileReader();
-    reader.onload = function () { resolve(reader.result); };
+    reader.onload = function () {
+      var s = String(reader.result || '');
+      var i = s.toLowerCase().indexOf('base64,');
+      if (i < 0) { reject(new Error('photo')); return; }
+      resolve('data:application/pdf;base64,' + s.slice(i + 7).replace(/\s/g, ''));
+    };
     reader.onerror = function () { reject(new Error('photo')); };
     reader.readAsDataURL(file);
   });
@@ -621,8 +626,9 @@ function uploadDeskPhoto(file) {
   }).catch(function () {
     busy = false;
     err.textContent = 'That file could not be read. Use a photo or a PDF under 1.5 MB.';
+  }).then(function () {
+    document.getElementById('deskPhoto').value = '';
   });
-  document.getElementById('deskPhoto').value = '';
 }
 document.getElementById('deskPhoto').addEventListener('change', function (e) {
   uploadDeskPhoto(e.target.files && e.target.files[0]);

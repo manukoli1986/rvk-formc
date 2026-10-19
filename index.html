@@ -167,7 +167,7 @@
       <div class="step" data-step="2" hidden>
         <h2 data-i18n="s3">Passport, visa, and photo</h2>
         <p class="hint" data-i18n="photoHelp">Optional. Add a photo or a PDF. If the numbers are in the file, they must be readable. If you skip the passport and visa, bring a soft copy when you arrive.</p>
-        <div class="note" data-i18n="photocopy">If you did not upload your passport and visa on this form, please bring a soft copy of both when you arrive.</div>
+        <div class="note" data-i18n="photocopy">In case you were unable to upload your passport and visa to this form, kindly bring a soft copy of each with you.</div>
         <div class="slot" data-photo="front">
           <h3 data-i18n="ppFront">Passport — photo page</h3>
           <div class="rowbtns">
@@ -184,13 +184,29 @@
           </div>
           <img class="shot" id="prev-last" alt="" hidden>
         </div>
-        <div class="slot" data-photo="visa">
-          <h3 data-i18n="ppVisa">Visa or e-Visa</h3>
-          <div class="rowbtns">
-            <button type="button" class="cam" data-cam="visa" data-i18n="take">Take photo</button>
-            <button type="button" class="up" data-up="visa" data-i18n="upload">Upload</button>
+        <div class="slot">
+          <h3 data-i18n="docQ">Visa or OCI card</h3>
+          <p class="hint" data-i18n="docHelp">OCI card holders do not fill visa details.</p>
+          <div class="picks">
+            <button type="button" class="pick" data-group="doc" data-value="Visa" data-i18n="docVisa">Visa</button>
+            <button type="button" class="pick" data-group="doc" data-value="OCI" data-i18n="docOci">OCI card</button>
           </div>
-          <img class="shot" id="prev-visa" alt="" hidden>
+          <div id="visaBlock" hidden>
+            <p class="hint" data-i18n="docVisaHelp">Take a photo, or upload a photo or PDF of the visa.</p>
+            <div class="rowbtns">
+              <button type="button" class="cam" data-cam="visa" data-i18n="take">Take photo</button>
+              <button type="button" class="up" data-up="visa" data-i18n="upload">Upload photo or PDF</button>
+            </div>
+            <img class="shot" id="prev-visa" alt="" hidden>
+          </div>
+          <div id="ociBlock" hidden>
+            <p class="hint" data-i18n="docOciHelp">Take a photo, or upload a photo or PDF of the OCI card.</p>
+            <div class="rowbtns">
+              <button type="button" class="cam" data-cam="oci" data-i18n="take">Take photo</button>
+              <button type="button" class="up" data-up="oci" data-i18n="upload">Upload photo or PDF</button>
+            </div>
+            <img class="shot" id="prev-oci" alt="" hidden>
+          </div>
         </div>
         <div class="slot" data-photo="portrait">
           <h3 data-i18n="ppFace">Your passport-size photo</h3>
@@ -240,11 +256,11 @@
           <label for="nextCity" data-i18n="nextCity">City</label>
           <input id="nextCity" maxlength="80">
         </div>
-        <label for="departDate" data-i18n="departDate">Date you leave Raj Vidya Kender</label>
+        <label for="departDate"><span data-i18n="departDate">Date you leave Raj Vidya Kender</span> <span data-i18n="optionalMark">(optional)</span></label>
         <input id="departDate" type="date">
-        <label for="departTime" data-i18n="departTime">Time you leave</label>
+        <label for="departTime"><span data-i18n="departTime">Time you leave</span> <span data-i18n="optionalMark">(optional)</span></label>
         <input id="departTime" type="time">
-        <div class="note" data-i18n="photocopy">If you did not upload your passport and visa on this form, please bring a soft copy of both when you arrive.</div>
+        <div class="note" data-i18n="photocopy">In case you were unable to upload your passport and visa to this form, kindly bring a soft copy of each with you.</div>
       </div>
 
       <p class="err" id="formError" role="alert"></p>
@@ -294,7 +310,12 @@ var I18N = {
     flightDate:'Flight arrival date', flightTime:'Flight arrival time',
     rvkDate:'Date you arrive at Raj Vidya Kender, Delhi', rvkTime:'Time you arrive at Raj Vidya Kender',
     photoHelp:'Optional. Add a photo or a PDF. If the numbers are in the file, they must be readable. If you skip the passport and visa, bring a soft copy when you arrive.',
-    photocopy:'If you did not upload your passport and visa on this form, please bring a soft copy of both when you arrive.',
+    photocopy:'In case you were unable to upload your passport and visa to this form, kindly bring a soft copy of each with you.',
+    docQ:'Visa or OCI card', docHelp:'OCI card holders do not fill visa details.',
+    docVisa:'Visa', docOci:'OCI card',
+    docVisaHelp:'Take a photo, or upload a photo or PDF of the visa.',
+    docOciHelp:'Take a photo, or upload a photo or PDF of the OCI card.',
+    optionalMark:'(optional)',
     ppFront:'Passport — photo page', ppLast:'Passport — last page', ppVisa:'Visa or e-Visa', ppFace:'Your passport-size photo',
     faceHelp:'Take it now, or upload a passport-size photo. Face centered, plain background.',
     take:'Take photo', takeNow:'Take photo now', upload:'Upload photo or PDF',
@@ -345,7 +366,12 @@ var I18N = {
     flightDate:'Fecha de llegada del vuelo', flightTime:'Hora de llegada del vuelo',
     rvkDate:'Fecha en que llega a Raj Vidya Kender, Delhi', rvkTime:'Hora en que llega a Raj Vidya Kender',
     photoHelp:'Opcional. Añada una foto o un PDF. Si el archivo tiene números, deben leerse. Si no sube el pasaporte y el visado, traiga una copia digital al llegar.',
-    photocopy:'Si no subió el pasaporte y el visado en este formulario, traiga una copia digital de ambos al llegar.',
+    photocopy:'Si no pudo subir el pasaporte y el visado a este formulario, traiga una copia digital de cada uno.',
+    docQ:'Visado o tarjeta OCI', docHelp:'Quien tiene tarjeta OCI no completa datos de visado.',
+    docVisa:'Visado', docOci:'Tarjeta OCI',
+    docVisaHelp:'Tome una foto, o suba una foto o PDF del visado.',
+    docOciHelp:'Tome una foto, o suba una foto o PDF de la tarjeta OCI.',
+    optionalMark:'(opcional)',
     ppFront:'Pasaporte — página de la foto', ppLast:'Pasaporte — última página', ppVisa:'Visado o e-Visa', ppFace:'Su foto tamaño pasaporte',
     faceHelp:'Tómela ahora, o suba una foto tamaño pasaporte. Rostro centrado, fondo liso.',
     take:'Tomar foto', takeNow:'Tomar foto ahora', upload:'Subir foto o PDF',
@@ -391,7 +417,8 @@ var step = 0;
 var pickup = '';
 var dropNeed = '';
 var nextKind = '';
-var photos = { front:'', last:'', visa:'', portrait:'' };
+var photos = { front:'', last:'', visa:'', oci:'', portrait:'' };
+var docKind = '';
 var photoTarget = '';
 var sending = false;
 var finished = false;
@@ -544,7 +571,9 @@ function submitForm() {
     departTime: v('departTime'),
     ppFront: photos.front,
     ppLast: photos.last,
-    visaImg: photos.visa,
+    docType: docKind,
+    visaImg: docKind === 'OCI' ? '' : photos.visa,
+    ociImg: docKind === 'OCI' ? photos.oci : '',
     portrait: photos.portrait
   }).then(function (data) {
     document.getElementById('overlay').hidden = true;
@@ -621,6 +650,11 @@ document.querySelectorAll('.pick').forEach(function (btn) {
     if (group === 'drop') {
       dropNeed = value;
       document.getElementById('dropBlock').hidden = value !== 'Yes';
+    }
+    if (group === 'doc') {
+      docKind = value;
+      document.getElementById('visaBlock').hidden = value !== 'Visa';
+      document.getElementById('ociBlock').hidden = value !== 'OCI';
     }
     if (group === 'next') {
       nextKind = value;
@@ -721,7 +755,13 @@ function preparePhoto(file, maxKB, maxDim) {
     reader.readAsArrayBuffer(file.slice(0, 131072));
   });
 }
-var LIMITS = { front:[250,1600], last:[250,1600], visa:[250,1600], portrait:[50,800] };
+var LIMITS = { front:[250,1600], last:[250,1600], visa:[250,1600], oci:[250,1600], portrait:[50,800] };
+function pdfData(result) {
+  var s = String(result || '');
+  var i = s.toLowerCase().indexOf('base64,');
+  if (i < 0) return '';
+  return 'data:application/pdf;base64,' + s.slice(i + 7).replace(/\s/g, '');
+}
 function markFile(id, data, label) {
   photos[id] = data;
   var img = document.getElementById('prev-' + id);
@@ -752,14 +792,18 @@ function useFile(file) {
   if (isPdf) {
     if (file.size > 1500000) {
       document.getElementById('formError').textContent = t('badImage');
-    } else {
-      var reader = new FileReader();
-      reader.onload = function () { markFile(id, reader.result, 'PDF attached'); };
-      reader.onerror = function () { document.getElementById('formError').textContent = t('badImage'); };
-      reader.readAsDataURL(file);
+      return;
     }
-    document.getElementById('camInput').value = '';
-    document.getElementById('libInput').value = '';
+    var reader = new FileReader();
+    reader.onload = function () {
+      var data = pdfData(reader.result);
+      if (!data) document.getElementById('formError').textContent = t('badImage');
+      else markFile(id, data, 'PDF attached');
+      document.getElementById('camInput').value = '';
+      document.getElementById('libInput').value = '';
+    };
+    reader.onerror = function () { document.getElementById('formError').textContent = t('badImage'); };
+    reader.readAsDataURL(file);
     return;
   }
   var lim = LIMITS[id];
