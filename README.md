@@ -1,142 +1,58 @@
-# Form C Guest Pre-Registration — Deployment Guide
-### Raj Vidya Kender · Shahurpur Chhatarpur, New Delhi 110074
+# Guest Registration Form — Raj Vidya Kender
 
-Foreign guests fill their Form C details **before** reaching the desk. Data lands
-in a Google Sheet; your staff read the Sheet and punch it into the e-FRRO portal.
-No queue, no typing at the desk. A printable copy is emailed to the guest and to
-`indiaogm@gmail.com`, and the data is backed up nightly.
+Government of India Form C, filled before a foreign guest arrives at Raj Vidya Kender, Shahurpur Chhatarpur, New Delhi 110074.
 
-```
-Guest phone → [Smartcard gate: enter code]
-            → verified against SmartCards sheet (Name ↔ SmartCard)
-            → HTML form opens, Registered Name pre-filled & locked
-            → guest fills details + uploads photo, passport pages, visa
-            → progress bar while submitting
-            → Google Apps Script → Google Sheet  → emailed printable copy
-                                        ↓
-              Staff punch into e-FRRO portal → paste Application ID + ACK back
-                                        ↓
-              Nightly backup (full copy + CSV) to FormC_Backups
-```
+The public site is [formc.parakhforpr.org](https://formc.parakhforpr.org/). Reception uses [formc.parakhforpr.org/staff.html](https://formc.parakhforpr.org/staff.html).
 
-Cost: ₹0. No server to maintain.
+Day-to-day steps are in [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md).
 
----
+## How this was built
 
-## PART A — Backend (Google Sheet + Apps Script)
+The first version asked every guest to type the full government form and to pass a short smartcard code. That was too long for older guests, and a public link or lobby QR could be opened by anyone.
 
-1. Create a new Google Sheet. Copy its **ID** from the URL
-   `docs.google.com/spreadsheets/d/`**`THIS_IS_THE_ID`**`/edit`.
-2. In the Sheet: **Extensions → Apps Script**. Delete any sample code.
-3. Paste the full contents of **`Code.gs`**.
-4. Set `SHEET_ID` at the top to your Sheet ID.
-   (Optional) change `VERIFY_EMAIL` if the double-check copy should go elsewhere.
-5. From the function dropdown, run **`setupSheet`** once. Authorize when asked
-   (your account → Advanced → Go to project → Allow). This creates the
-   submissions tab with all column headers.
-   **The app also sends email and makes backups**, so the authorization will ask
-   for permission to send email and manage Drive files — allow it.
-6. Run **`setupLookup`** once. This creates a **`SmartCards`** tab with headers.
-7. Open the **`SmartCards`** tab and fill your list:
-   **Column A = Name, Column B = SmartCard**, data from row 2 down.
-   Only these codes can open the form.
-8. Run **`installBackupTrigger`** once to schedule nightly backups (see Part E).
-9. **Deploy → New deployment** → gear → **Web app**:
-   - Execute as: **Me**
-   - Who has access: **Anyone**
-   - Deploy → copy the **Web app URL** ending in `/exec`.
+It was rebuilt as a short registration that still lands in the same Google Sheet, in e-FRRO column order, so staff can punch the portal within 24 hours.
 
-> **While still testing**, use **Deploy → Test deployments** and its `/dev` URL —
-> it always runs the latest saved code, so you never redeploy while tweaking.
-> Do one final **New deployment** when you're ready for real guests.
+Three pieces:
 
----
+1. **Website** — `index.html` and `staff.html` are static files on GitHub Pages, branch `guest-registration-form`, custom domain `formc.parakhforpr.org`. DNS is a CNAME: `formc` → `manukoli1986.github.io`.
+2. **Apps Script web app** — `Code.gs` runs as the Google account that owns the sheet. Deploy it as a web app, **Execute as: Me**, **Who has access: Anyone**. “Anyone” only means a guest does not need a Google login. The `/exec` address goes in `config.js` as `RVK_SCRIPT_URL`.
+3. **Google Sheet** — `FormC_Submissions` holds the answers. `Invites` holds the name, email, and one-time token. Photos go in the private Drive folder `FormC_Photos`. A nightly copy goes to `FormC_Backups`.
 
-## PART B — Guest Form (Cloudflare Pages)
+The copy of `Code.gs` in this repo has placeholders for the sheet id and the staff password. The live script in Apps Script has the real values. Do not commit those.
 
-1. Open **`guest-formc.html`**. Set `SCRIPT_URL` (near the bottom of the
-   `<script>`) to the `/exec` (or `/dev`) URL from Part A.
-2. Host it:
-   - **Cloudflare Pages** (recommended): Dashboard → Workers & Pages →
-     Create → Pages → upload the file renamed to `index.html`. You get a URL
-     like `rvk-formc.pages.dev`, or attach a subdomain e.g. `checkin.rvk.org`.
-3. Test on your phone: enter a smartcard from your list, fill a dummy entry,
-   confirm a row appears in the Sheet and an email arrives.
+## What a guest does
 
----
+Reception sends one email. The link can be forwarded, but the form stays closed until that same email is typed. A different email is refused.
 
-## PART C — Send the link to guests
+The pages are:
 
-- **On booking:** include the form URL in the confirmation email / WhatsApp
-  (fire it from your existing n8n flow for foreign bookings).
-- **Walk-ins / midnight arrivals:** print a **QR code** of the form URL and
-  place it at reception, the entrance, and on 1–2 lobby tablets.
+1. Name, email, contact, emergency contact, and home address. The India address is Raj Vidya Kender.
+2. Airport pickup and flight details. Optional. If the guest does not have the flight yet, they can email it later, or reception can add it on arrival.
+3. Passport photo page, passport last page, visa, and a passport-size photo. Optional. Reception can upload them at the desk.
+4. Country they are coming from.
+5. Drop from RVK or not, the next country or Indian state, and when they leave RVK.
 
----
+Every page says the form is only for that guest: do not pass it on, or they will be blacklisted for future events, and please cooperate with the volunteers. English and Español. The form also asks them to bring a photocopy of the passport and the visa.
 
-## PART D — Daily desk operation
+Nepal and Bhutan passports do not need this link.
 
-**What the guest provides:** all Form C fields, a passport-size photo, passport
-front + last pages, and a visa/eVisa image.
+## What reception does
 
-**At check-in (seconds):** find the guest's row (search by name / passport /
-smartcard), match the physical passport, hand over the key.
+The staff page can stay open on two or three computers at once. Each one enters the staff password. Locking one screen does not sign the others out.
 
-**Filing to e-FRRO (within 24 h, in a batch):**
-1. Open the e-FRRO C-Form portal (`indianfrro.gov.in`) — works only from an
-   **Indian internet connection**.
-2. For each `PENDING` row, punch the fields (Sheet columns follow the portal's
-   order). Open the photo/passport/visa links to verify and to upload the photo.
-3. After the portal returns an **Application ID** + acknowledgement, paste them
-   into the Sheet, put your name in `Punched By`, set `Status` to `DONE`.
+- **New guest** — name and the one email allowed to open the form. The email works once and expires after 14 days.
+- **Guest at reception** — search the name or email, fill anything left blank, upload missing photos, save, and print Form C.
+- Within 24 hours, punch e-FRRO from the sheet, paste Application ID and ACK No, and set Status to DONE.
 
-Tip: add a filter view on `Status = PENDING` so staff only see unfiled guests.
+## Files
 
-**Field notes**
-- Two arrival dates: *in India* = airport landing; *at Hotel* = arrival at RVK.
-- Departure date + time are captured for the departure report.
-- Photo compresses under 50 KB; passport/visa pages up to ~200 KB.
-- Dates go into the portal as **DD/MM/YYYY** (the emailed copy already shows this).
-- **Nepal & Bhutan** passport holders don't need Form C — GRC only.
+| File | Where it lives |
+|---|---|
+| `index.html` | Guest form. Published. |
+| `staff.html` | Reception. Published. |
+| `config.js` | Web app `/exec` URL only. No password. Published. |
+| `CNAME` | `formc.parakhforpr.org` |
+| `robots.txt` | Asks search engines not to index the site. |
+| `Code.gs` | Apps Script only. Placeholders in git. Real password stays in Apps Script. |
 
----
-
-## PART E — Data backup
-
-The script backs up automatically once `installBackupTrigger` has been run:
-
-- **Full copy** of the whole spreadsheet, nightly (~2 AM), named
-  `FormC_Backup_YYYY-MM-DD_HHMM`, into a Drive folder **`FormC_Backups`**.
-- **CSV snapshot** of the submissions tab the same night, in the same folder —
-  small and openable anywhere.
-- The newest ~60 backups are kept; older ones are auto-trashed.
-
-**Run a backup on demand:** open Apps Script, select `backupData` (or
-`exportCsvBackup`) from the dropdown, click Run.
-
-**Restore:** open any `FormC_Backup_…` file from `FormC_Backups`, or import the
-CSV into a fresh Sheet. Guest photos live separately in **`FormC_Photos`** and
-are already retained there.
-
-**Off-Google copy (optional):** periodically download a CSV
-(`File → Download → CSV`) or the whole Sheet (`File → Download → Excel`) and keep
-it on hotel storage, so a backup exists outside the Google account too.
-
----
-
-## Security / privacy
-- The Sheet and both Drive folders hold passport/visa data — restrict sharing to
-  named staff only.
-- Photos are set to "anyone with link"; tighten to restricted if your staff
-  access allows.
-- Purge rows, photos, and old backups on a retention schedule once compliance
-  is met.
-
----
-
-## What to re-run after code changes
-- Edited `Code.gs` and using an `/exec` URL → **redeploy** (Deploy → Manage
-  deployments → Edit → Version: New). Using `/dev` → just save.
-- Added a smartcard → just add a row, no redeploy.
-- Changed the column layout → re-run `setupSheet` **before** you have live data
-  (it clears the tab), or add the new headers manually.
+After a change to `Code.gs`, paste it into Apps Script and use **Deploy → Manage deployments → pencil → Version: New version → Deploy**. The `/exec` URL stays the same. After a change to the HTML, push this branch. GitHub Pages publishes `guest-registration-form`.
