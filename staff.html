@@ -106,6 +106,7 @@
   </section>
 </main>
 <section id="printSheet" hidden></section>
+<input id="deskPhoto" type="file" accept="image/*" hidden>
 <script>
 var PIN_KEY = 'rvkStaffPin';
 var params = new URLSearchParams(location.search);
@@ -138,7 +139,7 @@ function postJson(payload) {
   var url = scriptUrl();
   if (!url) return Promise.resolve({ ok: false, code: 'config', error: 'Add the web app URL to config.js.' });
   var ctrl = new AbortController();
-  var timer = setTimeout(function () { ctrl.abort(); }, 60000);
+  var timer = setTimeout(function () { ctrl.abort(); }, 90000);
   return fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -414,19 +415,28 @@ function renderDesk(guest) {
   box.appendChild(grid);
   var photos = document.createElement('div');
   photos.style.marginTop = '12px';
+  var photoTitle = document.createElement('h2');
+  photoTitle.textContent = 'Photos';
+  photos.appendChild(photoTitle);
   (guest.photos || []).forEach(function (photo) {
-    var line = document.createElement('p');
-    line.className = 'photoLine meta';
+    var line = document.createElement('div');
+    line.className = 'row';
+    var label = document.createElement('p');
+    label.className = 'meta';
+    label.style.flex = '1';
+    label.style.margin = '8px 0 0';
     if (photo.url) {
       var a = document.createElement('a');
       a.href = photo.url;
       a.target = '_blank';
       a.rel = 'noopener';
       a.textContent = photo.label;
-      line.appendChild(a);
+      label.appendChild(a);
     } else {
-      line.textContent = photo.label + ' — not uploaded';
+      label.textContent = photo.label + ' — not uploaded';
     }
+    line.appendChild(label);
+    line.appendChild(action(photo.url ? 'Replace' : 'Upload', function () { pickDeskPhoto(photo.key); }, true));
     photos.appendChild(line);
   });
   box.appendChild(photos);
@@ -552,6 +562,60 @@ function saveDeskThen(done) {
     done();
   });
 }
+
+var deskPhotoKey = '';
+var PHOTO_LIMITS = { front: [250, 1600], last: [250, 1600], visa: [250, 1600], portrait: [50, 800] };
+function pickDeskPhoto(key) {
+  if (!deskGuest || busy) return;
+  deskPhotoKey = key;
+  document.getElementById('deskPhoto').click();
+}
+function compressDeskPhoto(file, maxKB, maxDim) {
+  return new Promise(function (resolve, reject) {
+    var url = URL.createObjectURL(file);
+    var img = new Image();
+    img.onload = function () {
+      URL.revokeObjectURL(url);
+      var w = img.naturalWidth || img.width, h = img.naturalHeight || img.height;
+      var longer = Math.max(w, h);
+      if (longer > maxDim) { var scale = maxDim / longer; w = Math.round(w * scale); h = Math.round(h * scale); }
+      var canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      var q = 0.82, data = canvas.toDataURL('image/jpeg', q);
+      while (data.length > maxKB * 1024 * 1.37 && q > 0.42) { q -= 0.08; data = canvas.toDataURL('image/jpeg', q); }
+      if (data.indexOf('data:image/jpeg') !== 0) reject(new Error('photo'));
+      else resolve(data);
+    };
+    img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('photo')); };
+    img.src = url;
+  });
+}
+function uploadDeskPhoto(file) {
+  if (!file || !deskGuest || !deskPhotoKey) return;
+  var key = deskPhotoKey;
+  var row = deskGuest.row;
+  var lim = PHOTO_LIMITS[key] || [250, 1600];
+  var err = document.getElementById('deskError');
+  err.textContent = 'Uploading photo…';
+  busy = true;
+  compressDeskPhoto(file, lim[0], lim[1]).then(function (image) {
+    return postJson({ action: 'uploadGuestPhoto', pin: pin, row: row, photoKey: key, image: image });
+  }).then(function (data) {
+    busy = false;
+    if (!data || !data.ok) { err.textContent = (data && data.error) || 'That photo could not be saved.'; return; }
+    renderDesk(data.guest);
+    err.textContent = 'Photo saved.';
+  }).catch(function () {
+    busy = false;
+    err.textContent = 'That photo could not be read. Please try again.';
+  });
+  document.getElementById('deskPhoto').value = '';
+}
+document.getElementById('deskPhoto').addEventListener('change', function (e) {
+  uploadDeskPhoto(e.target.files && e.target.files[0]);
+});
 
 window.addEventListener('afterprint', function () {
   document.getElementById('printSheet').hidden = true;

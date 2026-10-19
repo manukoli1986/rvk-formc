@@ -169,6 +169,7 @@ function handle_(d) {
   if (action === 'findGuests') return findGuests_(d);
   if (action === 'getGuest') return getGuest_(d);
   if (action === 'updateGuest') return updateGuest_(d);
+  if (action === 'uploadGuestPhoto') return uploadGuestPhoto_(d);
   return { ok: false, code: 'bad-request', error: 'Unknown action.' };
 }
 
@@ -447,6 +448,13 @@ const DESK_FIELDS = [
   { key: 'departTime', header: 'Departure Time', label: 'Time leaving RVK' }
 ];
 
+const PHOTO_SLOTS = [
+  { key: 'front', header: 'Passport Front', label: 'Passport photo page', file: 'passport_front_' },
+  { key: 'last', header: 'Passport Last', label: 'Passport last page', file: 'passport_last_' },
+  { key: 'visa', header: 'Visa Photo', label: 'Visa', file: 'visa_' },
+  { key: 'portrait', header: 'Passport Photo', label: 'Passport-size photo', file: 'portrait_' }
+];
+
 function findGuests_(d) {
   const auth = checkPin_(d.pin);
   if (!auth.ok) return auth;
@@ -529,6 +537,34 @@ function updateGuest_(d) {
   return { ok: true, guest: guestRecord_(fresh, saved) };
 }
 
+function uploadGuestPhoto_(d) {
+  const auth = checkPin_(d.pin);
+  if (!auth.ok) return auth;
+  let slot = null;
+  const photoKey = String(d.photoKey || '');
+  for (let i = 0; i < PHOTO_SLOTS.length; i++) {
+    if (PHOTO_SLOTS[i].key === photoKey) slot = PHOTO_SLOTS[i];
+  }
+  if (!slot) return { ok: false, code: 'missing', error: 'Choose which photo to upload.' };
+  const pack = readSubmissions_();
+  const row = submissionRow_(pack, d.row);
+  if (!row) return { ok: false, code: 'missing', error: 'That registration could not be found.' };
+  const name = showCell_(cell_(row.values, pack.map, 'Full Name')) || 'guest';
+  const stamp = Utilities.formatDate(new Date(), TIMEZONE, 'yyyyMMdd_HHmmss');
+  const holder = { folder: null };
+  let link = '';
+  try {
+    link = optionalImage_(holder, d.image, slot.file + safeName_(name) + '_' + stamp + '.jpg');
+  } catch (err) {
+    return { ok: false, code: 'bad-image', error: 'That photo could not be read. Please try a JPEG again.' };
+  }
+  if (!link) return { ok: false, code: 'missing-photo', error: 'Choose a photo to upload.' };
+  setCell_(pack.sh, pack.map, row.row, slot.header, link);
+  const fresh = readSubmissions_();
+  const saved = submissionRow_(fresh, row.row);
+  return { ok: true, guest: guestRecord_(fresh, saved) };
+}
+
 function readSubmissions_() {
   const sh = submissionSheet_();
   ensureHeaders_(sh, HEADERS);
@@ -566,12 +602,11 @@ function guestRecord_(pack, row) {
     const value = showCell_(cell_(row.values, pack.map, field.header));
     fields.push({ key: field.key, label: field.label, value: value, blank: !value });
   }
-  const photos = [
-    { label: 'Passport photo page', url: showCell_(cell_(row.values, pack.map, 'Passport Front')) },
-    { label: 'Passport last page', url: showCell_(cell_(row.values, pack.map, 'Passport Last')) },
-    { label: 'Visa', url: showCell_(cell_(row.values, pack.map, 'Visa Photo')) },
-    { label: 'Passport-size photo', url: showCell_(cell_(row.values, pack.map, 'Passport Photo')) }
-  ];
+  const photos = [];
+  for (let i = 0; i < PHOTO_SLOTS.length; i++) {
+    const slot = PHOTO_SLOTS[i];
+    photos.push({ key: slot.key, label: slot.label, url: showCell_(cell_(row.values, pack.map, slot.header)) });
+  }
   return {
     row: row.row,
     name: showCell_(cell_(row.values, pack.map, 'Full Name')) || showCell_(cell_(row.values, pack.map, 'Verified Name')),
@@ -691,7 +726,7 @@ function sendInviteEmail_(name, email, link, expires) {
     + '<div style="color:#e2c57a;font-size:13px;letter-spacing:.12em;text-transform:uppercase">Raj Vidya Kender</div>'
     + '<div style="font-size:20px;margin-top:4px">Guest Registration Form</div></div>'
     + '<div style="border:1px solid #e4ddd0;border-top:none;padding:20px;border-radius:0 0 12px 12px">'
-    + '<p style="background:#7a1f1f;color:#fff;padding:10px 12px;border-radius:8px;font-weight:700">Do not pass this form to anyone else. You will be blacklisted for future events.</p>'
+    + '<p style="background:#7a1f1f;color:#fff;padding:10px 12px;border-radius:8px;font-weight:700">This form is only for you. Do not pass it on, or you will be blacklisted for future events. Please cooperate with the volunteers so your arrival goes smoothly.</p>'
     + '<p>Please complete the guest registration for <b>' + safeName + '</b> before arrival.</p>'
     + '<p>The form opens only when you enter this email address: <b>' + escapeHtml_(email) + '</b></p>'
     + '<p style="margin:18px 0"><a href="' + safeLink + '" style="display:inline-block;background:#1a3a6b;color:#fff;text-decoration:none;padding:14px 22px;border-radius:10px;font-size:18px;font-weight:700">Open the registration form</a></p>'
@@ -699,7 +734,7 @@ function sendInviteEmail_(name, email, link, expires) {
     + '<p>A shared link does not open the form by itself. It stops working on <b>' + escapeHtml_(day) + '</b>, and it stops after you submit.</p>'
     + '<p>Please also bring a photocopy of your passport and visa.</p>'
     + '<hr style="border:none;border-top:1px solid #e4ddd0;margin:22px 0">'
-    + '<p>No pase este formulario a nadie. Si lo hace, quedará en la lista negra para futuros eventos.</p>'
+    + '<p>Este formulario es solo para usted. No lo pase a nadie, o quedará en la lista negra para futuros eventos. Por favor coopere con los voluntarios para que su llegada sea sencilla.</p>'
     + '<p>Complete el registro de <b>' + safeName + '</b>. El formulario se abre solo con este correo: <b>' + escapeHtml_(email) + '</b></p>'
     + '<p style="font-size:15px;word-break:break-all">' + safeLink + '</p>'
     + '<p>Traiga también una fotocopia del pasaporte y del visado. Deja de funcionar el <b>' + escapeHtml_(day) + '</b>.</p>'
@@ -725,7 +760,7 @@ function sendInviteEmail_(name, email, link, expires) {
 }
 
 function invitePlain_(name, link, day, email) {
-  return 'Do not pass this form to anyone else. You will be blacklisted for future events.\n\n'
+  return 'This form is only for you. Do not pass it on, or you will be blacklisted for future events. Please cooperate with the volunteers so your arrival goes smoothly.\n\n'
     + 'Please complete guest registration for ' + name + ' before arrival at Raj Vidya Kender.\n\n'
     + 'Open the form and enter this email address:\n' + email + '\n\n'
     + link + '\n\n'
