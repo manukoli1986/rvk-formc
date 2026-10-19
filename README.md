@@ -18,7 +18,7 @@ Three pieces:
 2. **Apps Script web app** — `Code.gs` runs as the Google account that owns the sheet. Deploy it as a web app, **Execute as: Me**, **Who has access: Anyone**. “Anyone” only means a guest does not need a Google login. The `/exec` address goes in `config.js` as `RVK_SCRIPT_URL`.
 3. **Google Sheet** — `FormC_Submissions` holds the answers. `Invites` holds the name, email, and one-time token. Photos go in the private Drive folder `FormC_Photos`. A nightly copy goes to `FormC_Backups`.
 
-The copy of `Code.gs` in this repo has placeholders for the sheet id and the staff password. The live script in Apps Script has the real values. Do not commit those.
+`Code.gs` is not in this repo. It stays on the computer that edits the form, and in Apps Script, because it holds the sheet id and the staff password.
 
 ## What a guest does
 
@@ -53,6 +53,6 @@ The staff page can stay open on two or three computers at once. Each one enters 
 | `config.js` | Web app `/exec` URL only. No password. Published. |
 | `CNAME` | `formc.parakhforpr.org` |
 | `robots.txt` | Asks search engines not to index the site. |
-| `Code.gs` | Apps Script only. Placeholders in git. Real password stays in Apps Script. |
+| `Code.gs` | Not in git. Apps Script only. The sheet id and staff password stay there. |
 
 After a change to `Code.gs`, paste it into Apps Script and use **Deploy → Manage deployments → pencil → Version: New version → Deploy**. The `/exec` URL stays the same. After a change to the HTML, push this branch. GitHub Pages publishes `guest-registration-form`.
