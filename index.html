@@ -43,6 +43,11 @@
   input[readonly]{background:#f3f5f8;color:var(--muted)}
   .hint{color:var(--muted);font-size:14.5px;margin:4px 0 0}
   .note{background:#fff8ea;border-left:4px solid var(--gold);padding:10px 12px;border-radius:0 10px 10px 0;margin:12px 0}
+  .review h3{margin:18px 0 8px;font-size:18px;color:var(--navy)}
+  .review h3:first-child{margin-top:0}
+  .review dl{margin:0;display:grid;grid-template-columns:minmax(130px,40%) 1fr;gap:8px 12px}
+  .review dt{color:var(--muted);font-weight:650}
+  .review dd{margin:0;font-weight:700;overflow-wrap:anywhere}
   .note a{color:var(--navy);font-weight:750}
   .err{color:var(--warn);font-weight:750;min-height:1.2em;margin:8px 0}
   button.action{font:750 18px/1.2 inherit;min-height:54px;padding:14px 18px;border-radius:12px;border:0;cursor:pointer;background:var(--navy);color:#fff}
@@ -110,7 +115,7 @@
 
   <section class="screen" id="wizard" hidden>
     <div class="card">
-      <div class="progress" id="progress" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="progress" id="progress" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
       <p class="stepno" id="stepNo"></p>
       <p class="hint" id="who"></p>
 
@@ -124,6 +129,9 @@
         <input id="emailLocked" type="email" readonly>
         <label for="nationality"><span data-i18n="nationality">Nationality</span> <span class="req">*</span></label>
         <input id="nationality" maxlength="80" placeholder="For example, Spanish">
+        <label for="dob"><span data-i18n="dob">Date of birth</span> <span class="req">*</span></label>
+        <input id="dob" type="date">
+        <p class="note" id="ageLine" hidden></p>
         <label for="address"><span data-i18n="address">Home address</span> <span class="req">*</span></label>
         <textarea id="address" rows="2" maxlength="300"></textarea>
         <label for="addrCity"><span data-i18n="city">City</span> <span class="req">*</span></label>
@@ -284,6 +292,13 @@
         <div class="note" data-i18n="photocopy">In case you were unable to upload your passport and visa to this form, kindly bring a soft copy of each with you.</div>
       </div>
 
+      <div class="step" data-step="5" hidden>
+        <h2 data-i18n="s6">Please check your answers</h2>
+        <p class="hint" data-i18n="reviewHint">Look through this once. Use Back if something needs a change, then submit.</p>
+        <div class="note" data-i18n="reviewLater">If a field is empty, you can leave it. You can fill it in later.</div>
+        <div class="review" id="review"></div>
+      </div>
+
       <p class="err" id="formError" role="alert"></p>
       <div class="nav">
         <button type="button" class="action ghost" id="backBtn" data-i18n="back">Back</button>
@@ -323,11 +338,13 @@ var I18N = {
     stepOf:'Step {n} of {total}',
     s1:'Your details', s2:'Transport', s3:'Passport, visa, and photo', s4:'Where are you coming from?', s5:'Departure from Raj Vidya Kender',
     name:'Full name', smartCard:'Smart card', nationality:'Nationality',
+    dob:'Date of birth', ageLabel:'Age', errDob:'Enter your date of birth.',
     contact:'Contact number at your home', emergencyName:'Emergency contact name at your home', emergencyPhone:'Emergency contact number at your home',
     homePhones:'Contact and emergency numbers at your home.',
     indiaPhone:'Phone number in India',
     address:'Home address', city:'City', country:'Country',
     indiaAddr:'Address in India for this stay: Raj Vidya Kender, Shahurpur Chhatarpur, New Delhi 110074.',
+    indiaStay:'Address in India',
     travelOptional:'If you do not have the flight details yet, you can send them later by email. You can also leave this blank, and reception will add it when you arrive.',
     pickupQ:'Do you need a pickup from the airport?', pickupYes:'Yes — pick me up', pickupNo:'No — I will reach RVK myself',
     pickupPlace:'Pickup airport', airline:'Airline', flightNo:'Flight number', flightFrom:'Flying from (city)',
@@ -358,6 +375,10 @@ var I18N = {
     nextCountry:'Country', nextCity:'City',
     departOptional:'If you do not have these details yet, you can send them later by email. You can also leave this blank, and reception will add it when you arrive.',
     departDate:'Date you leave Raj Vidya Kender', departTime:'Time you leave',
+    s6:'Please check your answers',
+    reviewHint:'Look through this once. Use Back if something needs a change, then submit.',
+    reviewLater:'If a field is empty, you can leave it. You can fill it in later.',
+    notAdded:'Not added', added:'Added',
     back:'Back', next:'Next', submit:'Submit registration',
     doneTitle:'Registration received',
     doneBody:'You are finished. If you did not upload your passport and visa, bring a soft copy of both to reception.',
@@ -391,11 +412,13 @@ var I18N = {
     stepOf:'Paso {n} de {total}',
     s1:'Sus datos', s2:'Transporte', s3:'Pasaporte, visado y foto', s4:'¿De dónde viene?', s5:'Salida de Raj Vidya Kender',
     name:'Nombre completo', smartCard:'Tarjeta inteligente', nationality:'Nacionalidad',
+    dob:'Fecha de nacimiento', ageLabel:'Edad', errDob:'Escriba su fecha de nacimiento.',
     contact:'Teléfono en su domicilio', emergencyName:'Nombre del contacto de emergencia en su domicilio', emergencyPhone:'Teléfono de emergencia en su domicilio',
     homePhones:'Teléfono de contacto y de emergencia en su domicilio.',
     indiaPhone:'Teléfono en la India',
     address:'Domicilio', city:'Ciudad', country:'País',
     indiaAddr:'Dirección en la India durante la estancia: Raj Vidya Kender, Shahurpur Chhatarpur, Nueva Delhi 110074.',
+    indiaStay:'Dirección en la India',
     travelOptional:'Si aún no tiene los datos del vuelo, puede enviarlos después por correo. También puede dejarlo en blanco y recepción lo añadirá cuando llegue.',
     pickupQ:'¿Necesita que lo recojan en el aeropuerto?', pickupYes:'Sí — recójame', pickupNo:'No — llegaré a RVK por mi cuenta',
     pickupPlace:'Aeropuerto de recogida', airline:'Aerolínea', flightNo:'Número de vuelo', flightFrom:'Sale de (ciudad)',
@@ -426,6 +449,10 @@ var I18N = {
     nextCountry:'País', nextCity:'Ciudad',
     departOptional:'Si aún no tiene estos datos, puede enviarlos después por correo. También puede dejarlos en blanco y recepción los añadirá cuando llegue.',
     departDate:'Fecha en que sale de Raj Vidya Kender', departTime:'Hora de salida',
+    s6:'Revise sus respuestas',
+    reviewHint:'Revise esto una vez. Use Atrás si algo debe cambiar, y luego envíe.',
+    reviewLater:'Si un campo está vacío, puede dejarlo. Puede completarlo más tarde.',
+    notAdded:'No indicado', added:'Añadido',
     back:'Atrás', next:'Siguiente', submit:'Enviar registro',
     doneTitle:'Registro recibido',
     doneBody:'Ya terminó. Si no subió el pasaporte y el visado, traiga una copia digital de ambos a recepción.',
@@ -482,8 +509,9 @@ function applyI18n() {
   document.title = t('title') + ' — Raj Vidya Kender';
   var next = document.getElementById('nextBtn');
   if (next && document.getElementById('wizard') && !document.getElementById('wizard').hidden) {
-    next.textContent = step === 4 ? t('submit') : t('next');
+    next.textContent = step === 5 ? t('submit') : t('next');
   }
+  showAge();
 }
 function scriptUrl() {
   if (localHost && params.get('script')) return params.get('script');
@@ -534,27 +562,155 @@ function renderStep() {
   document.querySelectorAll('.step').forEach(function (el) {
     el.hidden = Number(el.getAttribute('data-step')) !== step;
   });
-  document.getElementById('stepNo').textContent = t('stepOf').replace('{n}', String(step + 1)).replace('{total}', '5');
+  document.getElementById('stepNo').textContent = t('stepOf').replace('{n}', String(step + 1)).replace('{total}', '6');
   document.getElementById('who').textContent = t('forGuest').replace('{name}', guestName);
   document.querySelectorAll('#progress i').forEach(function (bar, i) {
     bar.className = i < step ? 'done' : (i === step ? 'on' : '');
   });
   document.getElementById('backBtn').hidden = step === 0;
-  document.getElementById('nextBtn').textContent = step === 4 ? t('submit') : t('next');
+  document.getElementById('nextBtn').textContent = step === 5 ? t('submit') : t('next');
+  if (step === 5) fillReview();
   document.getElementById('formError').textContent = '';
   window.scrollTo(0, 0);
 }
 function setError(key) {
   document.getElementById('formError').textContent = t(key);
 }
+function showDate(iso) {
+  var p = String(iso || '').split('-');
+  return p.length === 3 && p[0] && p[1] && p[2] ? (p[2] + '/' + p[1] + '/' + p[0]) : '';
+}
+function shown(value) {
+  var text = String(value || '').trim();
+  return text || t('notAdded');
+}
+function addSection(box, title) {
+  var heading = document.createElement('h3');
+  heading.textContent = title;
+  var list = document.createElement('dl');
+  box.appendChild(heading);
+  box.appendChild(list);
+  return list;
+}
+function addLine(list, label, value) {
+  var term = document.createElement('dt');
+  term.textContent = label;
+  var detail = document.createElement('dd');
+  detail.textContent = shown(value);
+  list.appendChild(term);
+  list.appendChild(detail);
+}
+function fillReview() {
+  var box = document.getElementById('review');
+  box.textContent = '';
+  var age = ageYears(v('dob'));
+  var born = showDate(v('dob'));
+  var details = addSection(box, t('s1'));
+  addLine(details, t('name'), v('fullName'));
+  addLine(details, t('smartCard'), v('smartCard'));
+  addLine(details, t('email'), v('emailLocked'));
+  addLine(details, t('nationality'), v('nationality'));
+  addLine(details, t('dob'), born ? (born + (age === null ? '' : ' · ' + t('ageLabel') + ': ' + age)) : '');
+  addLine(details, t('address'), v('address'));
+  addLine(details, t('city'), v('addrCity'));
+  addLine(details, t('country'), v('addrCountry'));
+  addLine(details, t('contact'), v('contact'));
+  addLine(details, t('emergencyName'), v('emergencyName'));
+  addLine(details, t('emergencyPhone'), v('emergencyPhone'));
+  addLine(details, t('indiaPhone'), v('indiaPhone'));
+  addLine(details, t('indiaStay'), 'Raj Vidya Kender, Shahurpur Chhatarpur, New Delhi 110074');
+
+  var travel = addSection(box, t('s2'));
+  addLine(travel, t('pickupQ'), pickup === 'Yes' ? t('pickupYes') : (pickup === 'No' ? t('pickupNo') : ''));
+  if (pickup === 'Yes') {
+    addLine(travel, t('pickupPlace'), v('pickupPlace'));
+    addLine(travel, t('airline'), v('airline'));
+    addLine(travel, t('flightNo'), v('flightNo'));
+    addLine(travel, t('flightFrom'), v('flightFrom'));
+    addLine(travel, t('flightDate'), showDate(v('flightDate')));
+    addLine(travel, t('flightTime'), v('flightTime'));
+  }
+  if (pickup === 'No') {
+    addLine(travel, t('rvkDate'), showDate(v('rvkDate')));
+    addLine(travel, t('rvkTime'), v('rvkTime'));
+  }
+
+  var docs = addSection(box, t('s3'));
+  addLine(docs, t('ppFront'), photos.front ? t('added') : '');
+  addLine(docs, t('passportNo'), v('passportNo'));
+  addLine(docs, t('passportPlaceCountry'), v('passportPlaceCountry'));
+  addLine(docs, t('passportPlaceCity'), v('passportPlaceCity'));
+  addLine(docs, t('passportIssue'), showDate(v('passportIssue')));
+  addLine(docs, t('passportExpiry'), showDate(v('passportExpiry')));
+  addLine(docs, t('docQ'), docKind === 'Visa' ? t('docVisa') : (docKind === 'e-Visa' ? t('docEvisa') : (docKind === 'OCI' ? t('docOci') : '')));
+  if (docKind === 'Visa' || docKind === 'e-Visa') {
+    addLine(docs, t('ppVisa'), photos.visa ? t('added') : '');
+    addLine(docs, t('visaNo'), v('visaNo'));
+    addLine(docs, t('visaIssue'), showDate(v('visaIssue')));
+    addLine(docs, t('visaExpiry'), showDate(v('visaExpiry')));
+    addLine(docs, t('visaCountry'), v('visaCountry'));
+    addLine(docs, t('visaCity'), v('visaCity'));
+    addLine(docs, t('visaType'), v('visaType'));
+  }
+  if (docKind === 'OCI') addLine(docs, t('docOci'), photos.oci ? t('added') : '');
+  addLine(docs, t('ppFace'), photos.portrait ? t('added') : '');
+
+  var from = addSection(box, t('s4'));
+  addLine(from, t('comingFrom'), v('comingFrom'));
+  addLine(from, t('comingCity'), v('comingCity'));
+
+  var leave = addSection(box, t('s5'));
+  addLine(leave, t('dropQ'), dropNeed === 'Yes' ? t('dropYes') : (dropNeed === 'No' ? t('dropNo') : ''));
+  if (dropNeed === 'Yes') {
+    addLine(leave, t('dropPlace'), v('dropPlace'));
+    addLine(leave, t('dropDate'), showDate(v('dropDate')));
+    addLine(leave, t('dropTime'), v('dropTime'));
+  }
+  addLine(leave, t('nextCountry'), v('nextCountry'));
+  addLine(leave, t('nextCity'), v('nextCity'));
+  addLine(leave, t('departDate'), showDate(v('departDate')));
+  addLine(leave, t('departTime'), v('departTime'));
+}
 
 function valText(id, min) {
   return (document.getElementById(id).value || '').trim().length >= (min || 1);
+}
+function ageYears(iso) {
+  var p = String(iso || '').split('-');
+  if (p.length !== 3) return null;
+  var y = parseInt(p[0], 10);
+  var m = parseInt(p[1], 10);
+  var d = parseInt(p[2], 10);
+  if (!y || m < 1 || m > 12 || d < 1 || d > 31) return null;
+  var born = new Date(y, m - 1, d);
+  if (born.getFullYear() !== y || born.getMonth() !== m - 1 || born.getDate() !== d) return null;
+  var today = new Date();
+  today.setHours(0, 0, 0, 0);
+  if (born > today) return null;
+  var age = today.getFullYear() - y;
+  var monthGap = today.getMonth() - (m - 1);
+  if (monthGap < 0 || (monthGap === 0 && today.getDate() < d)) age -= 1;
+  if (age < 0 || age > 120) return null;
+  return age;
+}
+function showAge() {
+  var line = document.getElementById('ageLine');
+  var field = document.getElementById('dob');
+  if (!line || !field) return;
+  var age = ageYears(field.value);
+  if (age === null) {
+    line.hidden = true;
+    line.textContent = '';
+    return;
+  }
+  line.hidden = false;
+  line.textContent = t('ageLabel') + ': ' + age;
 }
 function validate() {
   if (step === 0) {
     if (!valText('fullName', 2)) return 'errName';
     if (!valText('nationality', 2)) return 'errNationality';
+    if (ageYears(document.getElementById('dob').value) === null) return 'errDob';
     if (!valText('contact', 6)) return 'errContact';
     if (!valText('emergencyName', 2) || !valText('emergencyPhone', 6)) return 'errEmergency';
     if (!valText('address', 3) || !valText('addrCity', 2) || !valText('addrCountry', 2)) return 'errAddress';
@@ -587,6 +743,7 @@ function submitForm() {
     name: v('fullName'),
     smartCard: v('smartCard'),
     nationality: v('nationality'),
+    dob: v('dob'),
     indiaPhone: v('indiaPhone'),
     passportNo: v('passportNo'),
     passportPlaceCountry: v('passportPlaceCountry'),
@@ -721,7 +878,7 @@ document.getElementById('backBtn').addEventListener('click', function () {
 document.getElementById('nextBtn').addEventListener('click', function () {
   var problem = validate();
   if (problem) { setError(problem); return; }
-  if (step < 4) { step += 1; renderStep(); return; }
+  if (step < 5) { step += 1; renderStep(); return; }
   submitForm();
 });
 
@@ -888,6 +1045,17 @@ window.addEventListener('beforeunload', function (e) {
   e.returnValue = '';
 });
 
+(function () {
+  var n = new Date();
+  var m = String(n.getMonth() + 1);
+  var day = String(n.getDate());
+  if (m.length < 2) m = '0' + m;
+  if (day.length < 2) day = '0' + day;
+  var dob = document.getElementById('dob');
+  dob.max = n.getFullYear() + '-' + m + '-' + day;
+  dob.addEventListener('input', showAge);
+  dob.addEventListener('change', showAge);
+})();
 applyI18n();
 showOnly('gate');
 if (PREVIEW) {
@@ -901,6 +1069,8 @@ if (PREVIEW) {
       document.getElementById('addrCity').value = 'Madrid';
       document.getElementById('addrCountry').value = 'Spain';
       document.getElementById('nationality').value = 'Spanish';
+      document.getElementById('dob').value = '1954-03-12';
+      showAge();
       document.querySelector('.pick[data-group="pickup"][data-value="Yes"]').click();
       document.getElementById('pickupPlace').value = 'Delhi Airport T3';
       document.getElementById('airline').value = 'Air India';
