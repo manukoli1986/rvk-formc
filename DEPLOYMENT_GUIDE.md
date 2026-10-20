@@ -78,7 +78,7 @@ The guest address can be shared. It still asks for the registered email before a
 3. Enter the **one email that is allowed to open the form** (the guest, or the person helping them).
 4. Tap **Send registration link**.
 
-They receive a bilingual email from the Gmail account that owns the script, shown as **Raj Vidya Kender**. Ask them to check spam the first time. The same message is copied to `indiaogm@gmail.com`.
+They receive a bilingual email from the Gmail account that owns the script, shown as **Raj Vidya Kender**. The email attaches `Guest-Registration-Guide.pdf` and also links to it. Ask them to check spam the first time. The same message is copied to `indiaogm@gmail.com`.
 
 If the email does not send, the page still shows the link. Copy it into WhatsApp **only to that person**. Each link works once.
 

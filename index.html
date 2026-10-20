@@ -28,6 +28,7 @@
   .langbar{display:inline-flex;gap:6px;margin-top:14px;background:rgba(255,255,255,.12);padding:4px;border-radius:12px}
   .langbtn{min-height:44px;padding:8px 14px;border:0;border-radius:9px;background:transparent;color:#fff;font:700 16px/1 inherit;cursor:pointer}
   .langbtn[aria-pressed="true"]{background:#fff;color:var(--navy)}
+  a.guide{display:inline-block;margin-top:12px;font-weight:750;font-size:16px;color:var(--navy);background:#fff6ec;border:2px solid var(--saffron);border-radius:10px;padding:10px 14px;text-decoration:none}
   header{position:relative}
   .helpbtn{position:absolute;top:12px;right:12px;width:46px;height:46px;border:0;border-radius:50%;background:#fff;color:var(--navy);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.18)}
   .helpbtn svg{width:26px;height:26px;display:block}
@@ -111,6 +112,7 @@
     <button type="button" class="langbtn" data-lang="en">English</button>
     <button type="button" class="langbtn" data-lang="es">Español</button>
   </div>
+  <a class="guide" href="Guest-Registration-Guide.pdf" target="_blank" rel="noopener" data-i18n="guideLink">How to fill this form (PDF)</a>
 </header>
 <div class="tricolor" aria-hidden="true"><i></i><i></i><i></i></div>
 
@@ -353,6 +355,7 @@ var I18N = {
     gateBody:'This form opens only for the email address Raj Vidya Kender registered. A shared link is not enough.',
     email:'Email', openForm:'Open my form',
     support:'Contact us', supportWhatsapp:'WhatsApp', supportEmail:'Email',
+    guideLink:'How to fill this form (PDF)',
     chooseTitle:'Which guest are you?', chooseBody:'This email is registered for more than one person. Choose the right name.',
     usedTitle:'Already received', usedBody:'We already have the registration for {name}. Bring your passport, visa, and photocopies to reception.',
     forGuest:'Registration for {name}',
@@ -426,6 +429,7 @@ var I18N = {
     gateBody:'Este formulario se abre solo con el correo que registró Raj Vidya Kender. Un enlace compartido no basta.',
     email:'Correo electrónico', openForm:'Abrir mi formulario',
     support:'Contáctenos', supportWhatsapp:'WhatsApp', supportEmail:'Correo',
+    guideLink:'Cómo completar este formulario (PDF)',
     chooseTitle:'¿Qué huésped es usted?', chooseBody:'Este correo está registrado para más de una persona. Elija el nombre correcto.',
     usedTitle:'Ya recibido', usedBody:'Ya tenemos el registro de {name}. Traiga el pasaporte, el visado y las fotocopias a recepción.',
     forGuest:'Registro de {name}',

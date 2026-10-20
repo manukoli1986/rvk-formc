@@ -22,7 +22,7 @@ Three pieces:
 
 ## What a guest does
 
-Reception sends one email. The link can be forwarded, but the form stays closed until that same email is typed. A different email is refused.
+Reception sends one email. The short step guide is attached, and the same PDF is linked at the top of the form. The link can be forwarded, but the form stays closed until that same email is typed. A different email is refused.
 
 The pages are:
 
@@ -54,6 +54,7 @@ The staff page can stay open on two or three computers at once. Each one enters 
 | `config.js` | Web app `/exec` URL only. No password. Published. |
 | `CNAME` | `formc.parakhforpr.org` |
 | `robots.txt` | Asks search engines not to index the site. |
+| `Guest-Registration-Guide.pdf` | Seven-page guide attached to each invite email and linked on the form. |
 | `Code.gs` | Not in git. Apps Script only. The sheet id and staff password stay there. |
 
 After a change to `Code.gs`, paste it into Apps Script and use **Deploy → Manage deployments → pencil → Version: New version → Deploy**. The `/exec` URL stays the same. After a change to the HTML, push this branch. GitHub Pages publishes `guest-registration-form`.
