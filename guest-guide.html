@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Guest registration — simple guide</title>
+<style>
+  @page { size: A4; margin: 12mm 14mm 14mm; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", system-ui, sans-serif;
+    color: #172033;
+    font-size: 16.5pt;
+    line-height: 1.35;
+  }
+  .page {
+    page-break-after: always;
+    break-after: page;
+    min-height: 262mm;
+    position: relative;
+  }
+  .page:last-child { page-break-after: auto; break-after: auto; }
+  .bar { height: 8px; display: flex; margin: 0 0 14px; }
+  .bar i { flex: 1; display: block; }
+  .bar i:nth-child(1) { background: #ff9933; }
+  .bar i:nth-child(2) { background: #fff; border-top: 1px solid #e3e8f0; border-bottom: 1px solid #e3e8f0; }
+  .bar i:nth-child(3) { background: #138808; }
+  h1 { font-size: 28pt; line-height: 1.15; margin: 0 0 6px; color: #12315f; }
+  h2 { font-size: 22pt; line-height: 1.2; margin: 0 0 8px; color: #12315f; }
+  .kicker { margin: 0 0 8px; color: #e07a1f; font-weight: 750; font-size: 13pt; letter-spacing: .04em; text-transform: uppercase; }
+  .tag {
+    display: inline-block;
+    font-size: 13pt;
+    font-weight: 750;
+    padding: 4px 10px;
+    border-radius: 8px;
+    margin: 0 0 12px;
+  }
+  .must { background: #e7f6ee; color: #0f6b3c; }
+  .skip { background: #fff6ec; color: #9a4e08; }
+  ul { margin: 8px 0 0; padding: 0 0 0 1.15em; }
+  li { margin: 0 0 7px; }
+  .opt { color: #4a5568; font-weight: 650; }
+  .note {
+    margin-top: 14px;
+    background: #fff8ea;
+    border-left: 6px solid #c9a24b;
+    padding: 10px 12px;
+    border-radius: 0 10px 10px 0;
+  }
+  .foot {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    color: #4a5568;
+    font-size: 12pt;
+    border-top: 1px solid #e3e8f0;
+    padding-top: 6px;
+  }
+  strong { font-weight: 750; }
+</style>
+</head>
+<body>
+
+<section class="page">
+  <div class="bar" aria-hidden="true"><i></i><i></i><i></i></div>
+  <p class="kicker">Raj Vidya Kender</p>
+  <h1>How to fill your registration</h1>
+  <p>This form is only for you. Do not pass the link to anyone else.</p>
+  <ul>
+    <li>Open the email from Raj Vidya Kender.</li>
+    <li>Tap the link.</li>
+    <li>Type the <strong>same email</strong>.</li>
+    <li>Tap <strong>Open my form</strong>.</li>
+    <li>At the top, choose <strong>English</strong> or <strong>Español</strong>.</li>
+  </ul>
+  <div class="note">
+    Need help? Tap the round icon at the top right.<br>
+    WhatsApp <strong>+91 76693 56514</strong><br>
+    Email <strong>indiaogm@gmail.com</strong>
+  </div>
+  <div class="note">
+    Only the first page must be filled.<br>
+    Later pages can be left blank. A volunteer can finish them at reception.
+  </div>
+  <p class="foot">Page 1 of 7 · Start here</p>
+</section>
+
+<section class="page">
+  <div class="bar" aria-hidden="true"><i></i><i></i><i></i></div>
+  <p class="kicker">Step 1 of 6</p>
+  <h2>Your details</h2>
+  <p class="tag must">Please fill this page</p>
+  <ul>
+    <li><strong>Full name</strong></li>
+    <li>Smart card <span class="opt">— only if you have one</span></li>
+    <li>Email <span class="opt">— already filled</span></li>
+    <li><strong>Nationality</strong></li>
+    <li><strong>Date of birth</strong> <span class="opt">— your age appears by itself</span></li>
+    <li><strong>Home address, city, and country</strong></li>
+    <li><strong>Contact Number</strong></li>
+    <li><strong>Emergency Contact Number</strong></li>
+    <li>Phone number in India <span class="opt">— only if you have one</span></li>
+  </ul>
+  <div class="note">
+    Your address in India is already written:<br>
+    Raj Vidya Kender, Shahurpur Chhatarpur, New Delhi 110074.
+  </div>
+  <p>Then tap <strong>Next</strong>.</p>
+  <p class="foot">Page 2 of 7 · Your details</p>
+</section>
+
+<section class="page">
+  <div class="bar" aria-hidden="true"><i></i><i></i><i></i></div>
+  <p class="kicker">Step 2 of 6</p>
+  <h2>Transport</h2>
+  <p class="tag skip">You may leave this blank</p>
+  <ul>
+    <li>Do you need a <strong>pickup from the airport</strong>? Tap Yes or No.</li>
+    <li>If <strong>Yes</strong>: airport, airline, flight number, city, date, and time.</li>
+    <li>If <strong>No</strong>: the date and time you arrive at Raj Vidya Kender.</li>
+  </ul>
+  <div class="note">
+    No flight details yet? Leave them blank and tap <strong>Next</strong>.<br>
+    Reception can add them when you arrive.
+  </div>
+  <p class="foot">Page 3 of 7 · Transport</p>
+</section>
+
+<section class="page">
+  <div class="bar" aria-hidden="true"><i></i><i></i><i></i></div>
+  <p class="kicker">Step 3 of 6</p>
+  <h2>Passport, visa, and photo</h2>
+  <p class="tag skip">You may leave this blank</p>
+  <ul>
+    <li><strong>Passport photo page</strong> — take a photo, or upload a photo or PDF.</li>
+    <li>Passport number, issued country, issued city.</li>
+    <li>Passport issue date and expiry date.</li>
+    <li>Choose <strong>Visa</strong>, <strong>e-Visa</strong>, or <strong>OCI card</strong>.</li>
+    <li>OCI card: upload the card. Do not fill visa details.</li>
+    <li>Visa or e-Visa: number, dates, country, city, and type (Tourist or Other).</li>
+    <li><strong>Your face photo</strong> — face in the centre, plain background.</li>
+  </ul>
+  <div class="note">
+    If you cannot upload the passport and visa, bring a soft copy of each with you.
+  </div>
+  <p>Then tap <strong>Next</strong>.</p>
+  <p class="foot">Page 4 of 7 · Passport, visa, and photo</p>
+</section>
+
+<section class="page">
+  <div class="bar" aria-hidden="true"><i></i><i></i><i></i></div>
+  <p class="kicker">Step 4 of 6</p>
+  <h2>Where are you coming from?</h2>
+  <p class="tag skip">You may leave this blank</p>
+  <ul>
+    <li><strong>Country</strong> — for example, Spain.</li>
+    <li><strong>City</strong> — for example, Madrid.</li>
+  </ul>
+  <div class="note">
+    Not sure yet? Leave it blank and tap <strong>Next</strong>.<br>
+    Reception can add it when you arrive.
+  </div>
+  <p class="foot">Page 5 of 7 · Coming from</p>
+</section>
+
+<section class="page">
+  <div class="bar" aria-hidden="true"><i></i><i></i><i></i></div>
+  <p class="kicker">Step 5 of 6</p>
+  <h2>Leaving Raj Vidya Kender</h2>
+  <p class="tag skip">You may leave this blank</p>
+  <ul>
+    <li>Do you need a <strong>drop from RVK</strong>? Tap Yes or No.</li>
+    <li>If Yes: where, which date, and what time.</li>
+    <li>The <strong>country and city</strong> you go to after RVK.</li>
+    <li>The <strong>date and time</strong> you leave Raj Vidya Kender.</li>
+  </ul>
+  <div class="note">
+    These can wait. Tap <strong>Next</strong>.<br>
+    If you did not upload your passport and visa, bring a soft copy of each.
+  </div>
+  <p class="foot">Page 6 of 7 · Departure</p>
+</section>
+
+<section class="page">
+  <div class="bar" aria-hidden="true"><i></i><i></i><i></i></div>
+  <p class="kicker">Step 6 of 6</p>
+  <h2>Check, then send</h2>
+  <p class="tag must">Last page</p>
+  <ul>
+    <li>Read your answers once.</li>
+    <li>Tap <strong>Back</strong> if something should change.</li>
+    <li>Tap <strong>Submit registration</strong> when it looks right.</li>
+  </ul>
+  <div class="note">
+    Blank fields can be completed at reception with the help of a volunteer.
+  </div>
+  <div class="note">
+    You are finished.<br>
+    Bring your passport and visa to reception.
+  </div>
+  <p class="foot">Page 7 of 7 · Raj Vidya Kender, New Delhi</p>
+</section>
+
+</body>
+</html>
