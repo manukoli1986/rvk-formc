@@ -28,6 +28,15 @@
   .langbar{display:inline-flex;gap:6px;margin-top:14px;background:rgba(255,255,255,.12);padding:4px;border-radius:12px}
   .langbtn{min-height:44px;padding:8px 14px;border:0;border-radius:9px;background:transparent;color:#fff;font:700 16px/1 inherit;cursor:pointer}
   .langbtn[aria-pressed="true"]{background:#fff;color:var(--navy)}
+  header{position:relative}
+  .helpbtn{position:absolute;top:12px;right:12px;width:46px;height:46px;border:0;border-radius:50%;background:#fff;color:var(--navy);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+  .helpbtn svg{width:26px;height:26px;display:block}
+  .helppanel{position:absolute;top:64px;right:12px;z-index:5;width:min(280px,calc(100vw - 24px));background:#fff;color:var(--ink);text-align:left;border-radius:14px;padding:12px;box-shadow:0 12px 32px rgba(18,49,95,.22)}
+  .helppanel p{margin:0 0 8px;font-weight:750;color:var(--navy)}
+  .helppanel a{display:flex;align-items:center;gap:10px;min-height:52px;padding:8px 10px;border-radius:10px;color:var(--navy);font-weight:700;text-decoration:none}
+  .helppanel a:hover,.helppanel a:focus-visible{background:#f4f7fb}
+  .helppanel small{display:block;font-weight:650;color:var(--muted)}
+  .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
   main{max-width:680px;margin:0 auto;padding:8px 16px 64px}
   .card{background:#fff;border-radius:16px;box-shadow:0 1px 2px rgba(18,49,95,.06),0 12px 32px rgba(18,49,95,.08);padding:22px 22px 18px;margin-top:16px}
   .progress{display:flex;gap:6px;margin:0 0 8px}
@@ -80,6 +89,21 @@
 <body>
 <div class="warnbar" data-i18n="blacklist">This form is only for you. Do not pass it on, or you will be blacklisted for future events. Please cooperate with the volunteers so your arrival goes smoothly.</div>
 <header>
+  <button type="button" class="helpbtn" id="helpBtn" aria-expanded="false" aria-controls="helpPanel">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 16 0"/><path d="M4 12v3a2 2 0 0 0 2 2h1v-6H6a2 2 0 0 0-2 1z"/><path d="M20 12v3a2 2 0 0 1-2 2h-1v-6h1a2 2 0 0 1 2 1z"/><path d="M12 19h3a2 2 0 0 0 2-2v-1"/></svg>
+    <span class="sr" data-i18n="support">Contact us</span>
+  </button>
+  <div class="helppanel" id="helpPanel" hidden>
+    <p data-i18n="support">Contact us</p>
+    <a href="https://wa.me/917669356514" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="#128C7E"><path d="M12 2a10 10 0 0 0-8.7 15l-1.2 4.4 4.5-1.2A10 10 0 1 0 12 2zm5.8 14.2c-.2.7-1.3 1.2-1.8 1.3-.5.1-1 .1-1.7-.1-.4-.1-.9-.3-1.5-.5-2.6-1.1-4.3-3.8-4.4-4-.1-.2-1-1.3-1-2.5s.6-1.8.9-2c.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5.2.6.8 2 .8 2.1.1.1.1.3 0 .4-.1.2-.2.3-.3.5l-.2.2c-.1.1-.2.2-.1.4.2.3.7 1.2 1.6 1.9 1.1.9 2 1.1 2.3 1.3.2.1.4.1.5 0l.6-.7c.2-.2.3-.2.6-.1l1.8.9c.2.1.4.2.4.3.1.2.1.8-.1 1.5z"/></svg>
+      <span><span data-i18n="supportWhatsapp">WhatsApp</span><small>+91 76693 56514</small></span>
+    </a>
+    <a href="mailto:indiaogm@gmail.com">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="#12315f" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
+      <span><span data-i18n="supportEmail">Email</span><small>indiaogm@gmail.com</small></span>
+    </a>
+  </div>
   <p class="kicker" data-i18n="gov">Government of India — Form C</p>
   <h1 data-i18n="title">Guest Registration Form</h1>
   <p class="sub">Raj Vidya Kender · Shahurpur Chhatarpur, New Delhi</p>
@@ -138,12 +162,9 @@
         <input id="addrCity" maxlength="80">
         <label for="addrCountry"><span data-i18n="country">Country</span> <span class="req">*</span></label>
         <input id="addrCountry" maxlength="80">
-        <p class="hint" data-i18n="homePhones">Contact and emergency numbers at your home.</p>
-        <label for="contact"><span data-i18n="contact">Contact number at your home</span> <span class="req">*</span></label>
+        <label for="contact"><span data-i18n="contact">Contact Number</span> <span class="req">*</span></label>
         <input id="contact" inputmode="tel" autocomplete="tel" maxlength="40" placeholder="+country code and number">
-        <label for="emergencyName"><span data-i18n="emergencyName">Emergency contact name at your home</span> <span class="req">*</span></label>
-        <input id="emergencyName" maxlength="120">
-        <label for="emergencyPhone"><span data-i18n="emergencyPhone">Emergency contact number at your home</span> <span class="req">*</span></label>
+        <label for="emergencyPhone"><span data-i18n="emergencyPhone">Emergency Contact Number</span> <span class="req">*</span></label>
         <input id="emergencyPhone" inputmode="tel" maxlength="40">
         <label for="indiaPhone"><span data-i18n="indiaPhone">Phone number in India</span> <span data-i18n="optionalMark">(optional)</span></label>
         <input id="indiaPhone" inputmode="tel" maxlength="40" placeholder="+91">
@@ -184,7 +205,6 @@
         <h2 data-i18n="s3">Passport, visa, and photo</h2>
         <p class="hint" data-i18n="photoHelp">Optional. Add a photo or a PDF. If the numbers are in the file, they must be readable. If you skip the passport and visa, bring a soft copy when you arrive.</p>
         <div class="note" data-i18n="photocopy">In case you were unable to upload your passport and visa to this form, kindly bring a soft copy of each with you.</div>
-        <div class="note"><span data-i18n="fileSize">A large photo is made smaller on this form, so you can upload it. A PDF must be under 1.5 MB. If your photo or PDF is larger, please email it to us at</span> <a href="mailto:indiaogm@gmail.com">indiaogm@gmail.com</a>.</div>
         <div class="slot" data-photo="front">
           <h3 data-i18n="ppFront">Passport — photo page</h3>
           <div class="rowbtns">
@@ -295,7 +315,7 @@
       <div class="step" data-step="5" hidden>
         <h2 data-i18n="s6">Please check your answers</h2>
         <p class="hint" data-i18n="reviewHint">Look through this once. Use Back if something needs a change, then submit.</p>
-        <div class="note" data-i18n="reviewLater">If a field is empty, you can leave it. You can fill it in later.</div>
+        <div class="note" data-i18n="reviewLater">Blank fields can be completed at reception with the help of a volunteer.</div>
         <div class="review" id="review"></div>
       </div>
 
@@ -332,6 +352,7 @@ var I18N = {
     private:'Private registration', gateTitle:'Enter your registered email',
     gateBody:'This form opens only for the email address Raj Vidya Kender registered. A shared link is not enough.',
     email:'Email', openForm:'Open my form',
+    support:'Contact us', supportWhatsapp:'WhatsApp', supportEmail:'Email',
     chooseTitle:'Which guest are you?', chooseBody:'This email is registered for more than one person. Choose the right name.',
     usedTitle:'Already received', usedBody:'We already have the registration for {name}. Bring your passport, visa, and photocopies to reception.',
     forGuest:'Registration for {name}',
@@ -339,8 +360,7 @@ var I18N = {
     s1:'Your details', s2:'Transport', s3:'Passport, visa, and photo', s4:'Where are you coming from?', s5:'Departure from Raj Vidya Kender',
     name:'Full name', smartCard:'Smart card', nationality:'Nationality',
     dob:'Date of birth', ageLabel:'Age', errDob:'Enter your date of birth.',
-    contact:'Contact number at your home', emergencyName:'Emergency contact name at your home', emergencyPhone:'Emergency contact number at your home',
-    homePhones:'Contact and emergency numbers at your home.',
+    contact:'Contact Number', emergencyPhone:'Emergency Contact Number',
     indiaPhone:'Phone number in India',
     address:'Home address', city:'City', country:'Country',
     indiaAddr:'Address in India for this stay: Raj Vidya Kender, Shahurpur Chhatarpur, New Delhi 110074.',
@@ -352,7 +372,6 @@ var I18N = {
     rvkDate:'Date you arrive at Raj Vidya Kender, Delhi', rvkTime:'Time you arrive at Raj Vidya Kender',
     photoHelp:'Optional. Add a photo or a PDF. If the numbers are in the file, they must be readable. If you skip the passport and visa, bring a soft copy when you arrive.',
     photocopy:'In case you were unable to upload your passport and visa to this form, kindly bring a soft copy of each with you.',
-    fileSize:'A large photo is made smaller on this form, so you can upload it. A PDF must be under 1.5 MB. If your photo or PDF is larger, please email it to us at',
     fileTooBig:'This file is over 1.5 MB. Please email it to indiaogm@gmail.com.',
     docQ:'Visa, e-Visa, or OCI card', docHelp:'OCI card holders do not fill visa details.',
     docVisa:'Visa', docEvisa:'e-Visa', docOci:'OCI card',
@@ -377,7 +396,7 @@ var I18N = {
     departDate:'Date you leave Raj Vidya Kender', departTime:'Time you leave',
     s6:'Please check your answers',
     reviewHint:'Look through this once. Use Back if something needs a change, then submit.',
-    reviewLater:'If a field is empty, you can leave it. You can fill it in later.',
+    reviewLater:'Blank fields can be completed at reception with the help of a volunteer.',
     notAdded:'Not added', added:'Added',
     back:'Back', next:'Next', submit:'Submit registration',
     doneTitle:'Registration received',
@@ -385,7 +404,7 @@ var I18N = {
     sending:'Sending your registration. Please keep this page open.',
     errEmail:'Enter the email address this registration was sent to.',
     errName:'Enter your full name.', errContact:'Enter your contact number.',
-    errEmergency:'Enter an emergency contact name and number.',
+    errEmergency:'Enter an emergency contact number.',
     errAddress:'Enter your home address, city, and country.',
     errNationality:'Enter your nationality.',
     errPickup:'Say whether you need an airport pickup.',
@@ -406,6 +425,7 @@ var I18N = {
     private:'Registro privado', gateTitle:'Escriba su correo registrado',
     gateBody:'Este formulario se abre solo con el correo que registró Raj Vidya Kender. Un enlace compartido no basta.',
     email:'Correo electrónico', openForm:'Abrir mi formulario',
+    support:'Contáctenos', supportWhatsapp:'WhatsApp', supportEmail:'Correo',
     chooseTitle:'¿Qué huésped es usted?', chooseBody:'Este correo está registrado para más de una persona. Elija el nombre correcto.',
     usedTitle:'Ya recibido', usedBody:'Ya tenemos el registro de {name}. Traiga el pasaporte, el visado y las fotocopias a recepción.',
     forGuest:'Registro de {name}',
@@ -413,8 +433,7 @@ var I18N = {
     s1:'Sus datos', s2:'Transporte', s3:'Pasaporte, visado y foto', s4:'¿De dónde viene?', s5:'Salida de Raj Vidya Kender',
     name:'Nombre completo', smartCard:'Tarjeta inteligente', nationality:'Nacionalidad',
     dob:'Fecha de nacimiento', ageLabel:'Edad', errDob:'Escriba su fecha de nacimiento.',
-    contact:'Teléfono en su domicilio', emergencyName:'Nombre del contacto de emergencia en su domicilio', emergencyPhone:'Teléfono de emergencia en su domicilio',
-    homePhones:'Teléfono de contacto y de emergencia en su domicilio.',
+    contact:'Número de contacto', emergencyPhone:'Número de contacto de emergencia',
     indiaPhone:'Teléfono en la India',
     address:'Domicilio', city:'Ciudad', country:'País',
     indiaAddr:'Dirección en la India durante la estancia: Raj Vidya Kender, Shahurpur Chhatarpur, Nueva Delhi 110074.',
@@ -426,7 +445,6 @@ var I18N = {
     rvkDate:'Fecha en que llega a Raj Vidya Kender, Delhi', rvkTime:'Hora en que llega a Raj Vidya Kender',
     photoHelp:'Opcional. Añada una foto o un PDF. Si el archivo tiene números, deben leerse. Si no sube el pasaporte y el visado, traiga una copia digital al llegar.',
     photocopy:'Si no pudo subir el pasaporte y el visado a este formulario, traiga una copia digital de cada uno.',
-    fileSize:'Una foto grande se reduce en este formulario, así que puede subirla. Un PDF debe ser de menos de 1,5 MB. Si su foto o PDF es más grande, envíenoslo por correo a',
     fileTooBig:'Este archivo supera 1,5 MB. Envíelo por correo a indiaogm@gmail.com.',
     docQ:'Visado, e-Visa o tarjeta OCI', docHelp:'Quien tiene tarjeta OCI no completa datos de visado.',
     docVisa:'Visado', docEvisa:'e-Visa', docOci:'Tarjeta OCI',
@@ -451,7 +469,7 @@ var I18N = {
     departDate:'Fecha en que sale de Raj Vidya Kender', departTime:'Hora de salida',
     s6:'Revise sus respuestas',
     reviewHint:'Revise esto una vez. Use Atrás si algo debe cambiar, y luego envíe.',
-    reviewLater:'Si un campo está vacío, puede dejarlo. Puede completarlo más tarde.',
+    reviewLater:'Los campos en blanco se pueden completar en recepción con la ayuda de un voluntario.',
     notAdded:'No indicado', added:'Añadido',
     back:'Atrás', next:'Siguiente', submit:'Enviar registro',
     doneTitle:'Registro recibido',
@@ -459,7 +477,7 @@ var I18N = {
     sending:'Enviando su registro. No cierre esta página.',
     errEmail:'Escriba el correo al que se envió este registro.',
     errName:'Escriba su nombre completo.', errContact:'Escriba su teléfono.',
-    errEmergency:'Escriba el nombre y el teléfono de emergencia.',
+    errEmergency:'Escriba el número de contacto de emergencia.',
     errAddress:'Escriba su domicilio, ciudad y país.',
     errNationality:'Escriba su nacionalidad.',
     errPickup:'Indique si necesita recogida en el aeropuerto.',
@@ -507,6 +525,8 @@ function applyI18n() {
     btn.setAttribute('aria-pressed', btn.getAttribute('data-lang') === LANG ? 'true' : 'false');
   });
   document.title = t('title') + ' — Raj Vidya Kender';
+  var help = document.getElementById('helpBtn');
+  if (help) help.setAttribute('aria-label', t('support'));
   var next = document.getElementById('nextBtn');
   if (next && document.getElementById('wizard') && !document.getElementById('wizard').hidden) {
     next.textContent = step === 5 ? t('submit') : t('next');
@@ -615,7 +635,6 @@ function fillReview() {
   addLine(details, t('city'), v('addrCity'));
   addLine(details, t('country'), v('addrCountry'));
   addLine(details, t('contact'), v('contact'));
-  addLine(details, t('emergencyName'), v('emergencyName'));
   addLine(details, t('emergencyPhone'), v('emergencyPhone'));
   addLine(details, t('indiaPhone'), v('indiaPhone'));
   addLine(details, t('indiaStay'), 'Raj Vidya Kender, Shahurpur Chhatarpur, New Delhi 110074');
@@ -712,7 +731,7 @@ function validate() {
     if (!valText('nationality', 2)) return 'errNationality';
     if (ageYears(document.getElementById('dob').value) === null) return 'errDob';
     if (!valText('contact', 6)) return 'errContact';
-    if (!valText('emergencyName', 2) || !valText('emergencyPhone', 6)) return 'errEmergency';
+    if (!valText('emergencyPhone', 6)) return 'errEmergency';
     if (!valText('address', 3) || !valText('addrCity', 2) || !valText('addrCountry', 2)) return 'errAddress';
   }
   return '';
@@ -757,7 +776,6 @@ function submitForm() {
     visaCity: docKind === 'Visa' || docKind === 'e-Visa' ? v('visaCity') : '',
     visaType: docKind === 'Visa' || docKind === 'e-Visa' ? v('visaType') : '',
     contact: v('contact'),
-    emergencyName: v('emergencyName'),
     emergencyPhone: v('emergencyPhone'),
     address: v('address'),
     city: v('addrCity'),
@@ -880,6 +898,21 @@ document.getElementById('nextBtn').addEventListener('click', function () {
   if (problem) { setError(problem); return; }
   if (step < 5) { step += 1; renderStep(); return; }
   submitForm();
+});
+
+document.getElementById('helpBtn').addEventListener('click', function (e) {
+  e.stopPropagation();
+  var panel = document.getElementById('helpPanel');
+  var open = panel.hidden;
+  panel.hidden = !open;
+  this.setAttribute('aria-expanded', open ? 'true' : 'false');
+});
+document.addEventListener('click', function (e) {
+  var panel = document.getElementById('helpPanel');
+  var btn = document.getElementById('helpBtn');
+  if (!panel || panel.hidden || btn.contains(e.target) || panel.contains(e.target)) return;
+  panel.hidden = true;
+  btn.setAttribute('aria-expanded', 'false');
 });
 
 document.querySelectorAll('.langbtn').forEach(function (btn) {
@@ -1063,7 +1096,6 @@ if (PREVIEW) {
     fill: function () {
       document.getElementById('fullName').value = 'Maria Lopez';
       document.getElementById('contact').value = '+34 600 000 000';
-      document.getElementById('emergencyName').value = 'Ana Lopez';
       document.getElementById('emergencyPhone').value = '+34 611 111 111';
       document.getElementById('address').value = '12 Calle Mayor';
       document.getElementById('addrCity').value = 'Madrid';

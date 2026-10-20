@@ -98,7 +98,7 @@ Every page starts with: do not pass this form on, or you will be blacklisted for
 4. Passport photo page, visa or e-Visa or OCI card, and a passport-size photo, as a photo or a PDF. These are optional. Passport number, issued country and city, and dates are optional. Visa number, issued country and city, dates, and type are optional. Smart card is optional and is stored beside the name. If the files are not uploaded, the guest brings a soft copy. Reception can upload them on arrival.
 5. Country and city they are coming from. Optional.
 6. Drop from RVK or not, the next country and city, and the date and time they leave RVK. Optional. Only the first page must be completed. It includes date of birth, and the form shows the age. It also has an optional phone number in India.
-7. A review of the answers. The page says an empty field can be left and filled in later. The guest checks the answers, then submits.
+7. A review of the answers. The page says blank fields can be completed at reception with a volunteer. The guest checks the answers, then submits.
 
 If the passport and visa were not uploaded, the form asks the guest to bring a soft copy of both.
 

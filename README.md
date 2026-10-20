@@ -30,8 +30,8 @@ The pages are:
 2. Airport pickup and flight details. Optional. If the guest does not have the flight yet, they can email it later, or reception can add it on arrival.
 3. Passport photo page and a passport-size photo. Then visa, e-Visa, or an OCI card. A photo or a PDF. Optional. Passport number, issued country and city, and dates are optional. Visa number, issued country and city, dates, and type are optional. If the passport and visa were not uploaded, the guest brings a soft copy of each.
 4. Country and city they are coming from. Optional.
-5. Drop from RVK or not, the next country and city, and when they leave RVK. Optional. The first page is the only page that must be completed. It includes nationality, date of birth with the age shown on the form, the home phone, and an optional phone number in India.
-6. A review of every answer. Empty fields can be left and filled in later. The guest checks the page, goes back to change anything, then submits.
+5. Drop from RVK or not, the next country and city, and when they leave RVK. Optional. The first page is the only page that must be completed. It includes nationality, date of birth with the age shown on the form, a contact number, an emergency contact number, and an optional phone number in India.
+6. A review of every answer. Blank fields can be completed at reception with a volunteer. The guest checks the page, goes back to change anything, then submits.
 
 Every page says the form is only for that guest: do not pass it on, or they will be blacklisted for future events, and please cooperate with the volunteers. English and Español. If the passport and visa were not uploaded, the guest brings a soft copy of both.
 
