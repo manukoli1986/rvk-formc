@@ -28,9 +28,9 @@ The pages are:
 
 1. Name, email, contact, emergency contact, and home address. The India address is Raj Vidya Kender.
 2. Airport pickup and flight details. Optional. If the guest does not have the flight yet, they can email it later, or reception can add it on arrival.
-3. Passport photo page and a passport-size photo. Then visa, e-Visa, or an OCI card. A photo or a PDF. Optional. Passport issue and expiry dates, visa country, visa city, and visa type (Tourist or Other) are optional. Smart card sits after the name and is optional. If the passport and visa were not uploaded, the guest brings a soft copy of each. Reception can also upload them at the desk.
-4. Country they are coming from.
-5. Drop from RVK or not, the next country or Indian state, and when they leave RVK. Optional. They can email the details later, or reception can add them on arrival.
+3. Passport photo page and a passport-size photo. Then visa, e-Visa, or an OCI card. A photo or a PDF. Optional. Passport number, issued country and city, and dates are optional. Visa number, issued country and city, dates, and type are optional. If the passport and visa were not uploaded, the guest brings a soft copy of each.
+4. Country and city they are coming from. Optional.
+5. Drop from RVK or not, the next country and city, and when they leave RVK. Optional. The first page is the only page that must be completed. It includes nationality, the home phone, and an optional phone number in India.
 
 Every page says the form is only for that guest: do not pass it on, or they will be blacklisted for future events, and please cooperate with the volunteers. English and Español. If the passport and visa were not uploaded, the guest brings a soft copy of both.
 

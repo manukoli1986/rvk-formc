@@ -122,18 +122,23 @@
         <input id="smartCard" maxlength="40" autocomplete="off">
         <label for="emailLocked" data-i18n="email">Email</label>
         <input id="emailLocked" type="email" readonly>
-        <label for="contact"><span data-i18n="contact">Contact number</span> <span class="req">*</span></label>
-        <input id="contact" inputmode="tel" autocomplete="tel" maxlength="40" placeholder="+country code and number">
-        <label for="emergencyName"><span data-i18n="emergencyName">Emergency contact name</span> <span class="req">*</span></label>
-        <input id="emergencyName" maxlength="120">
-        <label for="emergencyPhone"><span data-i18n="emergencyPhone">Emergency contact number</span> <span class="req">*</span></label>
-        <input id="emergencyPhone" inputmode="tel" maxlength="40">
+        <label for="nationality"><span data-i18n="nationality">Nationality</span> <span class="req">*</span></label>
+        <input id="nationality" maxlength="80" placeholder="For example, Spanish">
         <label for="address"><span data-i18n="address">Home address</span> <span class="req">*</span></label>
         <textarea id="address" rows="2" maxlength="300"></textarea>
         <label for="addrCity"><span data-i18n="city">City</span> <span class="req">*</span></label>
         <input id="addrCity" maxlength="80">
         <label for="addrCountry"><span data-i18n="country">Country</span> <span class="req">*</span></label>
         <input id="addrCountry" maxlength="80">
+        <p class="hint" data-i18n="homePhones">Contact and emergency numbers at your home.</p>
+        <label for="contact"><span data-i18n="contact">Contact number at your home</span> <span class="req">*</span></label>
+        <input id="contact" inputmode="tel" autocomplete="tel" maxlength="40" placeholder="+country code and number">
+        <label for="emergencyName"><span data-i18n="emergencyName">Emergency contact name at your home</span> <span class="req">*</span></label>
+        <input id="emergencyName" maxlength="120">
+        <label for="emergencyPhone"><span data-i18n="emergencyPhone">Emergency contact number at your home</span> <span class="req">*</span></label>
+        <input id="emergencyPhone" inputmode="tel" maxlength="40">
+        <label for="indiaPhone"><span data-i18n="indiaPhone">Phone number in India</span> <span data-i18n="optionalMark">(optional)</span></label>
+        <input id="indiaPhone" inputmode="tel" maxlength="40" placeholder="+91">
         <div class="note" data-i18n="indiaAddr">Address in India for this stay: Raj Vidya Kender, Shahurpur Chhatarpur, New Delhi 110074.</div>
       </div>
 
@@ -180,6 +185,12 @@
           </div>
           <img class="shot" id="prev-front" alt="" hidden>
         </div>
+        <label for="passportNo"><span data-i18n="passportNo">Passport number</span> <span data-i18n="optionalMark">(optional)</span></label>
+        <input id="passportNo" maxlength="20" autocapitalize="characters">
+        <label for="passportPlaceCountry"><span data-i18n="passportPlaceCountry">Passport issued country</span> <span data-i18n="optionalMark">(optional)</span></label>
+        <input id="passportPlaceCountry" maxlength="80">
+        <label for="passportPlaceCity"><span data-i18n="passportPlaceCity">Passport issued city</span> <span data-i18n="optionalMark">(optional)</span></label>
+        <input id="passportPlaceCity" maxlength="80">
         <label for="passportIssue"><span data-i18n="passportIssue">Passport issue date</span> <span data-i18n="optionalMark">(optional)</span></label>
         <input id="passportIssue" type="date">
         <label for="passportExpiry"><span data-i18n="passportExpiry">Passport expiry date</span> <span data-i18n="optionalMark">(optional)</span></label>
@@ -199,6 +210,12 @@
               <button type="button" class="up" data-up="visa" data-i18n="upload">Upload photo or PDF</button>
             </div>
             <img class="shot" id="prev-visa" alt="" hidden>
+            <label for="visaNo"><span data-i18n="visaNo">Visa number</span> <span data-i18n="optionalMark">(optional)</span></label>
+            <input id="visaNo" maxlength="30">
+            <label for="visaIssue"><span data-i18n="visaIssue">Visa issued date</span> <span data-i18n="optionalMark">(optional)</span></label>
+            <input id="visaIssue" type="date">
+            <label for="visaExpiry"><span data-i18n="visaExpiry">Visa expiry date</span> <span data-i18n="optionalMark">(optional)</span></label>
+            <input id="visaExpiry" type="date">
             <label for="visaCountry"><span data-i18n="visaCountry">Visa issued country</span> <span data-i18n="optionalMark">(optional)</span></label>
             <input id="visaCountry" maxlength="80">
             <label for="visaCity"><span data-i18n="visaCity">Visa issued city</span> <span data-i18n="optionalMark">(optional)</span></label>
@@ -231,9 +248,12 @@
       </div>
 
       <div class="step" data-step="3" hidden>
-        <h2 data-i18n="s4">Which country are you coming from?</h2>
-        <label for="comingFrom"><span data-i18n="comingFrom">Country</span> <span class="req">*</span></label>
+        <h2 data-i18n="s4">Where are you coming from?</h2>
+        <p class="hint" data-i18n="comingOptional">Optional. You can leave this blank, and reception will add it when you arrive.</p>
+        <label for="comingFrom"><span data-i18n="comingFrom">Country</span> <span data-i18n="optionalMark">(optional)</span></label>
         <input id="comingFrom" maxlength="80" placeholder="For example, Spain">
+        <label for="comingCity"><span data-i18n="comingCity">City</span> <span data-i18n="optionalMark">(optional)</span></label>
+        <input id="comingCity" maxlength="80" placeholder="For example, Madrid">
       </div>
 
       <div class="step" data-step="4" hidden>
@@ -252,21 +272,11 @@
           <label for="dropTime" data-i18n="dropTime">Drop time</label>
           <input id="dropTime" type="time">
         </div>
-        <p data-i18n="nextQ">After RVK, where do you go?</p>
-        <div class="picks">
-          <button type="button" class="pick" data-group="next" data-value="country" data-i18n="nextCountryBtn">Another country</button>
-          <button type="button" class="pick" data-group="next" data-value="state" data-i18n="nextStateBtn">Another state in India</button>
-        </div>
-        <div id="countryBlock" hidden>
-          <label for="nextCountry" data-i18n="nextCountry">Which country?</label>
-          <input id="nextCountry" maxlength="80">
-        </div>
-        <div id="stateBlock" hidden>
-          <label for="nextState" data-i18n="nextState">Which state?</label>
-          <input id="nextState" maxlength="80">
-          <label for="nextCity" data-i18n="nextCity">City</label>
-          <input id="nextCity" maxlength="80">
-        </div>
+        <p data-i18n="nextQ">After RVK, which country and city do you go to?</p>
+        <label for="nextCountry"><span data-i18n="nextCountry">Country</span> <span data-i18n="optionalMark">(optional)</span></label>
+        <input id="nextCountry" maxlength="80">
+        <label for="nextCity"><span data-i18n="nextCity">City</span> <span data-i18n="optionalMark">(optional)</span></label>
+        <input id="nextCity" maxlength="80">
         <label for="departDate"><span data-i18n="departDate">Date you leave Raj Vidya Kender</span> <span data-i18n="optionalMark">(optional)</span></label>
         <input id="departDate" type="date">
         <label for="departTime"><span data-i18n="departTime">Time you leave</span> <span data-i18n="optionalMark">(optional)</span></label>
@@ -311,8 +321,11 @@ var I18N = {
     usedTitle:'Already received', usedBody:'We already have the registration for {name}. Bring your passport, visa, and photocopies to reception.',
     forGuest:'Registration for {name}',
     stepOf:'Step {n} of {total}',
-    s1:'Your details', s2:'Transport', s3:'Passport, visa, and photo', s4:'Which country are you coming from?', s5:'Departure from Raj Vidya Kender',
-    name:'Full name', smartCard:'Smart card', contact:'Contact number', emergencyName:'Emergency contact name', emergencyPhone:'Emergency contact number',
+    s1:'Your details', s2:'Transport', s3:'Passport, visa, and photo', s4:'Where are you coming from?', s5:'Departure from Raj Vidya Kender',
+    name:'Full name', smartCard:'Smart card', nationality:'Nationality',
+    contact:'Contact number at your home', emergencyName:'Emergency contact name at your home', emergencyPhone:'Emergency contact number at your home',
+    homePhones:'Contact and emergency numbers at your home.',
+    indiaPhone:'Phone number in India',
     address:'Home address', city:'City', country:'Country',
     indiaAddr:'Address in India for this stay: Raj Vidya Kender, Shahurpur Chhatarpur, New Delhi 110074.',
     travelOptional:'If you do not have the flight details yet, you can send them later by email. You can also leave this blank, and reception will add it when you arrive.',
@@ -328,18 +341,21 @@ var I18N = {
     docVisa:'Visa', docEvisa:'e-Visa', docOci:'OCI card',
     docVisaHelp:'Take a photo, or upload a photo or PDF of the visa or e-Visa.',
     docOciHelp:'Take a photo, or upload a photo or PDF of the OCI card.',
+    passportNo:'Passport number', passportPlaceCountry:'Passport issued country', passportPlaceCity:'Passport issued city',
     passportIssue:'Passport issue date', passportExpiry:'Passport expiry date',
+    visaNo:'Visa number', visaIssue:'Visa issued date', visaExpiry:'Visa expiry date',
     visaCountry:'Visa issued country', visaCity:'Visa issued city', visaType:'Type of visa',
     visaTypeBlank:'Select', visaTourist:'Tourist', visaOther:'Other',
     optionalMark:'(optional)',
     ppFront:'Passport — photo page', ppVisa:'Visa or e-Visa', ppFace:'Your passport-size photo',
     faceHelp:'Take it now, or upload a passport-size photo. Face centered, plain background.',
     take:'Take photo', takeNow:'Take photo now', upload:'Upload photo or PDF',
-    comingFrom:'Country',
+    comingFrom:'Country', comingCity:'City',
+    comingOptional:'Optional. You can leave this blank, and reception will add it when you arrive.',
     dropQ:'Do you need a drop from RVK?', dropYes:'Yes — I need a drop', dropNo:'No drop needed',
     dropPlace:'Where should we drop you?', dropDate:'Drop date', dropTime:'Drop time',
-    nextQ:'After RVK, where do you go?', nextCountryBtn:'Another country', nextStateBtn:'Another state in India',
-    nextCountry:'Which country?', nextState:'Which state?', nextCity:'City',
+    nextQ:'After RVK, which country and city do you go to?',
+    nextCountry:'Country', nextCity:'City',
     departOptional:'If you do not have these details yet, you can send them later by email. You can also leave this blank, and reception will add it when you arrive.',
     departDate:'Date you leave Raj Vidya Kender', departTime:'Time you leave',
     back:'Back', next:'Next', submit:'Submit registration',
@@ -350,11 +366,12 @@ var I18N = {
     errName:'Enter your full name.', errContact:'Enter your contact number.',
     errEmergency:'Enter an emergency contact name and number.',
     errAddress:'Enter your home address, city, and country.',
+    errNationality:'Enter your nationality.',
     errPickup:'Say whether you need an airport pickup.',
     errFlight:'Enter the airport, airline, flight number, city, date, and time.',
     errRvk:'Enter the date and time you arrive at Raj Vidya Kender.',
     errPhotos:'Add a photo of the passport photo page, the visa, and your face.',
-    errCountry:'Enter the country you are coming from.',
+    errCountry:'Enter the country and city you are coming from.',
     errDrop:'Say whether you need a drop, and complete those details.',
     errNext:'Say whether you go to another country or another state, and name it.',
     errDepart:'Enter the date and time you leave Raj Vidya Kender.',
@@ -372,8 +389,11 @@ var I18N = {
     usedTitle:'Ya recibido', usedBody:'Ya tenemos el registro de {name}. Traiga el pasaporte, el visado y las fotocopias a recepción.',
     forGuest:'Registro de {name}',
     stepOf:'Paso {n} de {total}',
-    s1:'Sus datos', s2:'Transporte', s3:'Pasaporte, visado y foto', s4:'¿De qué país viene?', s5:'Salida de Raj Vidya Kender',
-    name:'Nombre completo', smartCard:'Tarjeta inteligente', contact:'Teléfono de contacto', emergencyName:'Nombre del contacto de emergencia', emergencyPhone:'Teléfono de emergencia',
+    s1:'Sus datos', s2:'Transporte', s3:'Pasaporte, visado y foto', s4:'¿De dónde viene?', s5:'Salida de Raj Vidya Kender',
+    name:'Nombre completo', smartCard:'Tarjeta inteligente', nationality:'Nacionalidad',
+    contact:'Teléfono en su domicilio', emergencyName:'Nombre del contacto de emergencia en su domicilio', emergencyPhone:'Teléfono de emergencia en su domicilio',
+    homePhones:'Teléfono de contacto y de emergencia en su domicilio.',
+    indiaPhone:'Teléfono en la India',
     address:'Domicilio', city:'Ciudad', country:'País',
     indiaAddr:'Dirección en la India durante la estancia: Raj Vidya Kender, Shahurpur Chhatarpur, Nueva Delhi 110074.',
     travelOptional:'Si aún no tiene los datos del vuelo, puede enviarlos después por correo. También puede dejarlo en blanco y recepción lo añadirá cuando llegue.',
@@ -389,18 +409,21 @@ var I18N = {
     docVisa:'Visado', docEvisa:'e-Visa', docOci:'Tarjeta OCI',
     docVisaHelp:'Tome una foto, o suba una foto o PDF del visado o e-Visa.',
     docOciHelp:'Tome una foto, o suba una foto o PDF de la tarjeta OCI.',
+    passportNo:'Número de pasaporte', passportPlaceCountry:'País de emisión del pasaporte', passportPlaceCity:'Ciudad de emisión del pasaporte',
     passportIssue:'Fecha de emisión del pasaporte', passportExpiry:'Fecha de vencimiento del pasaporte',
+    visaNo:'Número de visado', visaIssue:'Fecha de emisión del visado', visaExpiry:'Fecha de vencimiento del visado',
     visaCountry:'País de emisión del visado', visaCity:'Ciudad de emisión del visado', visaType:'Tipo de visado',
     visaTypeBlank:'Seleccionar', visaTourist:'Turista', visaOther:'Otro',
     optionalMark:'(opcional)',
     ppFront:'Pasaporte — página de la foto', ppVisa:'Visado o e-Visa', ppFace:'Su foto tamaño pasaporte',
     faceHelp:'Tómela ahora, o suba una foto tamaño pasaporte. Rostro centrado, fondo liso.',
     take:'Tomar foto', takeNow:'Tomar foto ahora', upload:'Subir foto o PDF',
-    comingFrom:'País',
+    comingFrom:'País', comingCity:'Ciudad',
+    comingOptional:'Opcional. Puede dejarlo en blanco y recepción lo añadirá cuando llegue.',
     dropQ:'¿Necesita traslado de salida desde RVK?', dropYes:'Sí — necesito traslado', dropNo:'No necesito traslado',
     dropPlace:'¿Dónde lo dejamos?', dropDate:'Fecha del traslado', dropTime:'Hora del traslado',
-    nextQ:'Después de RVK, ¿a dónde va?', nextCountryBtn:'Otro país', nextStateBtn:'Otro estado de la India',
-    nextCountry:'¿Qué país?', nextState:'¿Qué estado?', nextCity:'Ciudad',
+    nextQ:'Después de RVK, ¿a qué país y ciudad va?',
+    nextCountry:'País', nextCity:'Ciudad',
     departOptional:'Si aún no tiene estos datos, puede enviarlos después por correo. También puede dejarlos en blanco y recepción los añadirá cuando llegue.',
     departDate:'Fecha en que sale de Raj Vidya Kender', departTime:'Hora de salida',
     back:'Atrás', next:'Siguiente', submit:'Enviar registro',
@@ -411,11 +434,12 @@ var I18N = {
     errName:'Escriba su nombre completo.', errContact:'Escriba su teléfono.',
     errEmergency:'Escriba el nombre y el teléfono de emergencia.',
     errAddress:'Escriba su domicilio, ciudad y país.',
+    errNationality:'Escriba su nacionalidad.',
     errPickup:'Indique si necesita recogida en el aeropuerto.',
     errFlight:'Escriba el aeropuerto, la aerolínea, el vuelo, la ciudad, la fecha y la hora.',
     errRvk:'Escriba la fecha y la hora en que llega a Raj Vidya Kender.',
     errPhotos:'Añada la foto de la página del pasaporte, el visado y su rostro.',
-    errCountry:'Escriba el país del que viene.',
+    errCountry:'Escriba el país y la ciudad de los que viene.',
     errDrop:'Indique si necesita traslado y complete esos datos.',
     errNext:'Indique si va a otro país o a otro estado, y escríbalo.',
     errDepart:'Escriba la fecha y la hora en que sale de Raj Vidya Kender.',
@@ -437,7 +461,6 @@ var activeToken = '';
 var step = 0;
 var pickup = '';
 var dropNeed = '';
-var nextKind = '';
 var photos = { front:'', visa:'', oci:'', portrait:'' };
 var docKind = '';
 var photoTarget = '';
@@ -531,12 +554,10 @@ function valText(id, min) {
 function validate() {
   if (step === 0) {
     if (!valText('fullName', 2)) return 'errName';
+    if (!valText('nationality', 2)) return 'errNationality';
     if (!valText('contact', 6)) return 'errContact';
     if (!valText('emergencyName', 2) || !valText('emergencyPhone', 6)) return 'errEmergency';
     if (!valText('address', 3) || !valText('addrCity', 2) || !valText('addrCountry', 2)) return 'errAddress';
-  }
-  if (step === 3) {
-    if (!valText('comingFrom', 2)) return 'errCountry';
   }
   return '';
 }
@@ -565,8 +586,16 @@ function submitForm() {
     formLang: LANG,
     name: v('fullName'),
     smartCard: v('smartCard'),
+    nationality: v('nationality'),
+    indiaPhone: v('indiaPhone'),
+    passportNo: v('passportNo'),
+    passportPlaceCountry: v('passportPlaceCountry'),
+    passportPlaceCity: v('passportPlaceCity'),
     passportIssue: v('passportIssue'),
     passportExpiry: v('passportExpiry'),
+    visaNo: docKind === 'Visa' || docKind === 'e-Visa' ? v('visaNo') : '',
+    visaIssue: docKind === 'Visa' || docKind === 'e-Visa' ? v('visaIssue') : '',
+    visaExpiry: docKind === 'Visa' || docKind === 'e-Visa' ? v('visaExpiry') : '',
     visaCountry: docKind === 'Visa' || docKind === 'e-Visa' ? v('visaCountry') : '',
     visaCity: docKind === 'Visa' || docKind === 'e-Visa' ? v('visaCity') : '',
     visaType: docKind === 'Visa' || docKind === 'e-Visa' ? v('visaType') : '',
@@ -586,13 +615,12 @@ function submitForm() {
     rvkDate: v('rvkDate'),
     rvkTime: v('rvkTime'),
     comingFrom: v('comingFrom'),
+    comingCity: v('comingCity'),
     dropNeeded: dropNeed,
     dropPlace: v('dropPlace'),
     dropDate: v('dropDate'),
     dropTime: v('dropTime'),
-    nextKind: nextKind,
     nextCountry: v('nextCountry'),
-    nextState: v('nextState'),
     nextCity: v('nextCity'),
     departDate: v('departDate'),
     departTime: v('departTime'),
@@ -681,11 +709,6 @@ document.querySelectorAll('.pick').forEach(function (btn) {
       docKind = value;
       document.getElementById('visaBlock').hidden = value !== 'Visa' && value !== 'e-Visa';
       document.getElementById('ociBlock').hidden = value !== 'OCI';
-    }
-    if (group === 'next') {
-      nextKind = value;
-      document.getElementById('countryBlock').hidden = value !== 'country';
-      document.getElementById('stateBlock').hidden = value !== 'state';
     }
   });
 });
@@ -877,6 +900,7 @@ if (PREVIEW) {
       document.getElementById('address').value = '12 Calle Mayor';
       document.getElementById('addrCity').value = 'Madrid';
       document.getElementById('addrCountry').value = 'Spain';
+      document.getElementById('nationality').value = 'Spanish';
       document.querySelector('.pick[data-group="pickup"][data-value="Yes"]').click();
       document.getElementById('pickupPlace').value = 'Delhi Airport T3';
       document.getElementById('airline').value = 'Air India';
@@ -885,9 +909,10 @@ if (PREVIEW) {
       document.getElementById('flightDate').value = '2026-11-02';
       document.getElementById('flightTime').value = '14:30';
       document.getElementById('comingFrom').value = 'Spain';
+      document.getElementById('comingCity').value = 'Madrid';
       document.querySelector('.pick[data-group="drop"][data-value="No"]').click();
-      document.querySelector('.pick[data-group="next"][data-value="country"]').click();
       document.getElementById('nextCountry').value = 'Spain';
+      document.getElementById('nextCity').value = 'Madrid';
       document.getElementById('departDate').value = '2026-11-09';
       document.getElementById('departTime').value = '10:00';
     },
