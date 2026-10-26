@@ -84,7 +84,7 @@ If the email does not send, the page still shows the link. Copy it into WhatsApp
 
 **Walk-in or midnight arrival:** enter the name and email, then **Open on this tablet**. The guest must type that same email. The staff page locks when you hand the tablet over. Enter the password again afterwards.
 
-**They lost the email, or the photos were unusable:** on the recent-link card, **Send the email again** (same link, new 14-day expiry) or **Send a new link**. Sending a new link turns the previous unused link off.
+**They lost the email, or the photos were unusable:** on the recent-link card, **Send the email again** (same link, new 30-day expiry) or **Send a new link**. Sending a new link turns the previous unused link off.
 
 ---
 
@@ -142,7 +142,7 @@ Run **`backupData`** from Apps Script any time you want a copy now. Photos stay 
 - Sharing the website address does not open the questions. The guest must enter the email reception registered.
 - A personal link still asks for that same email. A different email is refused.
 - Staff actions need the password. Five wrong tries lock the page for 10 minutes. Too many wrong guest emails lock the gate for 15 minutes.
-- Each invitation works once and expires after 14 days (`LINK_VALID_DAYS` in `Code.gs`, maximum 60).
+- Each invitation works once and expires after 30 days (`LINK_VALID_DAYS` in `Code.gs`, maximum 60). Links already sent are stretched to 30 days from the day they were sent the first time the updated script runs. A submitted registration stays on the staff search after the link expires.
 - A newer invitation for the **same name and email** switches the older unused one off. Two guests may share a helper email; after that email is entered, they choose which name.
 - Do not publish `Code.gs`. Do not put the staff password in `config.js`.
 - Restrict the Sheet, FormC_Photos, and FormC_Backups to named staff.

@@ -18,7 +18,7 @@ Three pieces:
 2. **Apps Script web app** — `Code.gs` runs as the Google account that owns the sheet. Deploy it as a web app, **Execute as: Me**, **Who has access: Anyone**. “Anyone” only means a guest does not need a Google login. The `/exec` address goes in `config.js` as `RVK_SCRIPT_URL`.
 3. **Google Sheet** — `FormC_Submissions` holds the answers. `Invites` holds the name, email, and one-time token. Photos go in the private Drive folder `FormC_Photos`. A nightly copy goes to `FormC_Backups`.
 
-`Code.gs` is not in this repo. It stays on the computer that edits the form, and in Apps Script, because it holds the sheet id and the staff password.
+`Code.gs` is not in this repo. It stays on the computer that edits the form, and in Apps Script, because it holds the sheet id and the staff password. Do not push it. Rules for editing the sheet and the script are in [skills.md](skills.md).
 
 ## What a guest does
 
@@ -41,9 +41,17 @@ Nepal and Bhutan passports do not need this link.
 
 The staff page can stay open on two or three computers at once. Each one enters the staff password. Locking one screen does not sign the others out.
 
-- **New guest** — name and the one email allowed to open the form. The email works once and expires after 14 days.
-- **Guest at reception** — search the name or email, fill anything left blank, upload missing photos, save, and print Form C.
+- **New guest** — name and the one email allowed to open the form. The email works once and expires after 30 days.
+- **Guest at reception** — search the name or email, fill anything left blank, upload missing photos, save, and print Form C. Search reads **Full Name** and **Guest Email** only. The **Email** column is not searched.
 - Within 24 hours, punch e-FRRO from the sheet, paste Application ID and ACK No, and set Status to DONE.
+
+## Sheet columns
+
+New headers are added at the end of row 1. **OCI Card** and **Document Type** were added that way, after **Next City**. Do not drag columns and do not run a script that calls `moveColumns`. A move puts old values under the wrong titles, and staff search then finds nobody.
+
+Copy a value from a backup by the title in row 1, not by the column letter. Leave **Timestamp** as it is. Leave the **Invites** tab alone. A guest link is the token on that tab.
+
+A date of birth is a real date, including years before 1971. The staff page prints a clock time only for a time-only cell, which Google Sheets stores in 1899. An open invite keeps the same link when the validity changes from 14 days to 30. **Expires** becomes **Created** plus 30 days for a row that is still **SENT** or **OPENED**.
 
 ## Files
 
@@ -56,5 +64,6 @@ The staff page can stay open on two or three computers at once. Each one enters 
 | `robots.txt` | Asks search engines not to index the site. |
 | `Guest-Registration-Guide.pdf` | Seven-page guide attached to each invite email and linked on the form. |
 | `Code.gs` | Not in git. Apps Script only. The sheet id and staff password stay there. |
+| `skills.md` | Rules for the sheet, the script, and guest links. |
 
 After a change to `Code.gs`, paste it into Apps Script and use **Deploy → Manage deployments → pencil → Version: New version → Deploy**. The `/exec` URL stays the same. After a change to the HTML, push this branch. GitHub Pages publishes `guest-registration-form`.

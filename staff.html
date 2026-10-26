@@ -113,7 +113,7 @@ var params = new URLSearchParams(location.search);
 var localHost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 var pin = '';
 var invites = [];
-var validDays = 14;
+var validDays = 30;
 var busy = false;
 
 var STATUS = {
@@ -181,7 +181,7 @@ function unlock(password) {
     }
     pin = password;
     sessionStorage.setItem(PIN_KEY, password);
-    validDays = data.validDays || 14;
+    validDays = data.validDays || 30;
     invites = data.invites || [];
     showApp();
     renderList();
